@@ -16,8 +16,33 @@ jobs:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_SSH_KEY }}
-          script: |
-            cd /home/mirrodevelopment/theoryofbloom/theoryofbloom
-            git pull origin main
-            mvn clean package -DskipTests
-            sudo systemctl restart theoryofbloom
+script: |
+  cd /home/mirrodevelopment/theoryofbloom/theoryofbloom
+
+  git pull origin main
+
+  # Backup current working jar
+  cp target/theoryofbloom-0.0.1-SNAPSHOT.jar target/backup.jar || true
+
+  # Build new version
+  mvn clean package -DskipTests
+
+  # Restart app
+  sudo systemctl restart theoryofbloom
+
+  # Wait for app startup
+  sleep 15
+
+  # Health check
+  if ! curl -f http://localhost:8080 > /dev/null; then
+    echo "Deployment failed. Rolling back..."
+
+    # Restore backup
+    cp target/backup.jar target/theoryofbloom-0.0.1-SNAPSHOT.jar
+
+    sudo systemctl restart theoryofbloom
+
+    exit 1
+  fi
+
+  echo "Deployment successful"
