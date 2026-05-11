@@ -1,0 +1,290 @@
+/* ============================================================
+   CART PAGE – Theory of Bloom
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body.cart-body {
+    font-family: 'Inter', sans-serif;
+    color: #1a1a1a;
+    background-color: #F5F0E2; 
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* ==================== CART HEADER ==================== */
+.cart-header {
+    background: linear-gradient(135deg, #0A192F 0%, #112240 100%);
+    padding: 80px 40px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+.cart-header::before {
+    content: '';
+    position: absolute;
+    top: -50%; left: -50%;
+    width: 200%; height: 200%;
+    background: radial-gradient(circle at center, rgba(201, 160, 112, 0.15) 0%, transparent 60%);
+    pointer-events: none;
+}
+.cart-header-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2.2rem, 5vw, 3.5rem);
+    font-weight: 300;
+    color: #FFFFFF;
+    letter-spacing: 2px;
+    margin-bottom: 0.5rem;
+    position: relative;
+}
+.cart-header-sub {
+    font-family: 'Inter', sans-serif;
+    font-size: 1.05rem;
+    color: #EAE0DB;
+    letter-spacing: 1px;
+    font-weight: 300;
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.6;
+    position: relative;
+}
+@media (max-width: 768px) {
+    .cart-header { padding: 50px 20px; }
+    .cart-header-title { font-size: 2.4rem; }
+}
+
+/* ==================== CART LAYOUT ==================== */
+.cart-container {
+    max-width: 1200px;
+    margin: 3rem auto;
+    width: 100%;
+    padding: 0 2rem;
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 3rem;
+    flex: 1;
+}
+
+@media (max-width: 900px) {
+    .cart-container {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ==================== CART ITEMS ==================== */
+.cart-items {
+    background: #fff;
+    padding: 2rem;
+    border: 1px solid #D8D2C2;
+}
+
+.cart-item {
+    display: grid;
+    grid-template-columns: 100px 1fr auto;
+    gap: 1.5rem;
+    padding-bottom: 1.5rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid #eee;
+    align-items: center;
+}
+.cart-item:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.item-img-wrap {
+    width: 100px;
+    aspect-ratio: 4/5;
+    background: #F5F0E2;
+}
+.item-img-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.item-details h3 {
+    font-family: 'Cinzel', serif;
+    font-size: 1.3rem;
+    margin-bottom: 0.3rem;
+    color: #1a1a1a;
+}
+.item-category {
+    font-size: 0.8rem;
+    color: #666;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.item-actions {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.qty-control {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ccc;
+    background: #fafafa;
+}
+.qty-btn {
+    width: 32px;
+    height: 32px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.2rem;
+    color: #333;
+}
+.qty-btn:hover { background: #eee; }
+.qty-input {
+    width: 40px;
+    height: 32px;
+    border: none;
+    text-align: center;
+    font-size: 0.9rem;
+    background: transparent;
+}
+.qty-input:focus { outline: none; }
+
+.remove-btn {
+    background: none;
+    border: none;
+    color: #E50914; /* Red for remove */
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.item-price-wrap {
+    text-align: right;
+}
+.item-price {
+    font-size: 1.1rem;
+    font-weight: 500;
+}
+
+/* ==================== CART SUMMARY ==================== */
+.cart-summary {
+    background: #1a1a1a;
+    color: #fff;
+    padding: 2.5rem;
+    height: fit-content;
+}
+.summary-title {
+    font-family: 'Cinzel', serif;
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid rgba(255,255,255,0.2);
+    padding-bottom: 1rem;
+}
+
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+    font-size: 0.95rem;
+    color: #ccc;
+}
+.summary-total {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(255,255,255,0.2);
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #fff;
+}
+
+.checkout-btn {
+    display: block;
+    width: 100%;
+    padding: 1rem;
+    background: #F5F0E2;
+    color: #1a1a1a;
+    border: none;
+    font-size: 0.95rem;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    cursor: pointer;
+    margin-top: 2rem;
+    transition: background 0.2s;
+    text-align: center;
+    text-decoration: none;
+}
+.checkout-btn:hover {
+    background: #fff;
+}
+
+.empty-cart {
+    text-align: center;
+    padding: 4rem 2rem;
+    background: #fff;
+    border: 1px solid #D8D2C2;
+    grid-column: 1 / -1;
+}
+.empty-cart h3 {
+    font-family: 'Cinzel', serif;
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+.empty-cart a {
+    display: inline-block;
+    margin-top: 1rem;
+    padding: 0.8rem 2rem;
+    background: #1a1a1a;
+    color: #fff;
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-size: 0.8rem;
+}
+
+/* ==================== MOBILE LAYOUT ==================== */
+@media (max-width: 600px) {
+    .cart-container {
+        padding: 0 1rem;
+        margin: 1.5rem auto;
+    }
+    .cart-items {
+        padding: 1rem;
+    }
+    .cart-item {
+        grid-template-columns: 80px 1fr;
+        gap: 1rem;
+    }
+    .item-img-wrap {
+        width: 80px;
+    }
+    .item-actions {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.8rem;
+    }
+    .item-price-wrap {
+        grid-column: 1 / -1;
+        text-align: left;
+        padding-top: 0.5rem;
+        border-top: 1px dashed #eee;
+        margin-top: 0.5rem;
+    }
+    .cart-header {
+        padding: 4rem 1rem 2rem;
+    }
+    .cart-header-title {
+        font-size: 1.8rem;
+    }
+    .cart-summary {
+        padding: 1.5rem;
+    }
+}

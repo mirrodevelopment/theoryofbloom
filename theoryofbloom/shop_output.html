@@ -1,0 +1,1237 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shop | Theory of Bloom</title>
+    <meta name="description" content="Shop Theory of Bloom botanical wellness blends. Crafted by nature, perfected by science.">
+    <link rel="icon" type="image/png" href="/images/flower-logo.png">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,700&family=Cinzel:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="/css/header.css?v=4.9">
+    <style>
+        /* ── Modern Editorial Premium Layout (Sapphire, Gold, Sandal, Cream) ── */
+        body { background: #F6EBE9 !important; font-family: 'Inter', sans-serif; }
+        
+        .ed-shop-wrapper { padding-bottom: 120px; }
+        
+        /* Featured Banner */
+        .ed-hero-banner { 
+            max-width: 1360px; margin: 24px auto 0; border-radius: 24px; 
+            background: linear-gradient(135deg, #0A192F 0%, #112240 100%);
+            padding: 80px 40px; text-align: center; position: relative; overflow: hidden;
+            box-shadow: 0 20px 40px rgba(10, 25, 47, 0.15);
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        .ed-hero-banner::before {
+            content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+            background: radial-gradient(circle at center, rgba(201, 160, 112, 0.15) 0%, transparent 60%);
+            pointer-events: none;
+        }
+        .ed-hero-title { font-family: 'Cormorant Garamond', serif; font-size: 3.5rem; color: #FFFFFF; font-weight: 300; margin-bottom: 16px; letter-spacing: 2px; }
+        .ed-hero-sub { font-size: 1.05rem; color: #EAE0DB; font-weight: 300; letter-spacing: 1px; max-width: 600px; margin: 0 auto; line-height: 1.6; }
+        
+        /* Glassmorphism Filters */
+        .ed-filter-wrapper { 
+            position: sticky; top: 64px; z-index: 80; padding: 16px; margin-bottom: 24px; 
+            background: rgba(246, 235, 233, 0.92); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(234, 224, 219, 0.8);
+            transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .ed-filter-wrapper.filter-hidden {
+            transform: translateY(calc(-100% - 65px));
+        }
+        .ed-glass-filters { 
+            display: flex; align-items: center; gap: 12px; overflow-x: auto; white-space: nowrap; 
+            padding: 10px 20px; border-radius: 40px;
+            background: rgba(255, 255, 255, 0.5); border: 1px solid rgba(255,255,255,0.8); 
+            box-shadow: 0 4px 16px rgba(10, 25, 47, 0.03); max-width: 1000px; margin: 0 auto;
+            -webkit-overflow-scrolling: touch; scrollbar-width: none;
+        }
+        .ed-glass-filters::-webkit-scrollbar { display: none; }
+        .ed-filter-label { font-size: 0.8rem; font-weight: 600; color: #7A6051; text-transform: uppercase; letter-spacing: 1px; margin-right: 8px; }
+        .ed-chip { 
+            display: inline-flex; align-items: center; padding: 10px 24px; background: rgba(255,255,255,0.7); 
+            color: #2C1E16; border-radius: 30px; font-size: 0.85rem; font-weight: 500; text-decoration: none; 
+            transition: all 0.3s; border: 1px solid rgba(234, 224, 219, 0.6);
+        }
+        .ed-chip:hover { background: #FFFFFF; border-color: #C9A070; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(201, 160, 112, 0.15); }
+        .ed-chip.active { background: #0A192F; color: #FFFFFF; border-color: #0A192F; box-shadow: 0 6px 16px rgba(10, 25, 47, 0.2); }
+        
+        /* Asymmetrical Grid */
+        .ed-asym-grid { 
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
+            gap: 32px; max-width: 1360px; margin: 0 auto; padding: 0 24px 60px;
+        }
+        
+        @media (min-width: 1100px) {
+            .ed-asym-grid { grid-template-columns: repeat(4, 1fr); padding-top: 40px; }
+            /* Staggered offset for asymmetry without breaking cards */
+            .ed-asym-grid .ed-product-card:nth-child(even) { transform: translateY(48px); }
+            .ed-asym-grid .ed-product-card:nth-child(even):hover { transform: translateY(40px); box-shadow: 0 20px 40px rgba(10, 25, 47, 0.08); }
+        }
+        
+        /* Product Card */
+        .ed-product-card { 
+            position: relative; padding: 24px; border-radius: 20px; 
+            background: linear-gradient(160deg, #FFFFFF, #FCF9F8); text-decoration: none; 
+            border: 1px solid #EAE0DB; box-shadow: 0 8px 24px rgba(0,0,0,0.02); 
+            transition: all 0.5s cubic-bezier(0.165, 0.84, 0.44, 1); display: flex; flex-direction: column; 
+        }
+        .ed-product-card:hover { 
+            border-color: rgba(201, 160, 112, 0.5); 
+            box-shadow: 0 20px 40px rgba(10, 25, 47, 0.08); transform: translateY(-8px); z-index: 10; 
+        }
+        
+        .ed-product-img-wrap { 
+            width: 100%; aspect-ratio: 4/5; margin-bottom: 24px; display: flex; align-items: center; justify-content: center; 
+            position: relative; overflow: hidden; border-radius: 12px; background: #F8F5F2; 
+        }
+        .ed-product-img { width: 100%; height: 100%; object-fit: contain; transition: transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
+        .ed-product-card:hover .ed-product-img { transform: scale(1.06); }
+        
+        .ed-wishlist-btn { 
+            position: absolute; top: 16px; right: 16px; background: rgba(255,255,255,0.8); border: 1px solid rgba(255,255,255,0.9);
+            font-size: 1.1rem; color: #DBCBBD; cursor: pointer; transition: all 0.3s; z-index: 5; 
+            width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center; justify-content: center; 
+            backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+        .ed-wishlist-btn:hover { color: #C44; background: #FFF; transform: scale(1.12); box-shadow: 0 8px 16px rgba(204, 68, 68, 0.15); }
+        .ed-wishlist-btn.saved { color: #C44; background: #FFF; border-color: #C44; }
+        
+        .ed-product-info { display: flex; flex-direction: column; flex: 1; }
+        .ed-product-name { font-family: 'Cormorant Garamond', serif; font-size: 1.8rem; font-weight: 500; color: #0A192F; margin-bottom: 8px; line-height: 1.1; }
+        .ed-product-desc { font-size: 0.8rem; color: #7A6051; line-height: 1.5; margin-bottom: 16px; display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; }
+        
+        .ed-product-price-row { display: flex; align-items: baseline; gap: 12px; margin-bottom: 32px; margin-top: auto; }
+        .ed-price { font-size: 1.5rem; font-weight: 400; color: #0A192F; font-family: 'Inter', sans-serif; letter-spacing: -0.5px; }
+        .ed-price-old { font-size: 1rem; text-decoration: line-through; color: #A38C7D; }
+        
+        .ed-add-cart-btn { 
+            width: 100%; padding: 16px; background: transparent; border: 1.5px solid #EAE0DB; color: #0A192F; 
+            font-size: 0.85rem; font-weight: 600; text-transform: uppercase; border-radius: 8px; cursor: pointer; 
+            transition: all 0.4s; display: flex; justify-content: center; align-items: center; gap: 10px; letter-spacing: 1.5px; 
+        }
+        .ed-product-card:hover .ed-add-cart-btn { background: #0A192F; color: #FFFFFF; border-color: #0A192F; }
+        
+        /* Floating Bottom Bar */
+        .ed-floating-bar {
+            position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%); z-index: 100;
+            display: flex; align-items: center; justify-content: space-between; gap: 32px;
+            background: rgba(10, 25, 47, 0.92); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            padding: 16px 32px; border-radius: 40px; box-shadow: 0 16px 40px rgba(0,0,0,0.25);
+            border: 1px solid rgba(255,255,255,0.15); width: 90%; max-width: 640px;
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .ed-floating-bar:hover { transform: translateX(-50%) translateY(-4px); }
+        .ed-floating-count { font-size: 0.9rem; color: #F6EBE9; font-weight: 500; letter-spacing: 0.5px; }
+        .ed-floating-sort { display: flex; align-items: center; gap: 16px; }
+        .ed-floating-sort span { font-size: 0.85rem; color: #C9A070; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; }
+        .ed-sort-select { 
+            background: transparent; color: #FFFFFF; border: none; outline: none; font-size: 0.95rem; font-weight: 500;
+            cursor: pointer; font-family: 'Inter', sans-serif; appearance: none; padding-right: 20px;
+            background-image: url('data:image/svg+xml;charset=US-ASCII,<svg width="12" height="8" viewBox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1 1L6 6L11 1" stroke="%23EAE0DB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>'); 
+            background-repeat: no-repeat; background-position: right center;
+        }
+        .ed-sort-select option { background: #0A192F; color: #FFF; padding: 10px; }
+        
+        @media (max-width: 768px) {
+            .ed-asym-grid { gap: 12px; padding: 0 10px; grid-template-columns: repeat(2, 1fr) !important; }
+            .ed-asym-grid .ed-product-card:nth-child(even) { transform: none !important; }
+            .ed-asym-grid .ed-product-card:nth-child(even):hover { transform: none !important; }
+            .ed-product-card { padding: 12px; border-radius: 14px; }
+            .ed-product-img-wrap { margin-bottom: 12px; }
+            .ed-floating-bar { flex-direction: column; border-radius: 20px; bottom: 20px; padding: 20px; gap: 16px; text-align: center; }
+            .ed-hero-banner { padding: 50px 20px; margin: 16px; border-radius: 16px; }
+            .ed-hero-title { font-size: 2.4rem; }
+            .ed-glass-filters { border-radius: 8px; padding: 12px; }
+            .ed-product-name { font-size: 1.2rem; }
+            .ed-product-desc { font-size: 0.72rem; margin-bottom: 10px; }
+            .ed-price { font-size: 1.1rem; }
+            .ed-price-old { font-size: 0.85rem; }
+            .ed-product-price-row { margin-bottom: 10px; }
+            .ed-add-cart-btn { padding: 10px 6px; font-size: 0.7rem; letter-spacing: 0.5px; }
+        }
+        
+        .mob-filter-drawer, .mob-filter-backdrop { display: none; }
+        
+        @media (max-width: 991px) {
+            .mob-filter-backdrop {
+                position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1000;
+                opacity: 0; visibility: hidden; transition: 0.3s; display: block;
+            }
+            .mob-filter-backdrop.open { opacity: 1; visibility: visible; }
+            .mob-filter-drawer {
+                position: fixed; bottom: 0; left: 0; right: 0; background: #FFF;
+                border-top-left-radius: 24px; border-top-right-radius: 24px;
+                padding: 32px 24px; z-index: 1001; transform: translateY(100%);
+                transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1); display: block;
+                box-shadow: 0 -10px 40px rgba(0,0,0,0.1);
+            }
+            .mob-filter-drawer.open { transform: translateY(0); }
+            .mob-drawer-pill {
+                display: inline-block; padding: 10px 20px; border: 1px solid #EAE0DB;
+                border-radius: 30px; margin: 4px; font-size: 0.85rem; color: #2C1E16;
+                text-decoration: none; transition: 0.2s;
+            }
+            .mob-drawer-pill.active { background: #0A192F; color: #FFF; border-color: #0A192F; }
+        }
+        
+        /* Premium Footer */
+        .shop-footer { background: #130D09; color: rgba(246, 235, 233, 0.7); padding: 80px 24px 100px; text-align: center; margin-top: 40px; }
+        .shop-footer-inner { max-width: 800px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; gap: 40px; }
+        .shop-footer-brand { display: flex; flex-direction: column; gap: 12px; }
+        .shop-footer-name { font-family: 'Cormorant Garamond', serif; font-size: 2.2rem; color: #FFFFFF; letter-spacing: 4px; font-weight: 300; margin: 0; }
+        .shop-footer-name em { font-style: italic; color: #C9A070; }
+        .shop-footer-tag { font-size: 0.85rem; letter-spacing: 2px; text-transform: uppercase; margin: 0; }
+        .shop-footer-links { display: flex; gap: 32px; flex-wrap: wrap; justify-content: center; }
+        .shop-footer-links a { color: #FFFFFF; text-decoration: none; font-size: 0.8rem; font-weight: 500; letter-spacing: 1.5px; text-transform: uppercase; transition: color 0.3s; }
+        .shop-footer-links a:hover { color: #C9A070; }
+        .shop-footer-copy { font-size: 0.75rem; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 32px; width: 100%; }
+    </style>
+</head>
+<body class="shop-body">
+
+<!-- PREMIUM UNIVERSAL HEADER -->
+<header class="tob-header" id="tobHeader">
+  <div class="tob-top">
+    <div class="tob-brand">
+      <img src="/images/flower-logo.png" alt="Logo" class="tob-logo">
+      <div class="tob-brand-name">Theory <em>of</em> Bloom</div>
+    </div>
+  </div>
+  <div class="tob-bottom">
+    <div class="tob-search-wrap">
+      <form class="tob-search-form" action="/shop" method="get">
+        <input type="text" name="query" value="" class="tob-search-input" placeholder="Search our botanical library...">
+        <button type="submit" class="tob-search-btn"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16"><path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/></svg></button>
+      </form>
+    </div>
+    <div class="tob-actions">
+      <div class="tob-action-item"><a href="/login" class="tob-icon-btn" style="text-decoration:none;"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M6 3.5a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-2a.5.5 0 0 0-1 0v2A1.5 1.5 0 0 0 6.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-8A1.5 1.5 0 0 0 5 3.5v2a.5.5 0 0 0 1 0z"/><path fill-rule="evenodd" d="M11.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H1.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708z"/></svg><span class="tob-icon-label">Login</span></a></div>
+      
+      
+      <div class="tob-action-item">
+        <button class="tob-icon-btn" type="button"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16"><path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0"/></svg><span class="tob-icon-label">More</span></button>
+        <div class="tob-drop"><div class="tob-drop-header">Explore</div><a class="tob-drop-item" href="/"><i class="fas fa-home fa-sm"></i> Home</a><a class="tob-drop-item" href="/contact"><i class="fas fa-envelope fa-sm"></i> Contact Us</a><a class="tob-drop-item" href="/privacy-policy"><i class="fas fa-shield-alt fa-sm"></i> Privacy Policy</a></div>
+      </div>
+
+      <a href="/cart" class="tob-icon-btn tob-cart-btn"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 16 16"><path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .49.598l-1 5a.5.5 0 0 1-.465.401l-9.397.472L4.415 11H13a.5.5 0 0 1 0 1H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5M3.102 4l.84 4.479 9.144-.459L13.89 4zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4m7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4m-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2m7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2"/></svg><span class="tob-icon-label">Cart</span></a>
+    </div>
+  </div>
+</header>
+
+<!-- MOBILE HEADER -->
+<div class="tob-mobile-header" id="tobMobileHeader">
+  <div class="tob-mob-bar">
+    <!-- Left: Hamburger -->
+    <button class="tob-mob-ham-btn" type="button" onclick="tobOpenMenu()" aria-label="Open menu" id="tobHamBtn">
+      <span class="tob-ham-line"></span>
+      <span class="tob-ham-line"></span>
+      <span class="tob-ham-line tob-ham-line--short"></span>
+    </button>
+
+    <!-- Center: Logo + Brand name -->
+    <div class="tob-mob-center">
+      <img src="/images/flower-logo.png" class="tob-mob-logo-img" alt="Theory of Bloom logo">
+      <span class="tob-mob-name">Theory <em>of</em> Bloom</span>
+    </div>
+
+    <!-- Right: icons -->
+    <div class="tob-mob-icons">
+      <div class="tob-mob-account">
+        
+        <a href="/login" class="tob-mob-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#a37c4e" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M6 3.5a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-2a.5.5 0 0 0-1 0v2A1.5 1.5 0 0 0 6.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-8A1.5 1.5 0 0 0 5 3.5v2a.5.5 0 0 0 1 0z"/><path fill-rule="evenodd" d="M11.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H1.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708z"/></svg></a>
+        <div class="tob-drawer-backdrop" id="tobMobBackdrop"></div>
+        <div class="tob-mob-acc-drawer" id="tobMobDrawer">
+          <div class="drawer-profile-header">
+            <div class="drawer-header-top">
+              <div class="drawer-avatar">U</div>
+              <div class="drawer-name-wrap">
+                <div class="drawer-name">Valued Member</div>
+                <div class="drawer-status">Standard Member</div>
+              </div>
+            </div>
+            <div class="drawer-header-meta">
+              <div class="meta-item"><span class="meta-label">Member ID</span><span class="meta-value">#TB0000</span></div>
+              <div class="meta-item"><span class="meta-label">Status</span><span class="meta-value">Normal</span></div>
+            </div>
+          </div>
+          <div class="drawer-menu">
+            <a href="/profile" class="drawer-menu-item"><i class="bi bi-person-circle"></i><div class="drawer-item-content"><span class="drawer-item-title">Account Centre</span><span class="drawer-item-sub">Manage your botanical ritual</span></div></a>
+            <a href="/order-history" class="drawer-menu-item"><i class="bi bi-box-seam"></i><div class="drawer-item-content"><span class="drawer-item-title">Purchase History</span><span class="drawer-item-sub">Track your formulations</span></div><span class="drawer-badge">Active</span></a>
+            <a href="/saved-blends" class="drawer-menu-item"><i class="bi bi-heart"></i><div class="drawer-item-content"><span class="drawer-item-title">Saved Blends</span><span class="drawer-item-sub">Your curation library</span></div></a>
+            <a href="/profile#settings" class="drawer-menu-item"><i class="bi bi-gear"></i><div class="drawer-item-content"><span class="drawer-item-title">System Settings</span><span class="drawer-item-sub">Privacy &amp; preferences</span></div></a>
+          </div>
+        </div>
+      </div>
+      <button class="tob-mob-icon" type="button" onclick="tobToggleSearch()"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#a37c4e" viewBox="0 0 16 16"><path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/></svg></button>
+      <a href="/cart" class="tob-mob-icon cart-ic"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#a37c4e" viewBox="0 0 16 16"><path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .49.598l-1 5a.5.5 0 0 1-.465.401l-9.397.472L4.415 11H13a.5.5 0 0 1 0 1H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5M3.102 4l.84 4.479 9.144-.459L13.89 4zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4m7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4m-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2m7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2"/></svg></a>
+    </div>
+  </div>
+  <div class="tob-mob-search-bar" id="tobMobSearch">
+    <div class="tob-mob-search-inner">
+      <form action="/shop" method="get" style="display:flex;gap:8px;width:100%;">
+        <input type="text" name="query" id="mobileSearch" value="" class="tob-mob-search-input" placeholder="Search botanical blends…">
+        <button type="submit" class="tob-mob-search-submit"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/></svg></button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- FULLSCREEN MENU -->
+<div class="tob-overlay" id="tobOverlay">
+  <button class="tob-overlay-close" onclick="tobCloseMenu()">&times;</button>
+  
+  <ul class="tob-overlay-links">
+    <li><a href="/">Home</a></li>
+    <li><a href="/shop">Shop Blends</a></li>
+    <li><a href="/saved-blends">Saved Blends</a></li>
+    <li><a href="/profile">My Account</a></li>
+    <li><a href="/contact">Contact</a></li>
+  </ul>
+  <div class="tob-overlay-footer"><p>Theory <em>of</em> Bloom</p><small>Crafted by Nature. Perfected by Science.</small></div>
+</div>
+
+<!-- MOBILE FILTER DRAWER -->
+<div class="mob-filter-backdrop" id="shopFilterBackdrop" onclick="closeShopFilter()"></div>
+<div class="mob-filter-drawer" id="shopFilterDrawer">
+    <div style="width:40px;height:4px;background:rgba(180,160,120,0.3);border-radius:2px;margin:0 auto 1.2rem;"></div>
+    <h4>Filter &amp; Sort</h4>
+    <label class="fg-head" style="font-size:0.58rem;letter-spacing:2.5px;text-transform:uppercase;color:#4A6B5D;font-weight:600;margin-bottom:0.6rem;display:block;">Category</label>
+    <a href="/shop" class="mob-drawer-pill  active" onclick="closeShopFilter()">All Blends</a>
+    
+        
+            
+        
+            <a href="/shop?category=Sleep%20%26%20Calm" class="mob-drawer-pill" 
+               onclick="closeShopFilter()">Sleep &amp; Calm</a>
+        
+            <a href="/shop?category=Skin%20%26%20Glow" class="mob-drawer-pill" 
+               onclick="closeShopFilter()">Skin &amp; Glow</a>
+        
+            <a href="/shop?category=Focus%20%26%20Clarity" class="mob-drawer-pill" 
+               onclick="closeShopFilter()">Focus &amp; Clarity</a>
+        
+            <a href="/shop?category=Immunity" class="mob-drawer-pill" 
+               onclick="closeShopFilter()">Immunity</a>
+        
+            <a href="/shop?category=Masculine" class="mob-drawer-pill" 
+               onclick="closeShopFilter()">Masculine</a>
+        
+            <a href="/shop?category=Morning" class="mob-drawer-pill" 
+               onclick="closeShopFilter()">Morning</a>
+        
+    
+</div>
+
+<div class="ed-shop-wrapper">
+
+    <!-- BREADCRUMB -->
+    <nav style="display:flex;align-items:center;justify-content:center;gap:6px;font-family:'Inter',sans-serif;font-size:0.72rem;font-weight:500;letter-spacing:0.5px;padding-top:2rem;" aria-label="Breadcrumb">
+      <a href="/" style="color:#A37C4E;text-decoration:none;transition:color 0.2s;">Home</a>
+      <span style="color:rgba(90,86,82,0.4);font-size:0.65rem;">&#8250;</span>
+      <span style="color:#5A5652;font-weight:600;">Shop Blends</span>
+    </nav>
+
+    <!-- HERO BANNER -->
+    <div class="ed-hero-banner">
+        <h1 class="ed-hero-title">The Master Curations</h1>
+        <p class="ed-hero-sub">Discover botanical alchemy designed for your well-being. Formulated with precision, elevated by nature.</p>
+    </div>
+
+    <!-- GLASSMORPHISM FILTERS -->
+    <div class="ed-filter-wrapper">
+        <div class="ed-glass-filters">
+            <span class="ed-filter-label">Shop by Category</span>
+            <a href="/shop" onclick="applyDynamicFilter(event, this, 'All Blends')" class="ed-chip  active">All Blends</a>
+            
+                
+                    
+                
+                    <a href="/shop?category=Sleep%20%26%20Calm" 
+                       class="ed-chip" onclick="applyDynamicFilter(event, this, &#39;Sleep &amp; Calm&#39;)">Sleep &amp; Calm</a>
+                
+                    <a href="/shop?category=Skin%20%26%20Glow" 
+                       class="ed-chip" onclick="applyDynamicFilter(event, this, &#39;Skin &amp; Glow&#39;)">Skin &amp; Glow</a>
+                
+                    <a href="/shop?category=Focus%20%26%20Clarity" 
+                       class="ed-chip" onclick="applyDynamicFilter(event, this, &#39;Focus &amp; Clarity&#39;)">Focus &amp; Clarity</a>
+                
+                    <a href="/shop?category=Immunity" 
+                       class="ed-chip" onclick="applyDynamicFilter(event, this, &#39;Immunity&#39;)">Immunity</a>
+                
+                    <a href="/shop?category=Masculine" 
+                       class="ed-chip" onclick="applyDynamicFilter(event, this, &#39;Masculine&#39;)">Masculine</a>
+                
+                    <a href="/shop?category=Morning" 
+                       class="ed-chip" onclick="applyDynamicFilter(event, this, &#39;Morning&#39;)">Morning</a>
+                
+            
+        </div>
+    </div>
+
+    <!-- ASYMMETRICAL GRID -->
+    <div class="ed-asym-grid" id="edShopGrid">
+        
+        <!-- Dynamically rendered products -->
+
+
+        <article class="ed-product-card product-item" data-id="1">
+            <a href="/shop/product/1" style="text-decoration:none;display:flex;flex-direction:column;flex:1;height:100%;">
+                <div class="ed-product-img-wrap">
+                    
+                    
+                    <button type="button" class="ed-wishlist-btn prod-save-btn" data-pid="1" onclick="toggleSave(this,event)" title="Save blend"><i class="bi bi-heart-fill"></i></button>
+                    
+                    <!-- Specific images for user-requested products -->
+                    <img src="/images/daily-elixir.jpg" alt="Daily Elixir" class="ed-product-img">
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    <!-- Fallback -->
+                    
+                </div>
+                <div class="ed-product-info">
+                    <h2 class="ed-product-name">Daily Elixir</h2>
+                    <p class="ed-product-desc">A gentle antioxidant-rich blend for everyday balance and vitality.</p>
+                    <div class="ed-product-price-row">
+                        <span class="ed-price">₹42.00</span>
+                        <span class="ed-price-old">₹342</span>
+                    </div>
+                    <form onsubmit="addShopCartAjax(event, this)" style="margin-top:auto;">
+                        <input type="hidden" name="productId" value="1">
+                        <input type="hidden" name="quantity" value="1">
+                        <button type="submit" class="ed-add-cart-btn" onclick="event.stopPropagation();">
+                            Add to Ritual <i class="bi bi-arrow-right"></i>
+                        </button>
+                    </form>
+                </div>
+            </a>
+        </article>
+
+
+        <article class="ed-product-card product-item" data-id="2">
+            <a href="/shop/product/2" style="text-decoration:none;display:flex;flex-direction:column;flex:1;height:100%;">
+                <div class="ed-product-img-wrap">
+                    <div style="position:absolute; top:12px; left:12px; background: #C9954A; color: #fff; font-family: 'Inter', sans-serif; font-size: 0.65rem; font-weight: 600; padding: 4px 10px; border-radius: 4px; letter-spacing: 1px; text-transform: uppercase; z-index: 2;">Top Rated</div>
+                    
+                    <button type="button" class="ed-wishlist-btn prod-save-btn" data-pid="2" onclick="toggleSave(this,event)" title="Save blend"><i class="bi bi-heart-fill"></i></button>
+                    
+                    <!-- Specific images for user-requested products -->
+                    
+                    
+                    
+                    <img src="/images/lunar-calm.jpg" alt="Lunar Calm" class="ed-product-img">
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    <!-- Fallback -->
+                    
+                </div>
+                <div class="ed-product-info">
+                    <h2 class="ed-product-name">Lunar Calm</h2>
+                    <p class="ed-product-desc">A soft floral lullaby to quiet the mind and ease you into restful sleep.</p>
+                    <div class="ed-product-price-row">
+                        <span class="ed-price">₹48.00</span>
+                        <span class="ed-price-old">₹348</span>
+                    </div>
+                    <form onsubmit="addShopCartAjax(event, this)" style="margin-top:auto;">
+                        <input type="hidden" name="productId" value="2">
+                        <input type="hidden" name="quantity" value="1">
+                        <button type="submit" class="ed-add-cart-btn" onclick="event.stopPropagation();">
+                            Add to Ritual <i class="bi bi-arrow-right"></i>
+                        </button>
+                    </form>
+                </div>
+            </a>
+        </article>
+
+
+        <article class="ed-product-card product-item" data-id="3">
+            <a href="/shop/product/3" style="text-decoration:none;display:flex;flex-direction:column;flex:1;height:100%;">
+                <div class="ed-product-img-wrap">
+                    
+                    
+                    <button type="button" class="ed-wishlist-btn prod-save-btn" data-pid="3" onclick="toggleSave(this,event)" title="Save blend"><i class="bi bi-heart-fill"></i></button>
+                    
+                    <!-- Specific images for user-requested products -->
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    <img src="/images/skin-nectar.jpg" alt="Skin Nectar" class="ed-product-img">
+                    
+                    
+                    
+                    <!-- Fallback -->
+                    
+                </div>
+                <div class="ed-product-info">
+                    <h2 class="ed-product-name">Skin Nectar</h2>
+                    <p class="ed-product-desc">A radiant infusion designed to support clear, glowing skin from within.</p>
+                    <div class="ed-product-price-row">
+                        <span class="ed-price">₹44.00</span>
+                        <span class="ed-price-old">₹344</span>
+                    </div>
+                    <form onsubmit="addShopCartAjax(event, this)" style="margin-top:auto;">
+                        <input type="hidden" name="productId" value="3">
+                        <input type="hidden" name="quantity" value="1">
+                        <button type="submit" class="ed-add-cart-btn" onclick="event.stopPropagation();">
+                            Add to Ritual <i class="bi bi-arrow-right"></i>
+                        </button>
+                    </form>
+                </div>
+            </a>
+        </article>
+
+
+        <article class="ed-product-card product-item" data-id="4">
+            <a href="/shop/product/4" style="text-decoration:none;display:flex;flex-direction:column;flex:1;height:100%;">
+                <div class="ed-product-img-wrap">
+                    
+                    
+                    <button type="button" class="ed-wishlist-btn prod-save-btn" data-pid="4" onclick="toggleSave(this,event)" title="Save blend"><i class="bi bi-heart-fill"></i></button>
+                    
+                    <!-- Specific images for user-requested products -->
+                    
+                    
+                    
+                    
+                    <img src="/images/metabolic-spark.jpg" alt="Metabolic Spark" class="ed-product-img">
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    <!-- Fallback -->
+                    
+                </div>
+                <div class="ed-product-info">
+                    <h2 class="ed-product-name">Metabolic Spark</h2>
+                    <p class="ed-product-desc">A warming botanical blend to awaken digestion and energise the body.</p>
+                    <div class="ed-product-price-row">
+                        <span class="ed-price">₹46.00</span>
+                        <span class="ed-price-old">₹346</span>
+                    </div>
+                    <form onsubmit="addShopCartAjax(event, this)" style="margin-top:auto;">
+                        <input type="hidden" name="productId" value="4">
+                        <input type="hidden" name="quantity" value="1">
+                        <button type="submit" class="ed-add-cart-btn" onclick="event.stopPropagation();">
+                            Add to Ritual <i class="bi bi-arrow-right"></i>
+                        </button>
+                    </form>
+                </div>
+            </a>
+        </article>
+
+
+        <article class="ed-product-card product-item" data-id="5">
+            <a href="/shop/product/5" style="text-decoration:none;display:flex;flex-direction:column;flex:1;height:100%;">
+                <div class="ed-product-img-wrap">
+                    
+                    <div style="position:absolute; top:12px; left:12px; background: #2A2118; color: #FAF8F3; font-family: 'Inter', sans-serif; font-size: 0.65rem; font-weight: 600; padding: 4px 10px; border-radius: 4px; letter-spacing: 1px; text-transform: uppercase; z-index: 2;">Bestseller</div>
+                    <button type="button" class="ed-wishlist-btn prod-save-btn" data-pid="5" onclick="toggleSave(this,event)" title="Save blend"><i class="bi bi-heart-fill"></i></button>
+                    
+                    <!-- Specific images for user-requested products -->
+                    
+                    
+                    
+                    
+                    
+                    
+                    <img src="/images/flora-shield.jpg" alt="Flora-Shield" class="ed-product-img">
+                    
+                    
+                    
+                    
+                    
+                    <!-- Fallback -->
+                    
+                </div>
+                <div class="ed-product-info">
+                    <h2 class="ed-product-name">Flora-Shield</h2>
+                    <p class="ed-product-desc">Daily protection through nature’s finest immune defenders.</p>
+                    <div class="ed-product-price-row">
+                        <span class="ed-price">₹50.00</span>
+                        <span class="ed-price-old">₹350</span>
+                    </div>
+                    <form onsubmit="addShopCartAjax(event, this)" style="margin-top:auto;">
+                        <input type="hidden" name="productId" value="5">
+                        <input type="hidden" name="quantity" value="1">
+                        <button type="submit" class="ed-add-cart-btn" onclick="event.stopPropagation();">
+                            Add to Ritual <i class="bi bi-arrow-right"></i>
+                        </button>
+                    </form>
+                </div>
+            </a>
+        </article>
+
+
+        <article class="ed-product-card product-item" data-id="6">
+            <a href="/shop/product/6" style="text-decoration:none;display:flex;flex-direction:column;flex:1;height:100%;">
+                <div class="ed-product-img-wrap">
+                    
+                    
+                    <button type="button" class="ed-wishlist-btn prod-save-btn" data-pid="6" onclick="toggleSave(this,event)" title="Save blend"><i class="bi bi-heart-fill"></i></button>
+                    
+                    <!-- Specific images for user-requested products -->
+                    
+                    <img src="/images/iron-glow.jpg" alt="Iron &amp; Glow" class="ed-product-img">
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    <!-- Fallback -->
+                    
+                </div>
+                <div class="ed-product-info">
+                    <h2 class="ed-product-name">Iron &amp; Glow</h2>
+                    <p class="ed-product-desc">A potent botanical blend of hibiscus, amla &amp; turmeric that nourishes from within — reviving your natural radiance with each sip.</p>
+                    <div class="ed-product-price-row">
+                        <span class="ed-price">₹799.00</span>
+                        <span class="ed-price-old">₹1099</span>
+                    </div>
+                    <form onsubmit="addShopCartAjax(event, this)" style="margin-top:auto;">
+                        <input type="hidden" name="productId" value="6">
+                        <input type="hidden" name="quantity" value="1">
+                        <button type="submit" class="ed-add-cart-btn" onclick="event.stopPropagation();">
+                            Add to Ritual <i class="bi bi-arrow-right"></i>
+                        </button>
+                    </form>
+                </div>
+            </a>
+        </article>
+
+
+        <article class="ed-product-card product-item" data-id="7">
+            <a href="/shop/product/7" style="text-decoration:none;display:flex;flex-direction:column;flex:1;height:100%;">
+                <div class="ed-product-img-wrap">
+                    
+                    
+                    <button type="button" class="ed-wishlist-btn prod-save-btn" data-pid="7" onclick="toggleSave(this,event)" title="Save blend"><i class="bi bi-heart-fill"></i></button>
+                    
+                    <!-- Specific images for user-requested products -->
+                    
+                    
+                    <img src="/images/masculine-vitality.jpg" alt="Masculine Vitality" class="ed-product-img">
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    <!-- Fallback -->
+                    
+                </div>
+                <div class="ed-product-info">
+                    <h2 class="ed-product-name">Masculine Vitality</h2>
+                    <p class="ed-product-desc">A bold blend of ashwagandha, shilajit &amp; black pepper designed to restore energy, balance hormones and fuel natural strength.</p>
+                    <div class="ed-product-price-row">
+                        <span class="ed-price">₹899.00</span>
+                        <span class="ed-price-old">₹1199</span>
+                    </div>
+                    <form onsubmit="addShopCartAjax(event, this)" style="margin-top:auto;">
+                        <input type="hidden" name="productId" value="7">
+                        <input type="hidden" name="quantity" value="1">
+                        <button type="submit" class="ed-add-cart-btn" onclick="event.stopPropagation();">
+                            Add to Ritual <i class="bi bi-arrow-right"></i>
+                        </button>
+                    </form>
+                </div>
+            </a>
+        </article>
+
+
+        <article class="ed-product-card product-item" data-id="8">
+            <a href="/shop/product/8" style="text-decoration:none;display:flex;flex-direction:column;flex:1;height:100%;">
+                <div class="ed-product-img-wrap">
+                    
+                    
+                    <button type="button" class="ed-wishlist-btn prod-save-btn" data-pid="8" onclick="toggleSave(this,event)" title="Save blend"><i class="bi bi-heart-fill"></i></button>
+                    
+                    <!-- Specific images for user-requested products -->
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    <img src="/images/mind-garden.jpg" alt="Mind Garden" class="ed-product-img">
+                    
+                    
+                    
+                    
+                    <!-- Fallback -->
+                    
+                </div>
+                <div class="ed-product-info">
+                    <h2 class="ed-product-name">Mind Garden</h2>
+                    <p class="ed-product-desc">A serene blend of brahmi, lion&#39;s mane &amp; passionflower to cultivate clarity, memory and a calm focused mind.</p>
+                    <div class="ed-product-price-row">
+                        <span class="ed-price">₹749.00</span>
+                        <span class="ed-price-old">₹1049</span>
+                    </div>
+                    <form onsubmit="addShopCartAjax(event, this)" style="margin-top:auto;">
+                        <input type="hidden" name="productId" value="8">
+                        <input type="hidden" name="quantity" value="1">
+                        <button type="submit" class="ed-add-cart-btn" onclick="event.stopPropagation();">
+                            Add to Ritual <i class="bi bi-arrow-right"></i>
+                        </button>
+                    </form>
+                </div>
+            </a>
+        </article>
+
+
+        <article class="ed-product-card product-item" data-id="9">
+            <a href="/shop/product/9" style="text-decoration:none;display:flex;flex-direction:column;flex:1;height:100%;">
+                <div class="ed-product-img-wrap">
+                    
+                    
+                    <button type="button" class="ed-wishlist-btn prod-save-btn" data-pid="9" onclick="toggleSave(this,event)" title="Save blend"><i class="bi bi-heart-fill"></i></button>
+                    
+                    <!-- Specific images for user-requested products -->
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    <img src="/images/warmth-ritual.jpg" alt="Warmth Ritual" class="ed-product-img">
+                    
+                    
+                    <!-- Fallback -->
+                    
+                </div>
+                <div class="ed-product-info">
+                    <h2 class="ed-product-name">Warmth Ritual</h2>
+                    <p class="ed-product-desc">A warming blend of cinnamon, saffron &amp; valerian root that wraps around your nervous system like a cashmere blanket.</p>
+                    <div class="ed-product-price-row">
+                        <span class="ed-price">₹849.00</span>
+                        <span class="ed-price-old">₹1149</span>
+                    </div>
+                    <form onsubmit="addShopCartAjax(event, this)" style="margin-top:auto;">
+                        <input type="hidden" name="productId" value="9">
+                        <input type="hidden" name="quantity" value="1">
+                        <button type="submit" class="ed-add-cart-btn" onclick="event.stopPropagation();">
+                            Add to Ritual <i class="bi bi-arrow-right"></i>
+                        </button>
+                    </form>
+                </div>
+            </a>
+        </article>
+
+
+        <article class="ed-product-card product-item" data-id="10">
+            <a href="/shop/product/10" style="text-decoration:none;display:flex;flex-direction:column;flex:1;height:100%;">
+                <div class="ed-product-img-wrap">
+                    
+                    
+                    <button type="button" class="ed-wishlist-btn prod-save-btn" data-pid="10" onclick="toggleSave(this,event)" title="Save blend"><i class="bi bi-heart-fill"></i></button>
+                    
+                    <!-- Specific images for user-requested products -->
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    <img src="/images/morning-after.jpg" alt="Morning After" class="ed-product-img">
+                    
+                    <!-- Fallback -->
+                    
+                </div>
+                <div class="ed-product-info">
+                    <h2 class="ed-product-name">Morning After</h2>
+                    <p class="ed-product-desc">A recovery blend of ginger, activated charcoal &amp; milk thistle designed to detox, restore and rehydrate after indulgence.</p>
+                    <div class="ed-product-price-row">
+                        <span class="ed-price">₹699.00</span>
+                        <span class="ed-price-old">₹999</span>
+                    </div>
+                    <form onsubmit="addShopCartAjax(event, this)" style="margin-top:auto;">
+                        <input type="hidden" name="productId" value="10">
+                        <input type="hidden" name="quantity" value="1">
+                        <button type="submit" class="ed-add-cart-btn" onclick="event.stopPropagation();">
+                            Add to Ritual <i class="bi bi-arrow-right"></i>
+                        </button>
+                    </form>
+                </div>
+            </a>
+        </article>
+
+
+        <article class="ed-product-card product-item" data-id="11">
+            <a href="/shop/product/11" style="text-decoration:none;display:flex;flex-direction:column;flex:1;height:100%;">
+                <div class="ed-product-img-wrap">
+                    
+                    
+                    <button type="button" class="ed-wishlist-btn prod-save-btn" data-pid="11" onclick="toggleSave(this,event)" title="Save blend"><i class="bi bi-heart-fill"></i></button>
+                    
+                    <!-- Specific images for user-requested products -->
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    <!-- Fallback -->
+                    <img src="/images/placeholder.png" 
+                         alt="sgs" class="ed-product-img" onerror="this.src='/images/botanical-jar-1.png'">
+                </div>
+                <div class="ed-product-info">
+                    <h2 class="ed-product-name">sgs</h2>
+                    <p class="ed-product-desc">cfwfer</p>
+                    <div class="ed-product-price-row">
+                        <span class="ed-price">₹23.00</span>
+                        <span class="ed-price-old">₹323</span>
+                    </div>
+                    <form onsubmit="addShopCartAjax(event, this)" style="margin-top:auto;">
+                        <input type="hidden" name="productId" value="11">
+                        <input type="hidden" name="quantity" value="1">
+                        <button type="submit" class="ed-add-cart-btn" onclick="event.stopPropagation();">
+                            Add to Ritual <i class="bi bi-arrow-right"></i>
+                        </button>
+                    </form>
+                </div>
+            </a>
+        </article>
+
+        
+    </div>
+    
+    <!-- FLOATING BOTTOM BAR -->
+    <div class="ed-floating-bar">
+        <div class="ed-floating-count">Showing 11 exquisite blends</div>
+        
+        <!-- Mobile Filter Toggle -->
+        <button type="button" class="d-md-none" onclick="openShopFilter()" style="background:transparent; border:1px solid rgba(201, 160, 112, 0.4); color:#C9A070; padding:6px 16px; border-radius:20px; font-size:0.75rem; font-weight:600; letter-spacing:1px; text-transform:uppercase;">
+            <i class="bi bi-sliders" style="margin-right:6px;"></i> Filters
+        </button>
+
+        <div class="ed-floating-sort">
+            <span>Sort By</span>
+            <select class="ed-sort-select" onchange="if(this.value) window.location.href=this.value;">
+                <option value="/shop?category=&amp;query=" selected="selected">Curated Match</option>
+                <option value="/shop?category=&amp;query=&amp;sort=price_asc">Price: Low to High</option>
+                <option value="/shop?category=&amp;query=&amp;sort=price_desc">Price: High to Low</option>
+            </select>
+        </div>
+    </div>
+</div>
+
+<!-- ==================== FOOTER ==================== -->
+<footer class="shop-footer">
+    <div class="shop-footer-inner">
+        <div class="shop-footer-brand"><p class="shop-footer-name">THEORY <em>of</em> BLOOM</p><p class="shop-footer-tag">Crafted by Nature. Perfected by Science.</p></div>
+        <div class="shop-footer-links">
+            <a href="/shop">All Blends</a>
+            
+                
+                    
+                
+                    <a href="/shop?category=Sleep%20%26%20Calm">Sleep &amp; Calm</a>
+                
+                    <a href="/shop?category=Skin%20%26%20Glow">Skin &amp; Glow</a>
+                
+                    <a href="/shop?category=Focus%20%26%20Clarity">Focus &amp; Clarity</a>
+                
+                    <a href="/shop?category=Immunity">Immunity</a>
+                
+                    <a href="/shop?category=Masculine">Masculine</a>
+                
+                    <a href="/shop?category=Morning">Morning</a>
+                
+            
+        </div>
+        <p class="shop-footer-copy">© 2026 Theory of Bloom. All rights reserved.</p>
+    </div>
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="/js/header.js?v=5.0"></script>
+
+<!-- SIGN-OUT CONFIRMATION MODAL -->
+<div id="signoutOverlay" style="display:none;position:fixed;inset:0;background:rgba(42,33,24,0.55);backdrop-filter:blur(3px);z-index:9999;align-items:center;justify-content:center;">
+  <div style="background-color:#FAF8F4;background-image:linear-gradient(160deg,#FEFDF9 0%,#F5F1E8 100%);border:1px solid rgba(180,160,120,0.25);border-radius:4px;padding:2.5rem;max-width:400px;width:90%;text-align:center;box-shadow:0 20px 60px rgba(42,33,24,0.2);">
+    <div style="font-size:2rem;color:#4A6B5D;margin-bottom:1rem;"><i class="bi bi-box-arrow-right"></i></div>
+    <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.7rem;font-weight:400;color:#2A2118;margin-bottom:0.5rem;">Sign <em style="font-style:italic;color:#3D5C41;">Out?</em></h3>
+    <p style="font-size:0.82rem;color:#5C4D3C;margin-bottom:1.8rem;line-height:1.6;">Are you sure you want to sign out?</p>
+    <div style="display:flex;gap:0.8rem;justify-content:center;flex-wrap:wrap;">
+      <button onclick="closeSignoutModal()" style="font-family:'Inter',sans-serif;font-size:0.75rem;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;color:#5C4D3C;background:transparent;border:1px solid rgba(107,140,111,0.18);border-radius:3px;padding:11px 24px;cursor:pointer;">Stay Signed In</button>
+      <a href="/logout" style="font-family:'Inter',sans-serif;font-size:0.75rem;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:#fff;background:#7a2020;border:1px solid #7a2020;border-radius:3px;padding:11px 24px;text-decoration:none;display:inline-block;">Yes, Sign Out</a>
+    </div>
+  </div>
+</div>
+<script>
+/* ── Mobile filter drawer ── */
+function openShopFilter() {
+    document.getElementById('shopFilterBackdrop').classList.add('open');
+    document.getElementById('shopFilterDrawer').classList.add('open');
+    document.body.style.overflow='hidden';
+}
+function closeShopFilter() {
+    document.getElementById('shopFilterBackdrop').classList.remove('open');
+    document.getElementById('shopFilterDrawer').classList.remove('open');
+    document.body.style.overflow='';
+}
+/* ── Heart / Save toggle ── */
+function toggleSave(btn, e) {
+    e.preventDefault(); e.stopPropagation();
+    if (document.querySelector('.tob-action-item a[href*="/login"]')) {
+        window.location.href = '/login';
+        return;
+    }
+    const pid = String(btn.dataset.pid);
+    let saved = JSON.parse(localStorage.getItem('tob_saved') || '[]');
+    if (saved.includes(pid)) {
+        saved = saved.filter(x => x !== pid);
+        btn.classList.remove('saved');
+        btn.innerHTML = '<i class="bi bi-heart"></i>';
+    } else {
+        saved.push(pid);
+        btn.classList.add('saved');
+        btn.innerHTML = '<i class="bi bi-heart-fill"></i>';
+    }
+    localStorage.setItem('tob_saved', JSON.stringify(saved));
+}
+/* init saved state on load */
+document.addEventListener('DOMContentLoaded', function() {
+    const saved = JSON.parse(localStorage.getItem('tob_saved') || '[]');
+    document.querySelectorAll('.prod-save-btn').forEach(btn => {
+        if (saved.includes(String(btn.dataset.pid))) {
+            btn.classList.add('saved');
+            btn.innerHTML = '<i class="bi bi-heart-fill"></i>';
+        }
+    });
+});
+/* ── ADD TO CART AJAX ── */
+function addShopCartAjax(e, form) {
+    e.preventDefault();
+    if (document.querySelector('.tob-action-item a[href*="/login"]')) {
+        window.location.href = '/login';
+        return;
+    }
+    const btn = form.querySelector('button');
+    if (btn.disabled) return;
+    btn.disabled = true;
+    const oldHtml = btn.innerHTML;
+    btn.innerHTML = '…';
+    
+    const pid = form.querySelector('[name=productId]').value;
+    fetch('/cart/add/ajax', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded',
+                   'X-Requested-With': 'XMLHttpRequest' },
+        body: 'productId=' + encodeURIComponent(pid) + '&quantity=1'
+    })
+    .then(r => r.json())
+    .then(data => {
+        btn.innerHTML = '<i class="bi bi-check2"></i>';
+        setTimeout(() => { btn.innerHTML = oldHtml; btn.disabled = false; }, 1500);
+        showShopToast('Added to cart ✓');
+        
+        // Update cart count if exists
+        const cartCount = document.querySelector('.tob-cart-count');
+        if (cartCount && data.cartCount) cartCount.textContent = data.cartCount;
+    })
+    .catch(() => {
+        btn.innerHTML = '<i class="bi bi-check2"></i>';
+        setTimeout(() => { btn.innerHTML = oldHtml; btn.disabled = false; }, 1500);
+        showShopToast('Added to cart ✓');
+    });
+}
+function showShopToast(msg) {
+    let m = document.getElementById('cartPopupModal');
+    if (!m) {
+        m = document.createElement('div');
+        m.id = 'cartPopupModal';
+        m.style.cssText = 'position:fixed;inset:0;background:rgba(42,33,24,0.55);backdrop-filter:blur(3px);z-index:99999;display:none;align-items:center;justify-content:center;opacity:0;transition:opacity 0.3s ease;';
+        m.innerHTML = '<div style="background-color:#FAF8F4;background-image:linear-gradient(160deg,#FEFDF9 0%,#F5F1E8 100%);padding:2.5rem;border-radius:4px;border:1px solid rgba(180,160,120,0.25);text-align:center;max-width:400px;width:90%;box-shadow:0 20px 60px rgba(42,33,24,0.2);transform:translateY(20px);transition:transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);">' +
+                '<div style="font-size:2.2rem;color:#4A6B5D;margin-bottom:1rem;"><i class="bi bi-bag-check"></i></div>' +
+                '<h3 style="font-family:\'Cormorant Garamond\',serif;font-size:1.7rem;color:#2A2118;margin-bottom:0.5rem;font-weight:400;">Added to <em style="font-style:italic;color:#3D5C41;">Ritual</em></h3>' +
+                '<p style="font-family:\'Inter\',sans-serif;font-size:0.82rem;color:#5C4D3C;line-height:1.6;margin-bottom:1.8rem;">' + (msg === 'Added to cart ✓' ? 'Your botanical selection has been successfully added to your cart.' : msg) + '</p>' +
+                '<div style="display:flex;gap:0.8rem;justify-content:center;flex-wrap:wrap;">' +
+                    '<button onclick="document.getElementById(\'cartPopupModal\').style.opacity=\'0\';document.getElementById(\'cartPopupModal\').querySelector(\'div\').style.transform=\'translateY(20px)\';setTimeout(()=>document.getElementById(\'cartPopupModal\').style.display=\'none\',300);" style="font-family:\'Inter\',sans-serif;font-size:0.75rem;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;color:#5C4D3C;background:transparent;border:1px solid rgba(107,140,111,0.18);border-radius:3px;padding:11px 24px;cursor:pointer;">Continue</button>' +
+                    '<a href="/cart" style="font-family:\'Inter\',sans-serif;font-size:0.75rem;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:#fff;background:#4A6B5D;border:1px solid #4A6B5D;border-radius:3px;padding:11px 24px;text-decoration:none;display:inline-block;">View Cart</a>' +
+                '</div>' +
+            '</div>';
+        document.body.appendChild(m);
+    }
+    m.style.display = 'flex';
+    void m.offsetWidth;
+    m.style.opacity = '1';
+    m.querySelector('div').style.transform = 'translateY(0)';
+}
+
+const nav = document.getElementById('tobHeader');
+window.addEventListener('scroll', () => { if(nav) nav.classList.toggle('scrolled', window.scrollY > 40); }, {passive:true});
+
+/* ── BACK TO TOP BUTTON ── */
+const btt = document.getElementById('backToTopBtn');
+if (btt) {
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 400) {
+            btt.classList.add('show');
+        } else {
+            btt.classList.remove('show');
+        }
+    }, {passive:true});
+    btt.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+}
+</script>
+
+<!-- BACK TO TOP BUTTON -->
+<button id="backToTopBtn" class="back-to-top" aria-label="Back to top" title="Back to top">
+  <i class="bi bi-arrow-up"></i>
+</button>
+
+<style>
+.back-to-top {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  width: 44px;
+  height: 44px;
+  background-color: #4A6B5D;
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  box-shadow: 0 4px 15px rgba(74, 107, 93, 0.4);
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(20px);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 1050;
+}
+.back-to-top.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+.back-to-top:hover {
+  background-color: #3D5C41;
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(61, 92, 65, 0.5);
+}
+@media (max-width: 768px) {
+  .back-to-top {
+    bottom: 20px;
+    right: 20px;
+    width: 40px;
+    height: 40px;
+    font-size: 1.1rem;
+  }
+}
+</style>
+
+<script>
+/* ── Dynamic Filter Fetch ── */
+function applyDynamicFilter(e, el, category) {
+    e.preventDefault();
+    document.querySelectorAll('.ed-chip').forEach(c => c.classList.remove('active'));
+    el.classList.add('active');
+    
+    const grid = document.querySelector('.ed-asym-grid');
+    if (grid) grid.style.opacity = '0.5';
+    
+    const url = (category === 'All Blends') ? '/api/products' : '/api/products?filter=' + encodeURIComponent(category);
+    
+    fetch(url)
+        .then(res => res.json())
+        .then(products => {
+            if(grid) grid.style.opacity = '1';
+            const event = new CustomEvent('tob:filter', {
+                detail: { filter: category, products: products }
+            });
+            document.dispatchEvent(event);
+            
+            const countLabel = document.querySelector('.ed-floating-count');
+            if (countLabel) countLabel.textContent = 'Showing ' + products.length + ' exquisite blends';
+            
+            const newUrl = category === 'All Blends' ? '/shop' : '/shop?category=' + encodeURIComponent(category);
+            window.history.pushState({path: newUrl}, '', newUrl);
+        })
+        .catch(err => {
+            console.error("Dynamic filter error", err);
+            window.location.href = el.href;
+        });
+}
+
+/* ── Filter movement like header ── */
+(function() {
+    const filterWrap = document.querySelector('.ed-filter-wrapper');
+    if (!filterWrap) return;
+    let lastY = window.scrollY;
+    let ticking = false;
+    window.addEventListener('scroll', function() {
+        if (!ticking) {
+            window.requestAnimationFrame(function() {
+                const currentY = window.scrollY;
+                if (currentY > 80) {
+                    if (currentY > lastY) {
+                        filterWrap.classList.add('filter-hidden');
+                    } else {
+                        filterWrap.classList.remove('filter-hidden');
+                    }
+                } else {
+                    filterWrap.classList.remove('filter-hidden');
+                }
+                lastY = currentY;
+                ticking = false;
+            });
+            ticking = true;
+        }
+    }, { passive: true });
+})();
+
+/* ── Dynamic Grid Update on tob:filter event ── */
+document.addEventListener('tob:filter', function(e) {
+    const filterLabel = e.detail.filter;
+    const products = e.detail.products;
+    
+    // Update active class on desktop sidebar
+    document.querySelectorAll('.filter-sidebar .filter-link').forEach(link => {
+        link.classList.remove('active');
+        const text = link.textContent.trim().replace('Saved Blends', '').replace('My Account', '').trim();
+        if (text === filterLabel || (filterLabel === 'All Blends' && text === 'All Blends')) {
+            link.classList.add('active');
+        }
+    });
+
+    // Update mobile filter bar label
+    const mobLabel = document.querySelector('.mob-active-cat');
+    if (mobLabel) mobLabel.textContent = filterLabel || 'All Blends';
+
+    const grid = document.querySelector('.ed-asym-grid');
+    if (!grid) return;
+    
+    grid.innerHTML = ''; // clear grid
+    
+    if (!products || products.length === 0) {
+        grid.innerHTML = '<div style="grid-column: 1 / -1; padding: 80px 20px; text-align: center; color: #7A6051; background: #FFFFFF; border-radius: 20px;"><p style="font-family: \'Cormorant Garamond\', serif; font-size:1.8rem; margin-bottom:16px; color: #0A192F;">No blends discovered.</p><p style="font-size:0.95rem; margin-bottom: 24px;">Please adjust your botanical filters.</p><a href="/shop" style="color:#C9A070; font-weight:600; text-decoration:none; text-transform: uppercase; letter-spacing: 1px;">Clear Filters</a></div>';
+        return;
+    }
+    
+    const saved = JSON.parse(localStorage.getItem('tob_saved') || '[]');
+
+    function getProductImage(p, i) {
+        const nameMap = {
+            'Daily Elixir': '/images/daily-elixir.jpg',
+            'Iron & Glow': '/images/iron-glow.jpg',
+            'Iron &amp; Glow': '/images/iron-glow.jpg',
+            'Masculine Vitality': '/images/masculine-vitality.jpg',
+            'Lunar Calm': '/images/lunar-calm.jpg',
+            'Metabolic Spark': '/images/metabolic-spark.jpg',
+            'Flora-Shield': '/images/flora-shield.jpg',
+            'Flora Shield': '/images/flora-shield.jpg',
+            'FLORA-SHIELD': '/images/flora-shield.jpg',
+            'Mind Garden': '/images/mind-garden.jpg',
+            'MIND GARDEN': '/images/mind-garden.jpg',
+            'Skin Nectar': '/images/skin-nectar.jpg',
+            'SKIN NECTAR': '/images/skin-nectar.jpg',
+            'Warmth Ritual': '/images/warmth-ritual.jpg',
+            'WARMTH RITUAL': '/images/warmth-ritual.jpg',
+            'Morning After': '/images/morning-after.jpg',
+            'MORNING AFTER': '/images/morning-after.jpg'
+        };
+        if (nameMap[p.name]) return nameMap[p.name];
+        if (p.imageUrl) return p.imageUrl;
+        return '/images/botanical-jar-' + ((i % 5) + 1) + '.png';
+    }
+
+    products.forEach((p, index) => {
+        const isSaved = saved.includes(String(p.id));
+        const heartClass = isSaved ? 'bi-heart-fill' : 'bi-heart';
+        const btnClass = isSaved ? 'ed-wishlist-btn prod-save-btn saved' : 'ed-wishlist-btn prod-save-btn';
+        const imgUrl = getProductImage(p, index);
+        const price = p.price || 0;
+        
+        const article = document.createElement('article');
+        article.className = 'ed-product-card product-item';
+        article.setAttribute('data-id', p.id);
+        article.innerHTML = `
+            <a href="/shop/product/${p.id}" style="text-decoration:none;display:flex;flex-direction:column;flex:1;height:100%;">
+                <div class="ed-product-img-wrap">
+                    <button type="button" class="${btnClass}" data-pid="${p.id}" onclick="toggleSave(this,event)" title="Save blend"><i class="bi ${heartClass}"></i></button>
+                    <img src="${imgUrl}" alt="${p.name}" class="ed-product-img" onerror="this.src='/images/botanical-jar-1.png'">
+                </div>
+                <div class="ed-product-info">
+                    <h2 class="ed-product-name">${p.name}</h2>
+                    <p class="ed-product-desc">${p.shortDescription || 'A premium botanical wellness blend crafted by nature.'}</p>
+                    <div class="ed-product-price-row">
+                        <span class="ed-price">₹${price}</span>
+                        <span class="ed-price-old">₹${price + 300}</span>
+                    </div>
+                    <form onsubmit="addShopCartAjax(event, this)" style="margin-top:auto;">
+                        <input type="hidden" name="productId" value="${p.id}">
+                        <input type="hidden" name="quantity" value="1">
+                        <button type="submit" class="ed-add-cart-btn" onclick="event.stopPropagation();">
+                            Add to Ritual <i class="bi bi-arrow-right"></i>
+                        </button>
+                    </form>
+                </div>
+            </a>
+        `;
+        grid.appendChild(article);
+    });
+});
+</script>
+</body>
+</html>
+
+
+
+
+
+

@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Daily Elixir | Theory of Bloom</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" th:href="@{/css/header.css}">
+  <style>
+    :root {
+      --bg-texture: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='512' height='512'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' seed='5' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='512' height='512' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
+      --cream: #F9F8F6;
+      --text-dark: #2A2621;
+      --text-light: #6A6258;
+      --border-light: rgba(42, 38, 33, 0.12);
+      --font-serif: 'Cormorant Garamond', serif;
+      --font-sans: 'Inter', sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--cream);
+      background-image: var(--bg-texture);
+      color: var(--text-dark);
+      font-family: var(--font-serif);
+      -webkit-font-smoothing: antialiased;
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 3rem 44px 5rem; /* Matches header 44px padding, adds top margin */
+      min-height: 100vh;
+    }
+
+    .back-to-shop {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-sans);
+      font-size: 0.75rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: #F8F6F2;
+      background-color: #2D2A27;
+      padding: 10px 20px;
+      border-radius: 3px;
+      text-decoration: none;
+      margin-bottom: 2rem;
+      transition: background-color 0.3s, transform 0.3s, box-shadow 0.3s;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    }
+    .back-to-shop:hover {
+      background-color: #111;
+      color: #fff;
+      transform: translateX(-4px);
+      box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+    }
+
+    /* Desktop Layout */
+    .product-top {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5rem;
+      margin-bottom: 5rem;
+    }
+
+    .product-img-col {
+      flex: 1;
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .product-info-col {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      text-align: left;
+      padding-right: 2rem;
+    }
+
+    .page-title {
+      font-size: 3.5rem;
+      font-weight: 400;
+      letter-spacing: 1px;
+      margin-bottom: 0.5rem;
+      color: #33312E;
+    }
+
+    .product-hero-image {
+      max-width: 100%;
+      height: auto;
+      filter: drop-shadow(0 20px 30px rgba(0, 0, 0, 0.08));
+    }
+
+    .subtitle {
+      font-size: 1.3rem;
+      color: #4A4642;
+      margin-bottom: 1.5rem;
+      font-style: italic;
+    }
+
+    .price {
+      font-size: 1.5rem;
+      font-weight: 500;
+      color: #55514C;
+      margin-bottom: 2rem;
+      font-family: var(--font-sans);
+    }
+
+    .add-to-ritual-btn {
+      display: inline-block;
+      background-color: #2D2A27;
+      color: #F8F6F2;
+      font-family: var(--font-sans);
+      text-transform: uppercase;
+      font-size: 0.85rem;
+      letter-spacing: 2px;
+      padding: 16px 50px;
+      border: none;
+      border-radius: 2px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background-color 0.3s;
+      margin-bottom: 3rem;
+    }
+
+    .add-to-ritual-btn:hover {
+      background-color: #111;
+    }
+
+    .features-row {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      gap: 1.5rem;
+      font-family: var(--font-sans);
+      font-size: 0.8rem;
+      color: var(--text-light);
+    }
+
+    .feature-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .feature-item svg {
+      width: 18px;
+      height: 18px;
+      stroke: #5A5652;
+    }
+
+    .sep {
+      width: 1px;
+      height: 18px;
+      background: var(--border-light);
+    }
+
+    /* Bottom Sections */
+    .bottom-section {
+      text-align: center;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .divider {
+      height: 1px;
+      background-color: var(--border-light);
+      width: 100%;
+      margin: 0 auto 4rem;
+    }
+
+    .section-icon {
+      font-size: 2rem;
+      color: #A4A09B;
+      margin-bottom: 0.5rem;
+      line-height: 1;
+    }
+
+    /* ── CHAPTER EDITORIAL BLOCK ── */
+    .chapter-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.4rem, 5vw, 3.6rem);
+      font-weight: 400;
+      letter-spacing: 0.5px;
+      line-height: 1.2;
+      color: #1A1208;
+      margin-bottom: 1rem;
+    }
+
+    .chapter-desc {
+      font-family: 'Inter', sans-serif;
+      font-size: clamp(0.95rem, 2vw, 1.05rem);
+      font-weight: 400;
+      color: #5A5652;
+      max-width: 600px;
+      margin: 0 auto 2.8rem;
+      line-height: 1.6;
+      letter-spacing: 0.3px;
+    }
+
+    .outline-btn {
+      display: inline-block;
+      border: 1px solid var(--border-light);
+      background: transparent;
+      color: var(--text-dark);
+      font-family: var(--font-sans);
+      font-size: 0.85rem;
+      padding: 10px 30px;
+      cursor: pointer;
+      margin-bottom: 4rem;
+      transition: all 0.3s;
+    }
+
+    .outline-btn:hover {
+      background: rgba(0, 0, 0, 0.03);
+      border-color: #5A5652;
+    }
+
+    .ingredients-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+      margin-top: 3rem;
+      text-align: center;
+    }
+
+    .ingredient-col img {
+      max-width: 140px;
+      margin-bottom: 1.5rem;
+      mix-blend-mode: multiply;
+      opacity: 0.9;
+    }
+
+    .ing-title {
+      font-family: var(--font-serif);
+      font-size: 1.2rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 0.2rem;
+      color: #444;
+    }
+
+    .ing-sub {
+      display: block;
+      font-family: var(--font-serif);
+      font-size: 1.4rem;
+      text-transform: capitalize;
+      font-weight: 400;
+      margin-bottom: 0.6rem;
+      color: #333;
+    }
+
+    .ing-desc {
+      font-family: var(--font-sans);
+      font-size: 0.85rem;
+      color: var(--text-light);
+      line-height: 1.6;
+      max-width: 200px;
+      margin: 0 auto;
+    }
+
+    /* Footer Styles */
+    .shop-footer {
+      background: #1A1208;
+      color: #FAF8F3;
+      padding: 4rem 2rem;
+      margin-top: 0;
+      font-family: var(--font-sans);
+    }
+
+    .shop-footer-inner {
+      max-width: 1280px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 2rem;
+    }
+
+    .shop-footer-brand {
+      text-align: left;
+    }
+
+    .shop-footer-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.6rem;
+      margin: 0;
+    }
+
+    .shop-footer-tag {
+      font-size: 0.8rem;
+      color: #A4A09B;
+      margin-top: 5px;
+    }
+
+    .shop-footer-links {
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .shop-footer-links a {
+      color: #FAF8F3;
+      text-decoration: none;
+      font-size: 0.85rem;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      transition: color 0.3s;
+    }
+
+    .shop-footer-links a:hover {
+      color: #B03030;
+    }
+
+    .shop-footer-copy {
+      width: 100%;
+      text-align: center;
+      margin-top: 2rem;
+      padding-top: 2rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      font-size: 0.8rem;
+      color: #A4A09B;
+    }
+
+    /* Mobile overrides */
+    @media (max-width: 900px) {
+      .product-top {
+        flex-direction: column;
+        gap: 2rem;
+        text-align: center;
+      }
+
+      .product-img-col {
+        justify-content: center;
+      }
+
+      .product-info-col {
+        align-items: center;
+        padding-right: 0;
+        text-align: center;
+      }
+
+      .page-title {
+        font-size: 2rem !important;
+        letter-spacing: 1.5px;
+      }
+
+      .subtitle {
+        font-size: 1.15rem !important;
+        text-align: center;
+      }
+
+      .features-row {
+        flex-direction: column;
+        gap: 1.2rem;
+      }
+
+      .sep {
+        display: none;
+      }
+
+      .shop-footer-inner {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .shop-footer-brand {
+        text-align: center;
+      }
+
+      .shop-footer-links {
+        justify-content: center;
+      }
+    }
+
+    @media (max-width: 650px) {
+      .ingredients-grid {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+      }
+
+      .container {
+        padding: 3rem 1.5rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- PREMIUM UNIVERSAL HEADER -->
+  <header class="tob-header" id="tobHeader">
+  <div class="tob-top tob-top-row1">
+    <div class="tob-brand">
+      <a th:href="@{/}" style="display:flex; align-items:center; text-decoration:none; color:inherit;">
+        <img th:src="@{/images/flower-logo.png}" alt="Logo" class="tob-logo">
+        <div class="tob-brand-name">Theory <em>of</em> Bloom</div>
+      </a>
+    </div>
+    <div class="tob-actions">
+      <div class="tob-search-wrap tob-cat-search">
+        <form class="tob-search-form" th:action="@{/shop}" method="get">
+          <input type="text" name="query" th:value="${searchKeyword}" class="tob-search-input" placeholder="Search our botanical library...">
+          <button type="submit" class="tob-search-btn"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16"><path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/></svg></button>
+        </form>
+      </div>
+      <div class="tob-action-item" sec:authorize="!isAuthenticated()"><a th:href="@{/login}" class="tob-icon-btn" style="text-decoration:none;"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M6 3.5a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-2a.5.5 0 0 0-1 0v2A1.5 1.5 0 0 0 6.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-8A1.5 1.5 0 0 0 5 3.5v2a.5.5 0 0 0 1 0z"/><path fill-rule="evenodd" d="M11.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H1.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708z"/></svg><span class="tob-icon-label">Login</span></a></div>
+      <div class="tob-action-item" sec:authorize="isAuthenticated()">
+        <button class="tob-icon-btn" type="button"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 16 16"><path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/><path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"/></svg><span class="tob-icon-label" th:text="${user != null and !#strings.isEmpty(user.fullName) ? #strings.arraySplit(user.fullName, ' ')[0] : 'Account'}">Account</span></button>
+        <div class="tob-drop"><div class="tob-drop-header">Account Centre</div><a class="tob-drop-item" th:href="@{/profile}"><i class="fas fa-user-circle fa-sm"></i> My Profile</a><a class="tob-drop-item" th:href="@{/order-history}"><i class="fas fa-box fa-sm"></i> Orders</a><a class="tob-drop-item" th:href="@{/saved-blends}"><i class="fas fa-heart fa-sm"></i> Saved Blends</a><a class="tob-drop-item" th:href="@{/profile#settings}"><i class="fas fa-cog fa-sm"></i> Settings</a><div class="tob-drop-divider"></div><button class="tob-drop-item danger" type="button" onclick="openSignoutModal()" style="width:100%;text-align:left;background:none;border:none;cursor:pointer;"><i class="fas fa-sign-out-alt fa-sm"></i> Sign Out</button></div>
+      </div>
+      <div class="tob-action-item">
+        <button class="tob-icon-btn"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16"><path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0"/></svg><span class="tob-icon-label">More</span></button>
+        <div class="tob-drop"><div class="tob-drop-header">Explore</div><a class="tob-drop-item" th:href="@{/}"><i class="fas fa-home fa-sm"></i> Home</a><a class="tob-drop-item" th:href="@{/contact}"><i class="fas fa-envelope fa-sm"></i> Contact Us</a><a class="tob-drop-item" th:href="@{/privacy-policy}"><i class="fas fa-shield-alt fa-sm"></i> Privacy Policy</a></div>
+      </div>
+      <a th:href="@{/cart}" class="tob-icon-btn tob-cart-btn"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 16 16"><path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .49.598l-1 5a.5.5 0 0 1-.465.401l-9.397.472L4.415 11H13a.5.5 0 0 1 0 1H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5M3.102 4l.84 4.479 9.144-.459L13.89 4zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4m7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4m-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2m7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2"/></svg><span class="tob-icon-label">Cart</span></a>
+    </div>
+  </div>
+</header>
+
+  <!-- MOBILE HEADER -->
+  <div class="tob-mobile-header" id="tobMobileHeader">
+    <div class="tob-mob-bar">
+      <button class="tob-mob-ham-btn" type="button" onclick="tobOpenMenu()" aria-label="Open menu" id="tobHamBtn">
+        <span class="tob-ham-line"></span><span class="tob-ham-line"></span><span
+          class="tob-ham-line tob-ham-line--short"></span>
+      </button>
+      <div class="tob-mob-center">
+        <img th:src="@{/images/flower-logo.png}" class="tob-mob-logo-img" alt="Theory of Bloom logo">
+        <span class="tob-mob-name">Theory <em>of</em> Bloom</span>
+      </div>
+      <div class="tob-mob-icons">
+        <a th:href="@{/cart}" class="tob-mob-icon cart-ic"><svg xmlns="http://www.w3.org/2000/svg" width="20"
+            height="20" fill="#a37c4e" viewBox="0 0 16 16">
+            <path
+              d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .49.598l-1 5a.5.5 0 0 1-.465.401l-9.397.472L4.415 11H13a.5.5 0 0 1 0 1H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5M3.102 4l.84 4.479 9.144-.459L13.89 4zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4m7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4m-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2m7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2" />
+          </svg></a>
+      </div>
+    </div>
+  </div>
+
+  <!-- FULLSCREEN MENU -->
+  <div class="tob-overlay" id="tobOverlay">
+    <button class="tob-overlay-close" onclick="tobCloseMenu()">&times;</button>
+    <ul class="tob-overlay-links">
+      <li><a th:href="@{/}">Home</a></li>
+      <li><a th:href="@{/shop}">Shop Blends</a></li>
+      <li><a th:href="@{/saved-blends}">Saved Blends</a></li>
+      <li><a th:href="@{/profile}">My Account</a></li>
+      <li><a th:href="@{/contact}">Contact</a></li>
+    </ul>
+  </div>
+
+  <div class="container">
+    
+    <nav style="display:flex;align-items:center;gap:6px;font-family:'Inter',sans-serif;font-size:0.72rem;font-weight:500;letter-spacing:0.5px;margin-bottom:2rem;" aria-label="Breadcrumb">
+      <a th:href="@{/}" style="color:#A37C4E;text-decoration:none;transition:color 0.2s;" onmouseover="this.style.color='#7A5C38'" onmouseout="this.style.color='#A37C4E'">Home</a>
+      <span style="color:rgba(90,86,82,0.4);font-size:0.65rem;">&#8250;</span>
+      <a th:href="@{/shop}" style="color:#A37C4E;text-decoration:none;transition:color 0.2s;" onmouseover="this.style.color='#7A5C38'" onmouseout="this.style.color='#A37C4E'">Shop Blends</a>
+      <span style="color:rgba(90,86,82,0.4);font-size:0.65rem;">&#8250;</span>
+      <span style="color:#5A5652;font-weight:600;">Daily Elixir</span>
+    </nav>
+
+    <!-- Top Section (2 Column on Desktop) -->
+    <div class="product-top">
+      <!-- Image Column with thumbnail gallery -->
+      <div class="product-img-col" style="flex-direction:column;gap:1rem;">
+        <!-- Main image -->
+        <div id="mainImgWrap" style="position:relative;border-radius:8px;overflow:hidden;background:#FDFBF7;box-shadow:0 8px 32px rgba(42,38,33,0.1);">
+          <img id="mainProductImg" th:src="@{/images/product-11.png}" alt="Daily Elixir Botanical Blend" class="product-hero-image"
+            onerror="this.src='https://placehold.co/500x500/FDFBF7/2A2621?text=Daily+Elixir'"
+            style="width:100%;max-width:460px;height:auto;display:block;transition:opacity 0.3s;">
+        </div>
+        <!-- Thumbnail row -->
+        <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:0.5rem;">
+          <button onclick="switchImg(this, '/images/product-11.png','https://placehold.co/500x500/FDFBF7/2A2621?text=Daily+Elixir')"
+            class="thumb-btn active-thumb"
+            style="width:72px;height:72px;border-radius:6px;overflow:hidden;border:2px solid #2D2A27;padding:0;cursor:pointer;background:#fff;transition:border 0.2s;">
+            <img th:src="@{/images/product-11.png}" onerror="this.src='https://placehold.co/80x80/F9F8F6/4A6B5D?text=1'" alt="View 1" style="width:100%;height:100%;object-fit:cover;">
+          </button>
+          <button onclick="switchImg(this, 'https://placehold.co/500x500/F5EDE0/C9954A?text=Ingredients','https://placehold.co/500x500/F5EDE0/C9954A?text=Ingredients')"
+            class="thumb-btn"
+            style="width:72px;height:72px;border-radius:6px;overflow:hidden;border:2px solid transparent;padding:0;cursor:pointer;background:#fff;transition:border 0.2s;">
+            <img src="https://placehold.co/80x80/F5EDE0/C9954A?text=Ingredients" alt="Ingredients" style="width:100%;height:100%;object-fit:cover;">
+          </button>
+          <button onclick="switchImg(this, 'https://placehold.co/500x500/EDE9DF/4A6B5D?text=Packaging','https://placehold.co/500x500/EDE9DF/4A6B5D?text=Packaging')"
+            class="thumb-btn"
+            style="width:72px;height:72px;border-radius:6px;overflow:hidden;border:2px solid transparent;padding:0;cursor:pointer;background:#fff;transition:border 0.2s;">
+            <img src="https://placehold.co/80x80/EDE9DF/4A6B5D?text=Packaging" alt="Packaging" style="width:100%;height:100%;object-fit:cover;">
+          </button>
+          <button onclick="switchImg(this, 'https://placehold.co/500x500/F0EBE3/5C4D3C?text=How+to+Use','https://placehold.co/500x500/F0EBE3/5C4D3C?text=How+to+Use')"
+            class="thumb-btn"
+            style="width:72px;height:72px;border-radius:6px;overflow:hidden;border:2px solid transparent;padding:0;cursor:pointer;background:#fff;transition:border 0.2s;">
+            <img src="https://placehold.co/80x80/F0EBE3/5C4D3C?text=How+to+Use" alt="How to Use" style="width:100%;height:100%;object-fit:cover;">
+          </button>
+        </div>
+      </div>
+
+      <!-- Share/Like/Copy icons above info column on mobile, beside image on desktop -->
+      <div class="product-info-col">
+        <div style="font-family:'Inter',sans-serif;font-size:0.6rem;letter-spacing:4px;text-transform:uppercase;color:#A37C4E;margin-bottom:0.8rem;">Botanical Wellness · Daily Ritual</div>
+        <h1 class="page-title" style="font-family: 'Cormorant Garamond', serif; font-weight: 500; color: #2A2118; letter-spacing: 1px; text-transform: uppercase; font-size: 2.8rem;">Daily Elixir</h1>
+        <p class="subtitle" style="font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; color: #C9954A; font-style: italic; margin-top: 0.5rem; font-weight: 500;">A gentle antioxidant-rich blend for everyday balance and vitality.</p>
+
+        <!-- Rating strip -->
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:1.2rem;">
+          <span style="color:#C9954A;font-size:0.95rem;letter-spacing:2px;">★★★★★</span>
+          <span style="font-family:'Inter',sans-serif;font-size:0.75rem;color:#5A5652;">4.9 · 128 reviews</span>
+        </div>
+
+        <p class="price">₹1,299</p>
+        <div style="font-family:'Inter',sans-serif;font-size:0.72rem;color:#B03030;margin-top:-1.5rem;margin-bottom:1.5rem;display:flex;align-items:center;gap:6px;">
+          <i class="bi bi-gift"></i> Earn <strong>13 bloom points</strong> on this purchase
+        </div>
+
+        <!-- Quantity + Add to Cart -->
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:1.5rem;">
+          <div style="display:flex;align-items:center;border:1px solid rgba(42,38,33,0.2);border-radius:3px;overflow:hidden;">
+            <button onclick="changeQty(-1)" style="width:36px;height:42px;background:transparent;border:none;font-size:1.1rem;cursor:pointer;color:#2D2A27;">−</button>
+            <input type="number" id="prod11Qty" value="1" min="1" max="10" style="width:44px;height:42px;text-align:center;border:none;border-left:1px solid rgba(42,38,33,0.1);border-right:1px solid rgba(42,38,33,0.1);font-family:'Inter',sans-serif;font-size:0.9rem;background:#fff;">
+            <button onclick="changeQty(1)" style="width:36px;height:42px;background:transparent;border:none;font-size:1.1rem;cursor:pointer;color:#2D2A27;">+</button>
+          </div>
+          <button id="addToCartBtn11" onclick="addProd11ToCart()" class="add-to-ritual-btn" style="margin-bottom:0;flex:1;text-align:center;border:none;">
+            <i class="bi bi-bag-plus" style="margin-right:6px;"></i>ADD TO RITUAL
+          </button>
+        </div>
+
+        <!-- Cart success toast -->
+        <div id="cartToast11" style="display:none;font-family:'Inter',sans-serif;font-size:0.78rem;color:#B03030;background:rgba(176,48,48,0.06);border:1px solid rgba(176,48,48,0.2);border-radius:4px;padding:8px 14px;margin-bottom:1rem;display:none;align-items:center;gap:8px;">
+          <i class="bi bi-check-circle-fill"></i> Added to your ritual bag!
+          <a th:href="@{/cart}" style="color:#B03030;font-weight:600;text-decoration:underline;margin-left:auto;">View Cart →</a>
+        </div>
+
+        <!-- Share / Like / Copy Icons -->
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:1.5rem;">
+          <button id="p11LikeBtn" onclick="p11ToggleLike()" title="Save" style="width:38px;height:38px;background:rgba(255,255,255,0.9);border:1px solid rgba(180,160,120,0.2);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:0.95rem;color:#5A5652;transition:all 0.3s;box-shadow:0 2px 8px rgba(0,0,0,0.06);">
+            <i class="bi bi-heart" id="p11LikeIcon"></i>
+          </button>
+          <button onclick="p11CopyLink()" title="Copy link" style="width:38px;height:38px;background:rgba(255,255,255,0.9);border:1px solid rgba(180,160,120,0.2);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:0.95rem;color:#5A5652;transition:all 0.3s;box-shadow:0 2px 8px rgba(0,0,0,0.06);">
+            <i class="bi bi-link-45deg"></i>
+          </button>
+          <button onclick="p11Share()" title="Share" style="width:38px;height:38px;background:rgba(255,255,255,0.9);border:1px solid rgba(180,160,120,0.2);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:0.95rem;color:#5A5652;transition:all 0.3s;box-shadow:0 2px 8px rgba(0,0,0,0.06);">
+            <i class="bi bi-share"></i>
+          </button>
+          <div id="p11Toast" style="font-family:'Inter',sans-serif;font-size:0.72rem;color:#B03030;background:rgba(176,48,48,0.08);border:1px solid rgba(176,48,48,0.2);border-radius:20px;padding:4px 12px;opacity:0;transition:opacity 0.3s;pointer-events:none;">Link copied ✓</div>
+        </div>
+
+        <div class="features-row">
+          <div class="feature-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
+              <path d="M12 22C12 22 20 18 20 12C20 6 12 2 12 2C12 2 4 6 4 12C4 18 12 22 12 22Z" />
+              <path d="M12 22V12" />
+            </svg>
+            <span>100% Botanical</span>
+          </div>
+          <div class="sep"></div>
+          <div class="feature-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
+              <path d="M9 3H15M10 3V8L4 20H20L14 8V3" />
+            </svg>
+            <span>No Synthetics</span>
+          </div>
+          <div class="sep"></div>
+          <div class="feature-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
+              <path d="M9 12l2 2 4-4M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <span>Lab Tested</span>
+          </div>
+        </div>
+
+        <!-- Product Tabs: Details / Ingredients / Benefits / FAQ -->
+        <div style="margin-top:2rem;">
+          <div style="display:flex;gap:0;border-bottom:1px solid rgba(42,38,33,0.12);margin-bottom:1.2rem;">
+            <button class="p11-tab active" onclick="p11Tab('details',this)" style="font-family:'Inter',sans-serif;font-size:0.68rem;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;padding:9px 14px;border:none;background:none;cursor:pointer;color:#2A2621;border-bottom:2px solid #2D2A27;transition:all 0.2s;">Details</button>
+            <button class="p11-tab" onclick="p11Tab('ingredients',this)" style="font-family:'Inter',sans-serif;font-size:0.68rem;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;padding:9px 14px;border:none;background:none;cursor:pointer;color:#5A5652;border-bottom:2px solid transparent;transition:all 0.2s;">Ingredients</button>
+            <button class="p11-tab" onclick="p11Tab('benefits',this)" style="font-family:'Inter',sans-serif;font-size:0.68rem;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;padding:9px 14px;border:none;background:none;cursor:pointer;color:#5A5652;border-bottom:2px solid transparent;transition:all 0.2s;">Benefits</button>
+            <button class="p11-tab" onclick="p11Tab('faq',this)" style="font-family:'Inter',sans-serif;font-size:0.68rem;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;padding:9px 14px;border:none;background:none;cursor:pointer;color:#5A5652;border-bottom:2px solid transparent;transition:all 0.2s;">FAQ</button>
+          </div>
+          <div id="p11-details" class="p11-panel" style="font-family:'Inter',sans-serif;font-size:0.87rem;color:#5A5652;line-height:1.8;">
+            <p>Daily Elixir is a premium botanical morning blend crafted from rare adaptogens and calming florals. Steep 1 tsp in 200ml hot water (85°C) for 3–5 minutes. Consume once daily, preferably on an empty stomach. Net Wt: 60g (30 servings).</p>
+            <p style="margin-top:0.8rem;"><strong style="color:#2A2621;">Directions:</strong> Add one heaped teaspoon to a cup. Pour near-boiling water. Steep 4 minutes. Strain and enjoy plain or with a touch of honey.</p>
+          </div>
+          <div id="p11-ingredients" class="p11-panel" style="display:none;font-family:'Inter',sans-serif;font-size:0.87rem;color:#5A5652;line-height:1.8;">
+            <ul style="padding-left:1.2rem;">
+              <li><strong style="color:#2A2621;">Tulsi (Holy Basil)</strong> — Adaptogenic, stress-relieving</li>
+              <li><strong style="color:#2A2621;">Lemon Peel</strong> — Vitamin C, brightening</li>
+              <li><strong style="color:#2A2621;">Chamomile Flowers</strong> — Calming, anti-inflammatory</li>
+              <li><strong style="color:#2A2621;">Rose Petals</strong> — Antioxidant, mood-lifting</li>
+              <li><strong style="color:#2A2621;">Ashwagandha Root</strong> — Adaptogen, energy balancing</li>
+            </ul>
+          </div>
+          <div id="p11-benefits" class="p11-panel" style="display:none;font-family:'Inter',sans-serif;font-size:0.87rem;color:#5A5652;line-height:1.8;">
+            <ul style="padding-left:1.2rem;">
+              <li>Reduces cortisol and daily stress levels</li>
+              <li>Supports mental clarity and focus throughout the day</li>
+              <li>Boosts natural immunity and gut health</li>
+              <li>Rich in antioxidants — promotes cellular vitality</li>
+              <li>Caffeine-free — safe for daily long-term use</li>
+            </ul>
+          </div>
+          <div id="p11-faq" class="p11-panel" style="display:none;font-family:'Inter',sans-serif;font-size:0.87rem;color:#5A5652;line-height:1.8;">
+            <p><strong style="color:#2A2621;">How many cups per day?</strong><br>1 cup daily is ideal. You may have 2 cups if needed.</p>
+            <p style="margin-top:0.8rem;"><strong style="color:#2A2621;">Is it safe during pregnancy?</strong><br>Consult your physician before use during pregnancy.</p>
+            <p style="margin-top:0.8rem;"><strong style="color:#2A2621;">Can kids drink this?</strong><br>Recommended for ages 16+.</p>
+            <p style="margin-top:0.8rem;"><strong style="color:#2A2621;">Does it contain caffeine?</strong><br>No. Completely caffeine-free.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  <script>
+    function switchImg(btn, src, fallback) {
+      const img = document.getElementById('mainProductImg');
+      img.style.opacity = '0.6';
+      img.src = src;
+      img.onerror = function() { this.src = fallback; };
+      setTimeout(() => { img.style.opacity = '1'; }, 200);
+      document.querySelectorAll('.thumb-btn').forEach(b => { b.style.border = '2px solid transparent'; });
+      btn.style.border = '2px solid #2D2A27';
+    }
+    function changeQty(delta) {
+      const inp = document.getElementById('prod11Qty');
+      let v = parseInt(inp.value) + delta;
+      inp.value = Math.max(1, Math.min(10, v));
+    }
+    function addProd11ToCart() {
+      const qty = parseInt(document.getElementById('prod11Qty').value) || 1;
+      const btn = document.getElementById('addToCartBtn11');
+      btn.disabled = true;
+      btn.textContent = 'Adding...';
+      // AJAX add to cart — product ID 11 (adjust if needed)
+      fetch('/cart/add/ajax', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/x-www-form-urlencoded', 'X-Requested-With': 'XMLHttpRequest'},
+        body: 'productId=11&quantity=' + qty
+      }).then(r => r.json()).then(data => {
+        btn.innerHTML = '<i class="bi bi-check2"></i> Added!';
+        showCartPopupModal();
+        // Update cart count if header supports it
+        const cartCount = document.querySelector('.tob-cart-count');
+        if (cartCount && data.cartCount) cartCount.textContent = data.cartCount;
+        setTimeout(() => {
+          btn.disabled = false;
+          btn.innerHTML = '<i class="bi bi-bag-plus" style="margin-right:6px;"></i>ADD TO RITUAL';
+        }, 2500);
+      }).catch(() => {
+        btn.innerHTML = '<i class="bi bi-check2"></i> Added!';
+        showCartPopupModal();
+        setTimeout(() => {
+          btn.disabled = false;
+          btn.innerHTML = '<i class="bi bi-bag-plus" style="margin-right:6px;"></i>ADD TO RITUAL';
+        }, 2500);
+      });
+    }
+    function showCartPopupModal() {
+        let m = document.getElementById('cartPopupModal');
+        if (!m) {
+            m = document.createElement('div');
+            m.id = 'cartPopupModal';
+            m.style.cssText = 'position:fixed;inset:0;background:rgba(42,33,24,0.55);backdrop-filter:blur(3px);z-index:99999;display:none;align-items:center;justify-content:center;opacity:0;transition:opacity 0.3s ease;';
+            m.innerHTML = '<div style="background-color:#FAF8F4;background-image:linear-gradient(160deg,#FEFDF9 0%,#F5F1E8 100%);padding:2.5rem;border-radius:4px;border:1px solid rgba(180,160,120,0.25);text-align:center;max-width:400px;width:90%;box-shadow:0 20px 60px rgba(42,33,24,0.2);transform:translateY(20px);transition:transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);">' +
+                    '<div style="font-size:2.2rem;color:#4A6B5D;margin-bottom:1rem;"><i class="bi bi-bag-check"></i></div>' +
+                    '<h3 style="font-family:\'Cormorant Garamond\',serif;font-size:1.7rem;color:#2A2118;margin-bottom:0.5rem;font-weight:400;">Added to <em style="font-style:italic;color:#3D5C41;">Ritual</em></h3>' +
+                    '<p style="font-family:\'Inter\',sans-serif;font-size:0.82rem;color:#5C4D3C;line-height:1.6;margin-bottom:1.8rem;">Your botanical selection has been successfully added to your cart.</p>' +
+                    '<div style="display:flex;gap:0.8rem;justify-content:center;flex-wrap:wrap;">' +
+                        '<button onclick="document.getElementById(\'cartPopupModal\').style.opacity=\'0\';document.getElementById(\'cartPopupModal\').querySelector(\'div\').style.transform=\'translateY(20px)\';setTimeout(()=>document.getElementById(\'cartPopupModal\').style.display=\'none\',300);" style="font-family:\'Inter\',sans-serif;font-size:0.75rem;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;color:#5C4D3C;background:transparent;border:1px solid rgba(107,140,111,0.18);border-radius:3px;padding:11px 24px;cursor:pointer;">Continue</button>' +
+                        '<a href="/cart" style="font-family:\'Inter\',sans-serif;font-size:0.75rem;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:#fff;background:#4A6B5D;border:1px solid #4A6B5D;border-radius:3px;padding:11px 24px;text-decoration:none;display:inline-block;">View Cart</a>' +
+                    '</div>' +
+                '</div>';
+            document.body.appendChild(m);
+        }
+        m.style.display = 'flex';
+        void m.offsetWidth;
+        m.style.opacity = '1';
+        m.querySelector('div').style.transform = 'translateY(0)';
+    }
+  </script>
+
+
+    <!-- Bottom Section (Centered) -->
+    <div class="bottom-section">
+      <div class="divider"></div>
+
+      <h2 class="chapter-title">CHAPTER I – The Daily Ritual</h2>
+      <p class="chapter-desc">
+        Sustainable. Botanical. Transformative. A sacred elixir<br>crafted to restore balance and brighten your spirit.
+      </p>
+
+      <button class="outline-btn">Our Ingredients •</button>
+
+      <div class="divider"></div>
+
+      <h2 class="chapter-title" style="margin-bottom: 0.8rem;">A Harmonious Blend of Botanicals</h2>
+      <p class="chapter-desc" style="max-width: 500px;">
+        A carefully crafted blend of adaptogens, calming florals, and invigorating citrus peels.
+      </p>
+
+      <div class="ingredients-grid">
+        <div class="ingredient-col">
+          <img src="https://placehold.co/200x160/F9F8F6/C9954A?text=Citrus+Peel" alt="Citrus Peel"
+            style="border-radius: 8px;">
+          <div class="ing-title">Uplifting</div>
+          <div class="ing-sub">Citrus Peel</div>
+          <div class="ing-desc">Bright lemon peel and invigorating notes</div>
+        </div>
+        <div class="ingredient-col">
+          <img src="https://placehold.co/200x160/F9F8F6/B47E95?text=Flower+Extracts" alt="Flower Extracts"
+            style="border-radius: 8px;">
+          <div class="ing-title">Calming</div>
+          <div class="ing-sub">Flower Extracts</div>
+          <div class="ing-desc">Delicate roses, calming chamomile</div>
+        </div>
+        <div class="ingredient-col">
+          <img src="https://placehold.co/200x160/F9F8F6/4A6B5D?text=Herbal+Adaptogens" alt="Herbal Adaptogens"
+            style="border-radius: 8px;">
+          <div class="ing-title">Balancing</div>
+          <div class="ing-sub">Herbal Adaptogens</div>
+          <div class="ing-desc">Powerful tulsi, soothing adaptogens</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ==================== FOOTER ==================== -->
+  <footer class="shop-footer">
+    <div class="shop-footer-inner">
+      <div class="shop-footer-brand">
+        <p class="shop-footer-name">THEORY <em>of</em> BLOOM</p>
+        <p class="shop-footer-tag">Crafted by Nature. Perfected by Science.</p>
+      </div>
+      <div class="shop-footer-links">
+        <a th:href="@{/shop}">All Blends</a>
+        <a th:href="@{/shop(category='Sleep &amp; Calm')}">Sleep &amp; Calm</a>
+        <a th:href="@{/shop(category='Skin &amp; Glow')}">Skin &amp; Glow</a>
+        <a th:href="@{/shop(category='Focus &amp; Clarity')}">Focus &amp; Clarity</a>
+      </div>
+      <p class="shop-footer-copy">© 2026 Theory of Bloom. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script th:src="@{/js/header.js?v=5.0}"></script>
+</body>
+
+</html>

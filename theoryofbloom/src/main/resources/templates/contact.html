@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact Us | Theory of Bloom</title>
+  <meta name="description" content="Reach out to the Theory of Bloom team for support, blend guidance, or wholesale enquiries. Based in Gandhipuram, Coimbatore.">
+  <link rel="icon" type="image/png" th:href="@{/images/flower-logo.png}">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" th:href="@{/css/header.css?v=4.9}">
+  <style>
+    :root {
+      --cream:#F5F0E8;--ink:#1A1208;--ink-soft:#4A3E2E;
+      --sage:#4A6B5D;--sage-dk:#2E4D3C;--gold:#a37c4e;--sand:#D8C9A8;
+      --serif:'Cormorant Garamond',serif;--sans:'Inter',sans-serif;
+    }
+    *, *::before, *::after { box-sizing: border-box; }
+    body{font-family:var(--sans);background:var(--cream);color:var(--ink);-webkit-font-smoothing:antialiased;overflow-x:hidden;}
+
+    /* -- BANNER -- */
+    .contact-banner {
+      max-width: 1360px;
+      margin: 24px auto 0;
+      border-radius: 24px;
+      background: linear-gradient(135deg, #0A192F 0%, #112240 100%);
+      padding: 80px 40px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 20px 40px rgba(10, 25, 47, 0.15);
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+    .contact-banner::before {
+      content:'';
+      position:absolute;
+      top:-50%;left:-50%;
+      width:200%;height:200%;
+      background:radial-gradient(circle at center, rgba(201,160,112,0.15) 0%, transparent 60%);
+      pointer-events:none;
+    }
+    .contact-banner-inner{position:relative;z-index:1;}
+    .contact-eyebrow {
+      font-family:var(--sans);font-size:0.6rem;letter-spacing:5px;
+      text-transform:uppercase;color:#B03030;margin-bottom:0.8rem;
+    }
+    .contact-title {
+      font-family:'Cormorant Garamond',serif;font-size:clamp(2.2rem,5vw,3.5rem);
+      font-weight:300;color:#fff;line-height:1.15;margin-bottom:0.6rem;letter-spacing:2px;
+    }
+    .contact-title em{font-style:italic;color:#C9A070;}
+    .contact-sub{font-size:1.05rem;color:#EAE0DB;max-width:600px;margin:0 auto;line-height:1.6;font-weight:300;letter-spacing:1px;}
+    @media (max-width: 768px) {
+      .contact-banner { margin: 16px; padding: 50px 20px; border-radius: 16px; }
+      .contact-title { font-size: 2.4rem; }
+    }
+
+    /* -- MAIN LAYOUT -- */
+    .contact-wrap {
+      max-width:1160px;margin:0 auto;
+      padding:4rem 1.5rem 6rem;
+      display:grid;grid-template-columns:1fr 1.2fr;
+      gap:3.5rem;align-items:start;
+    }
+    @media(max-width:840px){.contact-wrap{grid-template-columns:1fr;gap:2.5rem;}}
+    @media(max-width:991px){
+      .contact-info-panel{position:relative !important;top:auto !important;}
+      .contact-form-panel{position:relative !important;z-index:auto !important;}
+      /* ── Mobile form input visibility fix ── */
+      .cform-group input,
+      .cform-group textarea,
+      .cform-group select {
+        position: relative;
+        z-index: 2;
+        -webkit-appearance: none;
+        appearance: none;
+        opacity: 1 !important;
+        visibility: visible !important;
+        display: block !important;
+        background: #ffffff !important;
+        color: var(--ink) !important;
+        border: 1px solid rgba(216,201,168,0.6) !important;
+        -webkit-text-fill-color: var(--ink) !important;
+        pointer-events: auto !important;
+      }
+      .cform-group textarea {
+        min-height: 130px;
+        resize: vertical;
+      }
+      .btn-send {
+        pointer-events: auto !important;
+        opacity: 1 !important;
+        -webkit-appearance: none;
+      }
+      .contact-wrap{overflow:visible;}
+    }
+
+    /* -- INFO PANEL -- */
+    .contact-info-panel {
+      background:linear-gradient(160deg,#FDFBF7 0%,#F5F0E8 100%);
+      border:1px solid rgba(216,201,168,0.4);
+      border-radius:4px;
+      padding:2.5rem;
+      position:sticky;top:90px;
+    }
+    .info-logo-row{display:flex;align-items:center;gap:12px;margin-bottom:1.6rem;}
+    .info-logo{width:44px;height:44px;border-radius:50%;box-shadow:0 0 0 2px var(--gold),0 0 0 4px rgba(163,124,78,0.15);}
+    .info-brand{font-family:var(--serif);font-size:1.1rem;font-weight:600;text-transform:uppercase;letter-spacing:2px;color:var(--gold);}
+    .info-brand em{font-style:italic;font-weight:700;text-transform:lowercase;}
+    .info-tagline{font-size:0.82rem;color:var(--ink-soft);line-height:1.7;margin-bottom:2rem;padding-bottom:1.5rem;border-bottom:1px solid rgba(216,201,168,0.5);}
+    .info-item {
+      display:flex;align-items:flex-start;gap:14px;
+      margin-bottom:1.4rem;
+    }
+    .info-icon {
+      width:40px;height:40px;flex-shrink:0;
+      background:linear-gradient(135deg,rgba(74,107,93,0.1),rgba(163,124,78,0.08));
+      border-radius:50%;display:flex;align-items:center;justify-content:center;
+      color:var(--sage);font-size:0.95rem;
+    }
+    .info-label{font-size:0.6rem;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:2px;font-weight:600;}
+    .info-value{font-size:0.88rem;color:var(--ink);line-height:1.5;}
+    .info-value a{color:var(--ink);text-decoration:none;transition:color 0.2s;}
+    .info-value a:hover{color:var(--sage);}
+    .map-embed{
+      width:100%;height:200px;border-radius:4px;border:none;margin-top:1.5rem;
+      filter:saturate(0.7) contrast(0.9);
+    }
+
+    /* -- FORM PANEL -- */
+    .contact-form-panel {
+      background:linear-gradient(160deg,#FDFBF7 0%,#F5F0E8 100%);
+      border:1px solid rgba(216,201,168,0.4);
+      border-radius:4px;
+      padding:2.5rem;
+    }
+    .form-head{margin-bottom:2rem;}
+    .form-head-eyebrow{font-family:var(--sans);font-size:0.6rem;letter-spacing:3px;text-transform:uppercase;color:var(--sage);margin-bottom:0.4rem;}
+    .form-head-title{font-family:var(--serif);font-size:1.8rem;font-weight:400;color:var(--ink);}
+    .form-head-title em{font-style:italic;color:var(--sage);}
+    .cform-group{margin-bottom:1.4rem;}
+    .cform-group label{
+      display:block;font-size:0.62rem;letter-spacing:2px;text-transform:uppercase;
+      color:var(--sage);font-weight:600;margin-bottom:6px;
+    }
+    .cform-group input,.cform-group textarea,.cform-group select {
+      width:100%;padding:13px 15px;
+      background:#fff;border:1px solid rgba(216,201,168,0.5);border-radius:3px;
+      font-family:var(--sans);font-size:0.9rem;color:var(--ink);
+      outline:none;transition:all 0.25s;
+      appearance:none;
+    }
+    .cform-group input:focus,.cform-group textarea:focus,.cform-group select:focus {
+      border-color:var(--sage);
+      box-shadow:0 0 0 3px rgba(74,107,93,0.1);
+      background:#fff;
+    }
+    .cform-group textarea{resize:vertical;min-height:130px;}
+    .cform-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+    @media(max-width:500px){.cform-row{grid-template-columns:1fr;}}
+    .btn-send {
+      font-family:var(--sans);font-size:0.78rem;font-weight:600;
+      letter-spacing:2px;text-transform:uppercase;
+      background:var(--ink);color:#fff;border:none;
+      border-radius:3px;padding:15px 36px;
+      cursor:pointer;width:100%;margin-top:0.5rem;
+      transition:all 0.35s cubic-bezier(0.34,1.56,0.64,1);
+      position:relative;overflow:hidden;
+    }
+    .btn-send:hover{background:var(--sage);transform:translateY(-2px);box-shadow:0 8px 24px rgba(74,107,93,0.25);}
+    .btn-send:active{transform:translateY(-1px);}
+    .form-success {
+      padding:1rem 1.2rem;margin-bottom:1.5rem;
+      background:rgba(74,107,93,0.08);border-left:3px solid var(--sage);
+      border-radius:2px;font-size:0.88rem;color:var(--sage-dk);
+      display:flex;align-items:center;gap:8px;
+    }
+
+    /* -- Mini footer -- */
+    .contact-footer {
+      background:#1A1208;padding:2rem;text-align:center;
+      font-size:0.75rem;color:rgba(255,255,255,0.35);
+    }
+    .contact-footer a{color:rgba(255,255,255,0.4);text-decoration:none;margin:0 0.5rem;transition:color 0.2s;}
+    .contact-footer a:hover{color:#a37c4e;}
+  </style>
+</head>
+<body>
+
+<!-- DESKTOP HEADER -->
+<header class="tob-header" id="tobHeader">
+  <div class="tob-top tob-top-row1">
+    <div class="tob-brand">
+      <a th:href="@{/}" style="display:flex; align-items:center; text-decoration:none; color:inherit;">
+        <img th:src="@{/images/flower-logo.png}" alt="Logo" class="tob-logo">
+        <div class="tob-brand-name">Theory <em>of</em> Bloom</div>
+      </a>
+    </div>
+    <div class="tob-actions">
+      <div class="tob-search-wrap tob-cat-search">
+        <form class="tob-search-form" th:action="@{/shop}" method="get">
+          <input type="text" name="query" th:value="${searchKeyword}" class="tob-search-input" placeholder="Search our botanical library...">
+          <button type="submit" class="tob-search-btn"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16"><path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/></svg></button>
+        </form>
+      </div>
+      <div class="tob-action-item" sec:authorize="!isAuthenticated()"><a th:href="@{/login}" class="tob-icon-btn" style="text-decoration:none;"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M6 3.5a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-2a.5.5 0 0 0-1 0v2A1.5 1.5 0 0 0 6.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-8A1.5 1.5 0 0 0 5 3.5v2a.5.5 0 0 0 1 0z"/><path fill-rule="evenodd" d="M11.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H1.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708z"/></svg><span class="tob-icon-label">Login</span></a></div>
+      <div class="tob-action-item" sec:authorize="isAuthenticated()">
+        <button class="tob-icon-btn" type="button"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 16 16"><path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/><path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"/></svg><span class="tob-icon-label" th:text="${user != null and !#strings.isEmpty(user.fullName) ? #strings.arraySplit(user.fullName, ' ')[0] : 'Account'}">Account</span></button>
+        <div class="tob-drop"><div class="tob-drop-header">Account Centre</div><a class="tob-drop-item" th:href="@{/profile}"><i class="fas fa-user-circle fa-sm"></i> My Profile</a><a class="tob-drop-item" th:href="@{/order-history}"><i class="fas fa-box fa-sm"></i> Orders</a><a class="tob-drop-item" th:href="@{/saved-blends}"><i class="fas fa-heart fa-sm"></i> Saved Blends</a><a class="tob-drop-item" th:href="@{/profile#settings}"><i class="fas fa-cog fa-sm"></i> Settings</a><div class="tob-drop-divider"></div><button class="tob-drop-item danger" type="button" onclick="openSignoutModal()" style="width:100%;text-align:left;background:none;border:none;cursor:pointer;"><i class="fas fa-sign-out-alt fa-sm"></i> Sign Out</button></div>
+      </div>
+      <div class="tob-action-item">
+        <button class="tob-icon-btn"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16"><path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0"/></svg><span class="tob-icon-label">More</span></button>
+        <div class="tob-drop"><div class="tob-drop-header">Explore</div><a class="tob-drop-item" th:href="@{/}"><i class="fas fa-home fa-sm"></i> Home</a><a class="tob-drop-item" th:href="@{/contact}"><i class="fas fa-envelope fa-sm"></i> Contact Us</a><a class="tob-drop-item" th:href="@{/privacy-policy}"><i class="fas fa-shield-alt fa-sm"></i> Privacy Policy</a></div>
+      </div>
+      <a th:href="@{/cart}" class="tob-icon-btn tob-cart-btn"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 16 16"><path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .49.598l-1 5a.5.5 0 0 1-.465.401l-9.397.472L4.415 11H13a.5.5 0 0 1 0 1H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5M3.102 4l.84 4.479 9.144-.459L13.89 4zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4m7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4m-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2m7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2"/></svg><span class="tob-icon-label">Cart</span></a>
+    </div>
+  </div>
+</header>
+
+  <!-- MOBILE HEADER -->
+  <div class="tob-mobile-header" id="tobMobileHeader">
+    <!-- Bar: Hamburger | Brand | Account+Cart+More -->
+    <div class="tob-mob-bar">
+      <button class="tob-mob-ham-btn" type="button" onclick="tobOpenMenu()" aria-label="Open menu" id="tobHamBtn">
+        <span class="tob-ham-line"></span>
+        <span class="tob-ham-line"></span>
+        <span class="tob-ham-line tob-ham-line--short"></span>
+      </button>
+      <div class="tob-mob-center">
+        <img th:src="@{/images/flower-logo.png}" class="tob-mob-logo-img" alt="Theory of Bloom logo">
+        <span class="tob-mob-name">Theory <em>of</em> Bloom</span>
+      </div>
+      <div class="tob-mob-icons">
+        <div class="tob-mob-account">
+          <button class="tob-mob-icon" type="button" onclick="tobToggleAccDrop(event)"
+            sec:authorize="isAuthenticated()"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+              fill="#a37c4e" viewBox="0 0 16 16">
+              <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
+              <path fill-rule="evenodd"
+                d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1" />
+            </svg></button>
+          <a th:href="@{/login}" class="tob-mob-icon" sec:authorize="!isAuthenticated()"><svg
+              xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#a37c4e" viewBox="0 0 16 16">
+              <path fill-rule="evenodd"
+                d="M6 3.5a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-2a.5.5 0 0 0-1 0v2A1.5 1.5 0 0 0 6.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-8A1.5 1.5 0 0 0 5 3.5v2a.5.5 0 0 0 1 0z" />
+              <path fill-rule="evenodd"
+                d="M11.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H1.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708z" />
+            </svg></a>
+          <div class="tob-drawer-backdrop" id="tobMobBackdrop"></div>
+          <div class="tob-mob-acc-drawer" id="tobMobDrawer">
+            <div class="drawer-profile-header">
+              <div class="drawer-header-top">
+                <div class="drawer-avatar"
+                  th:text="${user != null and !#strings.isEmpty(user.fullName) ? #strings.substring(user.fullName,0,1) : 'U'}">
+                  U</div>
+                <div class="drawer-name-wrap">
+                  <div class="drawer-name" th:text="${user != null ? user.fullName : 'Valued Member'}">User Name</div>
+                  <div class="drawer-status"
+                    th:text="${user != null and user.premium ? '&#10022; Premium Member' : 'Standard Member'}">Standard Member
+                  </div>
+                </div>
+              </div>
+              <div class="drawer-header-meta">
+                <div class="meta-item"><span class="meta-label">Member ID</span><span class="meta-value"
+                    th:text="${user != null ? '#TB' + user.id : '#TB0000'}">#TB1001</span></div>
+                <div class="meta-item"><span class="meta-label">Status</span><span class="meta-value"
+                    th:text="${user != null and user.premium ? 'Premium' : 'Normal'}">Normal</span></div>
+              </div>
+            </div>
+            <div class="drawer-menu">
+              <a th:href="@{/profile}" class="drawer-menu-item"><i class="bi bi-person-circle"></i>
+                <div class="drawer-item-content"><span class="drawer-item-title">Account Centre</span><span
+                    class="drawer-item-sub">Manage your botanical ritual</span></div>
+              </a>
+              <a th:href="@{/order-history}" class="drawer-menu-item"><i class="bi bi-box-seam"></i>
+                <div class="drawer-item-content"><span class="drawer-item-title">Purchase History</span><span
+                    class="drawer-item-sub">Track your formulations</span></div><span class="drawer-badge">Active</span>
+              </a>
+              <a th:href="@{/saved-blends}" class="drawer-menu-item"><i class="bi bi-heart"></i>
+                <div class="drawer-item-content"><span class="drawer-item-title">Saved Blends</span><span
+                    class="drawer-item-sub">Your curation library</span></div>
+              </a>
+              <a th:href="@{/profile#settings}" class="drawer-menu-item"><i class="bi bi-gear"></i>
+                <div class="drawer-item-content"><span class="drawer-item-title">System Settings</span><span
+                    class="drawer-item-sub">Privacy &amp; preferences</span></div>
+              </a>
+            </div>
+          </div>
+        </div>
+        <a th:href="@{/cart}" class="tob-mob-icon cart-ic"><svg xmlns="http://www.w3.org/2000/svg" width="20"
+            height="20" fill="#a37c4e" viewBox="0 0 16 16">
+            <path
+              d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .49.598l-1 5a.5.5 0 0 1-.465.401l-9.397.472L4.415 11H13a.5.5 0 0 1 0 1H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5M3.102 4l.84 4.479 9.144-.459L13.89 4zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4m7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4m-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2m7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2" />
+          </svg></a>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- FULLSCREEN MENU OVERLAY (line-style, minimal) -->
+  <div class="tob-overlay" id="tobOverlay">
+    <button class="tob-overlay-close" onclick="tobCloseMenu()" aria-label="Close">&#x2715;</button>
+    <div class="tob-overlay-acc" sec:authorize="isAuthenticated()">
+      <div class="tob-overlay-acc-circle"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+          fill="currentColor" viewBox="0 0 16 16">
+          <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
+          <path fill-rule="evenodd"
+            d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1" />
+        </svg></div>
+      <div class="tob-overlay-acc-text"><span class="tob-overlay-acc-name"
+          th:text="${user != null and !#strings.isEmpty(user.fullName) ? user.fullName : 'My Account'}">User Name</span><span class="tob-overlay-acc-sub">Manage
+          Dashboard</span></div>
+    </div>
+    <ul class="tob-overlay-links">
+      <li><a th:href="@{/}">Home</a></li>
+      <li><a th:href="@{/shop}">Shop Blends</a></li>
+      <li><a th:href="@{/saved-blends}">Saved Blends</a></li>
+      <li><a th:href="@{/profile}">Account Centre</a></li>
+      <li><a th:href="@{/contact}">Contact</a></li>
+    </ul>
+    <div class="tob-overlay-footer">
+      <p>Theory <em>of</em> Bloom</p><small>Crafted by Nature. Perfected by Science.</small>
+    </div>
+  </div>
+
+  
+
+<!-- BANNER -->
+<div class="contact-banner">
+  <div class="contact-banner-inner">
+    <!-- BREADCRUMB -->
+    <nav style="display:inline-flex;align-items:center;gap:6px;font-family:'Inter',sans-serif;font-size:0.72rem;font-weight:500;letter-spacing:0.5px;margin-bottom:1.5rem;position:relative;" aria-label="Breadcrumb">
+      <a th:href="@{/}" style="color:rgba(201,160,112,0.8);text-decoration:none;transition:color 0.2s;">Home</a>
+      <span style="color:rgba(255,255,255,0.3);font-size:0.65rem;">&#8250;</span>
+      <span style="color:rgba(234,224,219,0.9);font-weight:600;">Consultations &amp; Inquiries</span>
+    </nav>
+    <div class="contact-eyebrow" th:text="${siteContent.contact.bannerEyebrow}">Reach Us</div>
+    <h1 class="contact-title" th:utext="${siteContent.contact.bannerTitle}">Consultations &amp; <em>Inquiries</em></h1>
+    <p class="contact-sub">Whether you need blend guidance, have an order query, or would like to discuss wholesale &mdash; our floral consultants are here to help.</p>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="contact-wrap">
+
+  <!-- Info Panel -->
+  <div class="contact-info-panel">
+    <div class="info-logo-row">
+      <img th:src="@{/images/flower-logo.png}" alt="Logo" class="info-logo">
+      <div class="info-brand">Theory <em>of</em> Bloom</div>
+    </div>
+    <p class="info-tagline" th:text="${siteContent.contact.tagline}">Crafted by nature. Perfected by science. We are a small-batch botanical wellness brand based in Coimbatore, Tamil Nadu.</p>
+
+    <div class="info-item">
+      <div class="info-icon"><i class="bi bi-envelope"></i></div>
+      <div><div class="info-label">Email</div><div class="info-value"><a th:href="'mailto:' + ${siteContent.contact.email}" th:text="${siteContent.contact.email}">hello@theoryofbloom.com</a></div></div>
+    </div>
+    <div class="info-item">
+      <div class="info-icon"><i class="bi bi-geo-alt"></i></div>
+      <div><div class="info-label">Store Address</div><div class="info-value" th:utext="${siteContent.contact.address}">12/87 Sathy Cross No:1,<br>Gandhipuram, Coimbatore 641012<br><a href="https://maps.app.goo.gl/nnQCQZwLyjJzAg819?g_st=ac" target="_blank" rel="noopener" style="color:var(--sage);">View on Google Maps &nearr;</a></div></div>
+    </div>
+    <div class="info-item">
+      <div class="info-icon"><i class="bi bi-clock"></i></div>
+      <div><div class="info-label">Hours</div><div class="info-value" th:utext="${siteContent.contact.hours}">Mon &ndash; Sat: 10:00 AM &ndash; 1:00 PM, 5:00 PM &ndash; 6:30 PM<br>Sunday: Holiday</div></div>
+    </div>
+
+    <iframe
+      th:src="${siteContent.contact.mapsUrl}"
+      class="map-embed"
+      allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+      title="Theory of Bloom store location"></iframe>
+  </div>
+
+  <!-- Form Panel -->
+  <div class="contact-form-panel">
+    <div class="form-head">
+      <div class="form-head-eyebrow">Send a Message</div>
+      <h2 class="form-head-title">How can we <em>help?</em></h2>
+    </div>
+
+    <div th:if="${success}" class="form-success">
+      <i class="bi bi-check-circle-fill"></i>
+      <span th:text="${success}">Your message has been received. We'll respond within 24 hours.</span>
+    </div>
+
+    <form th:action="@{/contact}" method="post">
+      <div class="cform-row">
+        <div class="cform-group">
+          <label for="cname">Full Name</label>
+          <input type="text" id="cname" name="name" placeholder="Your full name" required>
+        </div>
+        <div class="cform-group">
+          <label for="cemail">Email Address</label>
+          <input type="email" id="cemail" name="email" placeholder="your@email.com" required>
+        </div>
+      </div>
+      <div class="cform-group">
+        <label for="csubject">Subject</label>
+        <select id="csubject" name="subject">
+          <option value="">Select a topic...</option>
+          <option>Blend Recommendation</option>
+          <option>Order Query</option>
+          <option>Wholesale Enquiry</option>
+          <option>Return &amp; Refund</option>
+          <option>General Feedback</option>
+          <option>Other</option>
+        </select>
+      </div>
+      <div class="cform-group">
+        <label for="cmessage">Message</label>
+        <textarea id="cmessage" name="message" placeholder="Tell us how we can help you..." required></textarea>
+      </div>
+      <button type="submit" class="btn-send">
+        <i class="bi bi-send" style="margin-right:8px;"></i>Send Message
+      </button>
+    </form>
+  </div>
+
+</div>
+
+<!-- FOOTER -->
+<div class="contact-footer">
+  <span th:text="${siteContent.footer.copyrightText}">&copy; 2026 Theory of Bloom. All rights reserved.</span>
+  <br style="display:none;">
+  <a th:href="@{/}">Home</a>
+  <a th:href="@{/shop}">Shop</a>
+  <a th:href="@{/privacy-policy}">Privacy Policy</a>
+  <a th:href="@{/privacy-policy#terms}">Terms &amp; Conditions</a>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script th:src="@{/js/header.js?v=5.0}"></script>
+
+<!-- SIGN-OUT CONFIRMATION MODAL -->
+<div id="signoutOverlay" style="display:none;position:fixed;inset:0;background:rgba(42,33,24,0.55);backdrop-filter:blur(3px);z-index:9999;align-items:center;justify-content:center;">
+  <div style="background-color:#FAF8F4;background-image:linear-gradient(160deg,#FEFDF9 0%,#F5F1E8 100%);border:1px solid rgba(180,160,120,0.25);border-radius:4px;padding:2.5rem;max-width:400px;width:90%;text-align:center;box-shadow:0 20px 60px rgba(42,33,24,0.2);">
+    <div style="font-size:2rem;color:#4A6B5D;margin-bottom:1rem;"><i class="bi bi-box-arrow-right"></i></div>
+    <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.7rem;font-weight:400;color:#2A2118;margin-bottom:0.5rem;">Sign <em style="font-style:italic;color:#3D5C41;">Out?</em></h3>
+    <p style="font-size:0.82rem;color:#5C4D3C;margin-bottom:1.8rem;line-height:1.6;">Are you sure you want to sign out?</p>
+    <div style="display:flex;gap:0.8rem;justify-content:center;flex-wrap:wrap;">
+      <button onclick="closeSignoutModal()" style="font-family:'Inter',sans-serif;font-size:0.75rem;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;color:#5C4D3C;background:transparent;border:1px solid rgba(107,140,111,0.18);border-radius:3px;padding:11px 24px;cursor:pointer;">Stay Signed In</button>
+      <a th:href="@{/logout}" style="font-family:'Inter',sans-serif;font-size:0.75rem;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:#fff;background:#7a2020;border:1px solid #7a2020;border-radius:3px;padding:11px 24px;text-decoration:none;display:inline-block;">Yes, Sign Out</a>
+    </div>
+  </div>
+</div>
+<script>
+function openSignoutModal(){document.getElementById('signoutOverlay').style.display='flex';document.body.style.overflow='hidden';}
+function closeSignoutModal(){document.getElementById('signoutOverlay').style.display='none';document.body.style.overflow='';}
+document.getElementById('signoutOverlay').addEventListener('click',function(e){if(e.target===this)closeSignoutModal();});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')closeSignoutModal();});
+</script>
+</body>
+
+
+
+
+
+
+
+
+
+
+</html>

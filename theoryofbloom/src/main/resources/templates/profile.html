@@ -1,0 +1,1241 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Account | Theory of Bloom</title>
+    <meta name="description" content="Manage your Theory of Bloom account — profile, orders, and preferences.">
+    <link rel="icon" type="image/png" th:href="@{/images/flower-logo.png}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600&family=Inter:wght@300;400;500;600&family=Montserrat:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/header.css?v=4.9}">
+    <style>
+        html { scroll-behavior: smooth; }
+        /* ── Design Tokens ─────────────────────────────────────────── */
+        :root {
+            --linen:       #F4F1EB;
+            --linen-dark:  #EDE9DF;
+            --parchment:   #FDFAF5;
+            --sage:        #C9954A;
+            --sage-dark:   #A87B38;
+            --sage-pale:   #F4EBD9;
+            --sage-mid:    #DFCDAF;
+            --citrus:      #C9954A;
+            --citrus-pale: #F5E8CC;
+            --ink:         #1A1816;
+            --ink-soft:    #4A443E;
+            --border:      rgba(201,149,74,0.25);
+            --serif:       'Cormorant Garamond', serif;
+            --sans:        'Inter', sans-serif;
+            --brand:       'Montserrat', sans-serif;
+        }
+
+        /* ── Body / Background ─────────────────────────────────────── */
+        /* ═══════════════════════════════════════════════════════════
+           COLD-PRESSED WATERCOLOR PAPER TEXTURE
+           Layered multi-frequency fractal noise to simulate:
+           · Cotton rag fiber weave
+           · Irregular surface tooth/grain
+           · Warm off-white matte finish (NOT flat digital white)
+           ═══════════════════════════════════════════════════════════ */
+
+        /* SVG paper texture as data URI — injected once at <style> load */
+        body {
+            font-family: var(--sans);
+            color: var(--ink);
+            -webkit-font-smoothing: antialiased;
+
+            /* Cold-pressed watercolor paper: warm cream base */
+            background-color: #EDE9DF;
+
+            /* 
+             * THREE-LAYER PAPER TEXTURE:
+             * 1. Large tooth (low freq) — the uneven bumps of real cold-pressed paper
+             * 2. Fiber weave (mid freq, anisotropic) — horizontal cotton rag filaments  
+             * 3. Micro dust (high freq) — chalky surface bloom
+             */
+            background-image:
+                /* Layer 3 — micro chalk bloom (very fine, high opacity) */
+                url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='256' height='256'%3E%3Cfilter id='c'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.6 2.0' numOctaves='1' seed='5' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='256' height='256' fill='%23E8E3D8' filter='url(%23c)' opacity='0.18'/%3E%3C/svg%3E"),
+                /* Layer 2 — cotton fiber weave (anisotropic: wider X than Y) */
+                url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='512' height='512'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.12 0.88' numOctaves='4' seed='11' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='512' height='512' fill='%23D8D2C4' filter='url(%23f)' opacity='0.14'/%3E%3C/svg%3E"),
+                /* Layer 1 — large irregular grain / paper tooth */
+                url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='600'%3E%3Cfilter id='t'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.032 0.048' numOctaves='6' seed='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='600' height='600' fill='%23C8C0AE' filter='url(%23t)' opacity='0.10'/%3E%3C/svg%3E"),
+                /* Base warm radial gradient — brighter center, warmer darker edges */
+                radial-gradient(ellipse at 40% 30%, #F8F5EE 0%, #EDE9DF 50%, #E2DBCf 100%);
+
+            background-size: 256px 256px, 512px 512px, 600px 600px, cover;
+            background-repeat: repeat, repeat, repeat, no-repeat;
+            background-attachment: local, local, local, fixed;
+        }
+
+        /* ── Dashboard Layout ──────────────────────────────────────── */
+        .dash-wrap {
+            max-width: 1260px;
+            margin: 0 auto;
+            padding: 3rem 1.5rem 6rem;
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 2.5rem;
+        }
+
+        @media (max-width: 992px) {
+            .dash-wrap { grid-template-columns: 1fr; gap: 0; padding: 1rem 1rem 4rem; }
+        }
+
+        /* ── Page Banner ───────────────────────────────────────────── */
+        .dash-banner {
+            max-width: 1360px;
+            margin: 24px auto 0;
+            border-radius: 24px;
+            background: linear-gradient(135deg, #0A192F 0%, #112240 100%);
+            padding: 80px 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(10, 25, 47, 0.15);
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .dash-banner::before {
+            content: '';
+            position: absolute;
+            top: -50%; left: -50%;
+            width: 200%; height: 200%;
+            background: radial-gradient(circle at center, rgba(201, 160, 112, 0.15) 0%, transparent 60%);
+            pointer-events: none;
+        }
+
+        .dash-banner-eyebrow {
+            font-family: var(--sans);
+            font-size: 0.65rem;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: #B03030;
+            margin-bottom: 0.6rem;
+        }
+
+        .dash-banner-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(2.2rem, 5vw, 3.5rem);
+            font-weight: 300;
+            color: #FFFFFF;
+            letter-spacing: 2px;
+            line-height: 1.1;
+            margin-bottom: 0.4rem;
+        }
+
+        .dash-banner-title em {
+            font-style: italic;
+            color: #C9A070;
+        }
+
+        .dash-banner-sub {
+            font-family: 'Inter', sans-serif;
+            font-size: 1.05rem;
+            color: #EAE0DB;
+            letter-spacing: 1px;
+            font-weight: 300;
+            margin-bottom: 1.5rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.6;
+        }
+
+        /* Floral divider line like the poster */
+        .floral-divider {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            justify-content: center;
+            margin: 0.5rem 0 0;
+        }
+        .floral-divider::before,
+        .floral-divider::after {
+            content: '';
+            width: 80px;
+            height: 1px;
+            background: linear-gradient(to right, transparent, rgba(201,160,112,0.4), transparent);
+        }
+        .floral-divider span {
+            font-size: 0.9rem;
+            color: #C9A070;
+            opacity: 0.7;
+        }
+
+        /* ── Sidebar ───────────────────────────────────────────────── */
+        .dash-sidebar {
+            position: sticky;
+            top: 2rem;
+            height: fit-content;
+        }
+
+        @media (max-width: 992px) { .dash-sidebar { display: none; } }
+
+        .sidebar-user-card {
+            background-color: #F9F7F2;
+            background-image:
+                url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='p'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='4' seed='9' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23p)' opacity='0.04'/%3E%3C/svg%3E"),
+                linear-gradient(145deg, #FDFCFA 0%, #F5F2EB 100%);
+            background-size: 300px 300px, cover;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 2rem 1.5rem;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .sidebar-user-card::before {
+            content: '';
+            position: absolute;
+            top: -20px; right: -20px;
+            width: 120px; height: 120px;
+            background: radial-gradient(circle, rgba(201,149,74,0.14) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .sidebar-avatar {
+            width: 64px; height: 64px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--sage-mid), var(--sage-pale));
+            border: 2px solid var(--border);
+            display: flex; align-items: center; justify-content: center;
+            font-family: var(--serif);
+            font-size: 1.8rem;
+            font-weight: 500;
+            color: var(--sage-dark);
+            margin: 0 auto 1rem;
+        }
+
+        .sidebar-name {
+            font-family: var(--brand);
+            font-size: 1.4rem;
+            font-weight: 500;
+            color: var(--ink);
+            margin-bottom: 0.2rem;
+        }
+
+        .sidebar-tagline {
+            font-size: 0.7rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--sage);
+        }
+
+        /* Nav */
+        .dash-nav { list-style: none; padding: 0; margin: 0; }
+        .dash-nav li + li { border-top: 1px solid var(--border); }
+
+        .dash-nav a {
+            display: flex; align-items: center; gap: 12px;
+            padding: 13px 1rem;
+            font-family: var(--sans);
+            font-size: 0.88rem;
+            font-weight: 400;
+            color: var(--ink-soft);
+            text-decoration: none;
+            transition: all 0.25s;
+            background-color: #F9F7F2;
+            background-image: linear-gradient(135deg, #FDFCFA 0%, #F4F1EA 100%);
+            border: 1px solid var(--border);
+        }
+
+        .dash-nav li:first-child a { border-radius: 4px 4px 0 0; }
+        .dash-nav li:last-child a { border-radius: 0 0 4px 4px; border-top: none; }
+        .dash-nav li + li a { border-top: none; }
+
+        .dash-nav a:hover { background: var(--linen-dark); color: var(--sage-dark); }
+        .dash-nav li.active a { color: var(--sage-dark); font-weight: 600; background: var(--sage-pale); }
+        .dash-nav li.danger a { color: #b04040; }
+
+        .dash-nav a i { width: 18px; text-align: center; font-size: 0.9rem; }
+
+        /* Botanical footer badges */
+        .sidebar-badges {
+            margin-top: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+        }
+        .sidebar-badge {
+            display: flex; align-items: center; gap: 10px;
+            font-family: var(--sans);
+            font-size: 0.72rem;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--ink-soft);
+            padding: 0.5rem 0.8rem;
+            background-color: #F9F7F2;
+            background-image: linear-gradient(135deg, #FDFCFA 0%, #F2EFE8 100%);
+            border: 1px solid var(--border);
+            border-radius: 2px;
+        }
+        .sidebar-badge i { color: var(--sage); font-size: 0.95rem; }
+
+        /* ── Main Content ──────────────────────────────────────────── */
+        .dash-main { min-width: 0; }
+
+        /* Section cards — cold pressed paper feel, slightly brighter than the page */
+        .bot-section {
+            /* Cards appear as thick quality paper sheets resting on the page */
+            background-color: #F5F2EB;
+            background-image:
+                url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='s'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.45 0.72' numOctaves='4' seed='17' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='400' height='400' fill='%23C8BFA8' filter='url(%23s)' opacity='0.12'/%3E%3C/svg%3E"),
+                linear-gradient(160deg, #FDFAF4 0%, #F5F1E8 50%, #EDE8DC 100%);
+            background-size: 400px 400px, cover;
+            border: 1px solid rgba(180,160,120,0.2);
+            border-radius: 4px;
+            padding: 2.5rem 2.5rem;
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+            /* Depth shadow like a card resting on paper */
+            box-shadow:
+                0 1px 0 rgba(255,253,248,0.9),
+                0 2px 8px rgba(90,70,40,0.07),
+                0 6px 24px rgba(90,70,40,0.05);
+        }
+
+        @media (max-width: 992px) {
+            body {
+                background-image: none !important;
+                background-color: #EDE9DF;
+            }
+            .dash-banner {
+                margin: 16px;
+                padding: 50px 20px;
+                border-radius: 16px;
+            }
+            .dash-banner-title { font-size: 2.4rem; }
+            .sidebar-user-card {
+                background-image: none !important;
+            }
+            .bot-section { 
+                padding: 1.8rem 1.2rem; 
+                background-image: none !important;
+                box-shadow: 0 2px 6px rgba(90,70,40,0.06);
+            }
+            .bot-section::after {
+                display: none !important;
+            }
+        }
+
+        /* Watercolor accent blobs per section */
+        .bot-section::after {
+            content: '';
+            position: absolute;
+            bottom: -30px; right: -30px;
+            width: 180px; height: 180px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(212,137,154,0.1) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        /* Section header bar */
+        .section-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-bottom: 1.5rem;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .section-eyebrow {
+            font-family: var(--sans);
+            font-size: 0.62rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: #B03030;
+            margin-bottom: 0.2rem;
+        }
+
+        .section-heading {
+            font-family: var(--serif);
+            font-size: 1.7rem;
+            font-weight: 500;
+            color: var(--ink);
+            letter-spacing: 0.2px;
+            line-height: 1.2;
+            margin: 0;
+        }
+
+        .section-heading em { font-style: italic; color: var(--sage-dark); }
+
+        /* Edit button */
+        .btn-edit {
+            font-family: var(--sans);
+            font-size: 0.75rem;
+            font-weight: 500;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--sage-dark);
+            background: transparent;
+            border: 1px solid var(--border);
+            border-radius: 2px;
+            padding: 8px 18px;
+            cursor: pointer;
+            transition: all 0.25s;
+            white-space: nowrap;
+        }
+        .btn-edit:hover { background: var(--sage-dark); color: #fff; border-color: var(--sage-dark); }
+        .btn-edit.editing { color: #b04040; border-color: rgba(176,64,64,0.3); }
+        .btn-edit.editing:hover { background: #b04040; color: #fff; }
+
+        /* Form fields */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.4rem;
+        }
+
+        .field-group { display: flex; flex-direction: column; gap: 6px; }
+
+        .field-group label {
+            font-family: var(--sans);
+            font-size: 0.65rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--sage);
+            font-weight: 500;
+        }
+
+        .field-group input,
+        .field-group select,
+        .field-group textarea {
+            font-family: var(--sans);
+            font-size: 0.9rem;
+            color: var(--ink);
+            background: var(--linen);
+            border: 1px solid var(--border);
+            border-radius: 3px;
+            padding: 12px 14px;
+            outline: none;
+            transition: all 0.22s;
+            width: 100%;
+        }
+
+        .field-group input:not(:disabled):focus,
+        .field-group select:not(:disabled):focus,
+        .field-group textarea:not(:disabled):focus {
+            background: #fff;
+            border-color: var(--sage);
+            box-shadow: 0 0 0 3px rgba(201,149,74,0.12);
+        }
+
+        .field-group input:disabled,
+        .field-group select:disabled,
+        .field-group textarea:disabled {
+            opacity: 0.7;
+            cursor: default;
+        }
+
+        .field-group textarea { resize: vertical; min-height: 72px; }
+
+        /* Save button */
+        .btn-save {
+            font-family: var(--sans);
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            background: var(--sage-dark);
+            color: #fff;
+            border: none;
+            border-radius: 3px;
+            padding: 13px 32px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 1.5rem;
+        }
+        .btn-save:hover {
+            background: var(--ink);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(42,33,24,0.12);
+        }
+
+        /* Success / error messages */
+        .dash-alert {
+            border-radius: 3px;
+            padding: 1rem 1.4rem;
+            margin-bottom: 1.5rem;
+            font-family: var(--sans);
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .dash-alert.success {
+            background: rgba(201,149,74,0.12);
+            border-left: 3px solid var(--sage);
+            color: var(--sage-dark);
+        }
+        .dash-alert.error {
+            background: rgba(176,64,64,0.08);
+            border-left: 3px solid #b04040;
+            color: #7a2020;
+        }
+
+        /* ── Orders Table ──────────────────────────────────────────── */
+        .order-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+        }
+        .order-table th {
+            font-family: var(--sans);
+            font-size: 0.62rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--sage);
+            font-weight: 500;
+            padding: 0 0 14px;
+            border-bottom: 1px solid var(--border);
+            text-align: left;
+        }
+        .order-table td {
+            padding: 14px 0;
+            border-bottom: 1px solid var(--border);
+            color: var(--ink-soft);
+            font-weight: 400;
+        }
+        .order-table tr:last-child td { border-bottom: none; }
+
+        .order-status-pill {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+        .order-status-pill.pending  { background: var(--citrus-pale); color: var(--citrus); }
+        .order-status-pill.delivered { background: rgba(201,149,74,0.15); color: var(--sage-dark); }
+        .order-status-pill.shipped  { background: var(--lavender-pale); color: var(--lavender); }
+        .order-status-pill.cancelled { background: rgba(176,64,64,0.1); color: #b04040; }
+
+        .order-link {
+            font-size: 0.78rem;
+            color: var(--sage-dark);
+            text-decoration: none;
+            font-weight: 500;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 1px;
+            transition: all 0.2s;
+        }
+        .order-link:hover { color: var(--ink); border-color: var(--ink); }
+
+        /* Mobile order card */
+        .mob-order-card {
+            background-color: #FAF8F4;
+            background-image: linear-gradient(135deg, #FEFDF9 0%, #F3F0E9 100%);
+            border: 1px solid rgba(180,160,120,0.16);
+            border-radius: 4px;
+            padding: 1.2rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 8px rgba(90,70,40,0.04);
+        }
+        .mob-order-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.8rem; }
+        .mob-order-id { font-family: var(--serif); font-size: 1rem; color: var(--ink); font-weight: 500; }
+        .mob-order-date { font-size: 0.75rem; color: var(--ink-soft); }
+        .mob-order-foot { display: flex; justify-content: space-between; align-items: center; padding-top: 0.8rem; border-top: 1px solid var(--border); }
+
+        /* Empty orders */
+        .empty-orders {
+            text-align: center;
+            padding: 3rem;
+            color: var(--ink-soft);
+        }
+        .empty-orders i { font-size: 2.5rem; color: var(--border); display: block; margin-bottom: 1rem; }
+        .empty-orders p { font-family: var(--serif); font-size: 1.3rem; font-style: italic; }
+        .empty-orders small { font-size: 0.8rem; color: var(--ink-soft); opacity: 0.7; }
+
+        /* Mobile welcome strip */
+        .mob-welcome {
+            padding: 1.5rem 0 1rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+        .mob-welcome h2 {
+            font-family: var(--serif);
+            font-size: 1.8rem;
+            font-weight: 400;
+            color: var(--ink);
+            margin: 0;
+        }
+
+        /* ── Mobile nav pills ──────────────────────────────────────── */
+        .mob-nav-pills {
+            display: flex;
+            gap: 0.5rem;
+            overflow-x: auto;
+            padding-bottom: 0.5rem;
+            margin-bottom: 1.5rem;
+            scrollbar-width: none;
+        }
+        .mob-nav-pills::-webkit-scrollbar { display: none; }
+        .mob-nav-pill {
+            white-space: nowrap;
+            font-family: var(--sans);
+            font-size: 0.72rem;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--ink-soft);
+            background: var(--parchment);
+            border: 1px solid var(--border);
+            border-radius: 2px;
+            padding: 7px 14px;
+            text-decoration: none;
+            transition: all 0.2s;
+            flex-shrink: 0;
+        }
+        .mob-nav-pill.active,
+        .mob-nav-pill:hover { background: var(--sage-dark); color: #fff; border-color: var(--sage-dark); }
+
+        /* Page-bottom sign-out bar */
+        .signout-footer {
+            max-width: 1260px;
+            margin: 0 auto 3rem;
+            padding: 0 1.5rem;
+        }
+        .signout-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1.4rem 2rem;
+            background-color: #F8F5EF;
+            background-image: linear-gradient(135deg, #FDFAF4 0%, #EDE8DC 100%);
+            border: 1px solid rgba(180,160,120,0.2);
+            border-radius: 4px;
+        }
+        .signout-bar p {
+            font-family: var(--sans);
+            font-size: 0.82rem;
+            color: var(--ink-soft);
+            margin: 0;
+        }
+        .signout-bar p span {
+            font-weight: 600;
+            color: var(--ink);
+        }
+        .btn-signout {
+            font-family: var(--sans);
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: #7a2020;
+            background: transparent;
+            border: 1px solid rgba(176,64,64,0.3);
+            border-radius: 3px;
+            padding: 10px 24px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.25s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn-signout:hover {
+            background: #7a2020;
+            color: #fff;
+            border-color: #7a2020;
+        }
+
+    </style>
+</head>
+<body class="shop-body">
+
+<!-- HEADER -->
+<header class="tob-header" id="tobHeader">
+  <div class="tob-top tob-top-row1">
+    <div class="tob-brand">
+      <a th:href="@{/}" style="display:flex; align-items:center; text-decoration:none; color:inherit;">
+        <img th:src="@{/images/flower-logo.png}" alt="Logo" class="tob-logo">
+        <div class="tob-brand-name">Theory <em>of</em> Bloom</div>
+      </a>
+    </div>
+    <div class="tob-actions">
+      <div class="tob-search-wrap tob-cat-search">
+        <form class="tob-search-form" th:action="@{/shop}" method="get">
+          <input type="text" name="query" th:value="${searchKeyword}" class="tob-search-input" placeholder="Search our botanical library...">
+          <button type="submit" class="tob-search-btn"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16"><path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/></svg></button>
+        </form>
+      </div>
+      <div class="tob-action-item" sec:authorize="!isAuthenticated()"><a th:href="@{/login}" class="tob-icon-btn" style="text-decoration:none;"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M6 3.5a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-2a.5.5 0 0 0-1 0v2A1.5 1.5 0 0 0 6.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-8A1.5 1.5 0 0 0 5 3.5v2a.5.5 0 0 0 1 0z"/><path fill-rule="evenodd" d="M11.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H1.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708z"/></svg><span class="tob-icon-label">Login</span></a></div>
+      <div class="tob-action-item" sec:authorize="isAuthenticated()">
+        <button class="tob-icon-btn" type="button"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 16 16"><path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/><path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"/></svg><span class="tob-icon-label" th:text="${user != null and !#strings.isEmpty(user.fullName) ? #strings.arraySplit(user.fullName, ' ')[0] : 'Account'}">Account</span></button>
+        <div class="tob-drop"><div class="tob-drop-header">Account Centre</div><a class="tob-drop-item" th:href="@{/profile}"><i class="fas fa-user-circle fa-sm"></i> My Profile</a><a class="tob-drop-item" th:href="@{/order-history}"><i class="fas fa-box fa-sm"></i> Orders</a><a class="tob-drop-item" th:href="@{/saved-blends}"><i class="fas fa-heart fa-sm"></i> Saved Blends</a><a class="tob-drop-item" th:href="@{/profile#settings}"><i class="fas fa-cog fa-sm"></i> Settings</a><div class="tob-drop-divider"></div><button class="tob-drop-item danger" type="button" onclick="openSignoutModal()" style="width:100%;text-align:left;background:none;border:none;cursor:pointer;"><i class="fas fa-sign-out-alt fa-sm"></i> Sign Out</button></div>
+      </div>
+      <div class="tob-action-item">
+        <button class="tob-icon-btn"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16"><path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0"/></svg><span class="tob-icon-label">More</span></button>
+        <div class="tob-drop"><div class="tob-drop-header">Explore</div><a class="tob-drop-item" th:href="@{/}"><i class="fas fa-home fa-sm"></i> Home</a><a class="tob-drop-item" th:href="@{/contact}"><i class="fas fa-envelope fa-sm"></i> Contact Us</a><a class="tob-drop-item" th:href="@{/privacy-policy}"><i class="fas fa-shield-alt fa-sm"></i> Privacy Policy</a></div>
+      </div>
+      <a th:href="@{/cart}" class="tob-icon-btn tob-cart-btn"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 16 16"><path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .49.598l-1 5a.5.5 0 0 1-.465.401l-9.397.472L4.415 11H13a.5.5 0 0 1 0 1H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5M3.102 4l.84 4.479 9.144-.459L13.89 4zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4m7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4m-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2m7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2"/></svg><span class="tob-icon-label">Cart</span></a>
+    </div>
+  </div>
+</header>
+
+<!-- MOBILE HEADER -->
+<div class="tob-mobile-header" id="tobMobileHeader">
+  <div class="tob-mob-bar">
+    <button class="tob-mob-ham-btn" type="button" onclick="tobOpenMenu()" aria-label="Open menu" id="tobHamBtn">
+      <span class="tob-ham-line"></span>
+      <span class="tob-ham-line"></span>
+      <span class="tob-ham-line tob-ham-line--short"></span>
+    </button>
+    <div class="tob-mob-center">
+      <img th:src="@{/images/flower-logo.png}" class="tob-mob-logo-img" alt="Theory of Bloom logo">
+      <span class="tob-mob-name">Theory <em>of</em> Bloom</span>
+    </div>
+    <div class="tob-mob-icons">
+      <div class="tob-mob-account">
+        <button class="tob-mob-icon" type="button" onclick="tobToggleAccDrop(event)" sec:authorize="isAuthenticated()"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#a37c4e" viewBox="0 0 16 16"><path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/><path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"/></svg></button>
+        <a th:href="@{/login}" class="tob-mob-icon" sec:authorize="!isAuthenticated()"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#a37c4e" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M6 3.5a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-2a.5.5 0 0 0-1 0v2A1.5 1.5 0 0 0 6.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-8A1.5 1.5 0 0 0 5 3.5v2a.5.5 0 0 0 1 0z"/><path fill-rule="evenodd" d="M11.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H1.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708z"/></svg></a>
+        <div class="tob-drawer-backdrop" id="tobMobBackdrop"></div>
+        <div class="tob-mob-acc-drawer" id="tobMobDrawer">
+          <div class="drawer-profile-header">
+            <div class="drawer-header-top">
+              <div class="drawer-avatar" th:text="${user != null and !#strings.isEmpty(user.fullName) ? #strings.substring(user.fullName,0,1) : 'U'}">U</div>
+              <div class="drawer-name-wrap">
+                <div class="drawer-name" th:text="${user != null ? user.fullName : 'Valued Member'}">User Name</div>
+                <div class="drawer-status" th:text="${user != null and user.premium ? '✦ Premium Member' : 'Standard Member'}">Standard Member</div>
+              </div>
+            </div>
+            <div class="drawer-header-meta">
+              <div class="meta-item"><span class="meta-label">Member ID</span><span class="meta-value" th:text="${user != null ? '#TB' + user.id : '#TB0000'}">#TB1001</span></div>
+              <div class="meta-item"><span class="meta-label">Status</span><span class="meta-value" th:text="${user != null and user.premium ? 'Premium' : 'Normal'}">Normal</span></div>
+            </div>
+          </div>
+          <div class="drawer-menu">
+            <a th:href="@{/profile}" class="drawer-menu-item"><i class="bi bi-person-circle"></i><div class="drawer-item-content"><span class="drawer-item-title">Account Centre</span><span class="drawer-item-sub">Manage your botanical ritual</span></div></a>
+            <a th:href="@{/order-history}" class="drawer-menu-item"><i class="bi bi-box-seam"></i><div class="drawer-item-content"><span class="drawer-item-title">Purchase History</span><span class="drawer-item-sub">Track your formulations</span></div><span class="drawer-badge">Active</span></a>
+            <a th:href="@{/saved-blends}" class="drawer-menu-item"><i class="bi bi-heart"></i><div class="drawer-item-content"><span class="drawer-item-title">Saved Blends</span><span class="drawer-item-sub">Your curation library</span></div></a>
+            <a th:href="@{/profile#settings}" class="drawer-menu-item"><i class="bi bi-gear"></i><div class="drawer-item-content"><span class="drawer-item-title">System Settings</span><span class="drawer-item-sub">Privacy &amp; preferences</span></div></a>
+          </div>
+        </div>
+      </div>
+      <button class="tob-mob-icon" type="button" onclick="tobToggleSearch()"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#a37c4e" viewBox="0 0 16 16"><path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/></svg></button>
+      <a th:href="@{/cart}" class="tob-mob-icon cart-ic"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#a37c4e" viewBox="0 0 16 16"><path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .49.598l-1 5a.5.5 0 0 1-.465.401l-9.397.472L4.415 11H13a.5.5 0 0 1 0 1H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5M3.102 4l.84 4.479 9.144-.459L13.89 4zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4m7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4m-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2m7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2"/></svg></a>
+    </div>
+  </div>
+  <div class="tob-mob-search-bar" id="tobMobSearch">
+    <div class="tob-mob-search-inner">
+      <form th:action="@{/shop}" method="get" style="display:flex;gap:8px;width:100%;">
+        <input type="text" name="query" id="mobileSearch" class="tob-mob-search-input" placeholder="Search botanical blends…">
+        <button type="submit" class="tob-mob-search-submit"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/></svg></button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- FULLSCREEN MENU -->
+<div class="tob-overlay" id="tobOverlay">
+  <button class="tob-overlay-close" onclick="tobCloseMenu()">&times;</button>
+  <a th:href="@{/profile}" class="tob-overlay-acc" sec:authorize="isAuthenticated()"><div class="tob-overlay-acc-circle"><i class="fas fa-user"></i></div><div><span class="tob-overlay-acc-name" th:text="${user != null and !#strings.isEmpty(user.fullName) ? user.fullName : 'My Account'}">User Name</span><span class="tob-overlay-acc-sub">Manage Dashboard</span></div></a>
+  <ul class="tob-overlay-links">
+    <li><a th:href="@{/}">Home</a></li>
+    <li><a th:href="@{/shop}">Shop Blends</a></li>
+    <li><a th:href="@{/saved-blends}">Saved Blends</a></li>
+    <li><a th:href="@{/profile}">My Account</a></li>
+    <li><a th:href="@{/contact}">Contact</a></li>
+  </ul>
+  <div class="tob-overlay-footer"><p>Theory <em>of</em> Bloom</p><small>Crafted by Nature. Perfected by Science.</small></div>
+</div>
+
+<!-- ══ BOTANICAL BANNER ══════════════════════════════════════════════ -->
+<div class="dash-banner">
+    <div class="dash-banner-eyebrow">Botanical Ritual · Account</div>
+    <h1 class="dash-banner-title" th:utext="${siteContent.profile.pageTitle}">My <em>Profile</em></h1>
+    <p class="dash-banner-sub" th:text="${user != null ? user.fullName + ' — ' + siteContent.profile.pageSubtitle : siteContent.profile.pageSubtitle}">Manage your account, orders &amp; preferences.</p>
+    <div class="floral-divider"><span>✦</span></div>
+    <nav style="margin-top:1.2rem;display:inline-flex;align-items:center;gap:6px;font-family:'Inter',sans-serif;font-size:0.72rem;font-weight:500;letter-spacing:0.5px;" aria-label="Breadcrumb">
+      <a th:href="@{/}" style="color:rgba(201,160,112,0.8);text-decoration:none;transition:color 0.2s;">Home</a>
+      <span style="color:rgba(255,255,255,0.3);font-size:0.65rem;">&#8250;</span>
+      <span style="color:rgba(234,224,219,0.9);font-weight:600;">Account Centre</span>
+    </nav>
+</div>
+
+<!-- ══ DASHBOARD ══════════════════════════════════════════════════════ -->
+<div class="dash-wrap">
+
+    <!-- SIDEBAR -->
+    <aside class="dash-sidebar d-none d-lg-block">
+
+        <!-- User card -->
+        <div class="sidebar-user-card">
+            <div class="sidebar-avatar" th:text="${user != null and !#strings.isEmpty(user.fullName) ? #strings.substring(user.fullName,0,1) : 'U'}">U</div>
+            <div class="sidebar-name" th:text="${user != null ? user.fullName : 'Customer'}">Customer Name</div>
+            <div class="sidebar-tagline">Botanical Ritualist</div>
+        </div>
+
+        <!-- Membership Status Card -->
+        <div style="margin-bottom:1.5rem;border-radius:12px;overflow:hidden;">
+            <div th:if="${user != null and user.premium}" style="background:linear-gradient(135deg,#1A0F02,#3B2510);border:1px solid rgba(163,124,78,0.45);border-radius:12px;padding:1.3rem;position:relative;overflow:hidden;">
+                <div style="position:absolute;inset:0;background:linear-gradient(45deg,transparent 40%,rgba(198,162,90,0.15) 50%,transparent 60%);pointer-events:none;"></div>
+                <div style="font-size:0.5rem;text-transform:uppercase;letter-spacing:2.5px;color:rgba(163,124,78,0.65);margin-bottom:0.3rem;">✦ Platinum Member</div>
+                <div style="font-family:var(--serif);font-size:1.05rem;font-weight:600;color:#C9954A;" th:text="${user != null ? user.fullName : 'Member'}">Member</div>
+                <div style="font-size:0.68rem;color:rgba(255,255,255,0.45);margin-top:0.2rem;" th:text="${user != null ? '#TB' + user.id : '#TB0000'}">Member ID</div>
+                <!-- Points display -->
+                <div style="margin-top:0.8rem;display:flex;align-items:center;justify-content:space-between;background:rgba(163,124,78,0.1);border:1px solid rgba(163,124,78,0.2);border-radius:6px;padding:8px 12px;">
+                    <div><div style="font-size:0.55rem;letter-spacing:2px;text-transform:uppercase;color:rgba(163,124,78,0.65);" th:text="${siteContent.profile.pointsLabel}">Bloom Points</div><div style="font-family:var(--serif);font-size:1.3rem;color:#C9954A;" th:text="${user != null ? user.points : 0}">0</div></div>
+                    <a th:href="@{/membership}" style="font-size:0.6rem;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:#C9954A;text-decoration:none;background:rgba(163,124,78,0.15);padding:6px 12px;border-radius:20px;">View →</a>
+                </div>
+                <div style="font-size:0.6rem; color:rgba(255,255,255,0.45); margin-top:0.4rem; line-height:1.4;" th:text="${siteContent.profile.pointsDescription}">Earn points with every purchase and redeem for rewards.</div>
+            </div>
+            <div th:if="${user == null or !user.premium}" style="background:linear-gradient(135deg,#F5F0E8,#EDE9DF);border:1px solid rgba(180,160,120,0.25);border-radius:12px;padding:1.2rem;">
+                <div style="font-size:0.52rem;text-transform:uppercase;letter-spacing:2px;color:#9a8070;margin-bottom:0.2rem;">Member Status</div>
+                <div style="font-family:var(--serif);font-size:1rem;font-weight:600;color:var(--ink);">Standard Member</div>
+                <div style="font-size:0.68rem;color:var(--ink-soft);margin:0.2rem 0 0.5rem;" th:text="${user != null ? '#TB' + user.id : '#TB0000'}">Member ID</div>
+                <!-- Points display -->
+                <div style="display:flex;align-items:center;justify-content:space-between;background:rgba(107,140,111,0.08);border:1px solid rgba(107,140,111,0.15);border-radius:6px;padding:8px 12px;margin-bottom:0.4rem;">
+                    <div><div style="font-size:0.55rem;letter-spacing:2px;text-transform:uppercase;color:var(--sage);" th:text="${siteContent.profile.pointsLabel}">Bloom Points</div><div style="font-family:var(--serif);font-size:1.2rem;color:var(--sage-dark);" th:text="${user != null ? user.points : 0}">0</div></div>
+                    <a th:href="@{/membership}" style="font-size:0.6rem;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--sage-dark);text-decoration:none;background:rgba(107,140,111,0.12);padding:6px 12px;border-radius:20px;">View →</a>
+                </div>
+                <div style="font-size:0.6rem; color:var(--ink-soft); margin-bottom:0.8rem; line-height:1.4;" th:text="${siteContent.profile.pointsDescription}">Earn points with every purchase and redeem for rewards.</div>
+                <a th:href="@{/membership}" style="font-size:0.65rem;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:#8B6914;text-decoration:none;">✦ <span th:text="${siteContent.profile.membershipBannerTitle}">Upgrade to Platinum</span></a>
+            </div>
+        </div>
+
+
+        <!-- Nav -->
+        <ul class="dash-nav">
+            <li class="active"><a href="#personal"><i class="bi bi-person"></i> Login &amp; Security</a></li>
+            <li><a href="#addresses"><i class="bi bi-geo-alt"></i> Your Addresses</a></li>
+            <li><a th:href="@{/order-history}"><i class="bi bi-box-seam"></i> Your Orders</a></li>
+            <li><a href="#saved-blends"><i class="bi bi-heart"></i> Saved Blends</a></li>
+            <li><a href="#returns"><i class="bi bi-arrow-return-left"></i> Returns &amp; Refunds</a></li>
+            <li><a href="#reviews"><i class="bi bi-star"></i> Your Reviews</a></li>
+            <li><a href="#premium"><i class="bi bi-stars"></i> Membership</a></li>
+            <li><a href="#settings"><i class="bi bi-gear"></i> Account Settings</a></li>
+        </ul>
+        <!-- Botanical badges -->
+        <div class="sidebar-badges">
+            <div class="sidebar-badge"><i class="bi bi-flower1"></i> 100% Botanical</div>
+            <div class="sidebar-badge"><i class="bi bi-droplet-half"></i> No Synthetics</div>
+            <div class="sidebar-badge"><i class="bi bi-geo-alt"></i> Made in India</div>
+        </div>
+
+    </aside>
+
+    <!-- MAIN -->
+    <main class="dash-main">
+
+        <!-- Mobile welcome -->
+        <div class="mob-welcome d-lg-none">
+            <h2 th:text="'Hello, ' + ${user != null ? user.fullName : 'Customer'}">Hello, Customer</h2>
+        </div>
+
+        <!-- Mobile nav pills -->
+        <div class="mob-nav-pills d-lg-none" style="overflow-x:auto;white-space:nowrap;-webkit-overflow-scrolling:touch;scrollbar-width:none;">
+            <a href="#personal" class="mob-nav-pill active">Login &amp; Security</a>
+            <a href="#addresses" class="mob-nav-pill">Addresses</a>
+            <a th:href="@{/order-history}" class="mob-nav-pill">Orders</a>
+            <a href="#saved-blends" class="mob-nav-pill">Saved Blends</a>
+            <a href="#returns" class="mob-nav-pill">Returns</a>
+            <a href="#reviews" class="mob-nav-pill">Reviews</a>
+            <a href="#premium" class="mob-nav-pill">Premium</a>
+            <a href="#settings" class="mob-nav-pill">Settings</a>
+        </div>
+
+        <!-- Mobile Premium Card -->
+        <div class="d-lg-none" style="margin-bottom:1.2rem;">
+            <div th:if="${user != null and user.premium}" style="background:linear-gradient(135deg,#1A0F02,#3B2510);border:1px solid rgba(163,124,78,0.5);border-radius:14px;padding:1.4rem;position:relative;overflow:hidden;box-shadow:0 8px 24px rgba(163,124,78,0.2);">
+                <div style="position:absolute;inset:0;background:linear-gradient(120deg,transparent 40%,rgba(198,162,90,0.18) 50%,transparent 60%);pointer-events:none;"></div>
+                <div style="font-size:0.52rem;letter-spacing:3px;text-transform:uppercase;color:rgba(163,124,78,0.65);margin-bottom:0.2rem;">Theory of Bloom ✦ Premium</div>
+                <div style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:600;color:#C9954A;margin-bottom:0.5rem;">Premium Member</div>
+                <div style="display:flex;justify-content:space-between;border-top:1px solid rgba(255,255,255,0.07);padding-top:0.8rem;">
+                    <div><div style="font-size:0.5rem;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,0.3);">Member ID</div><div style="font-size:0.8rem;color:#fff;" th:text="${user != null ? '#TB' + user.id : '#TB0000'}">#TB1001</div></div>
+                    <div style="text-align:right;"><div style="font-size:0.5rem;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,0.3);">Status</div><div style="font-size:0.8rem;color:#C9954A;">Active ✓</div></div>
+                </div>
+            </div>
+            <div th:if="${user == null or !user.premium}" style="background:linear-gradient(135deg,#FAF8F3,#EDE9DF);border:1px solid rgba(180,160,120,0.25);border-radius:14px;padding:1.2rem;display:flex;align-items:center;gap:12px;">
+                <span style="font-size:1.5rem;color:rgba(163,124,78,0.5);">✦</span>
+                <div>
+                    <div style="font-family:'Cormorant Garamond',serif;font-size:0.95rem;font-weight:600;color:#1A1208;">Standard Member</div>
+                    <a href="#premium" style="font-size:0.68rem;color:#8B6914;text-decoration:none;">Tap to <span th:text="${#strings.toLowerCase(siteContent.profile.membershipBannerTitle)}">upgrade to premium</span> →</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Global alerts -->
+        <div th:if="${param.updated == 'profile'}" class="dash-alert success">
+            <i class="bi bi-check-circle-fill"></i> Personal information updated successfully.
+        </div>
+        <div th:if="${param.updated == 'address'}" class="dash-alert success">
+            <i class="bi bi-geo-alt-fill"></i> Address updated successfully.
+        </div>
+        <div th:if="${error}" class="dash-alert error">
+            <i class="bi bi-exclamation-triangle-fill"></i> <span th:text="${error}">Error</span>
+        </div>
+
+        <!-- ─ PERSONAL INFORMATION ─────────────────────────────────── -->
+        <section id="personal" class="bot-section">
+            <div class="section-bar">
+                <div>
+                    <div class="section-eyebrow">Personal Details</div>
+                    <h2 class="section-heading">Login &amp; <em>Security</em></h2>
+                </div>
+                <button type="button" class="btn-edit" id="editProfileBtn" onclick="toggleEdit('profile')">
+                    <i class="bi bi-pencil"></i> Edit
+                </button>
+            </div>
+
+            <form th:action="@{/profile/update}" method="post" id="profileForm">
+                <div class="form-grid">
+                    <div class="field-group">
+                        <label>Full Name</label>
+                        <input type="text" name="fullName" th:value="${user != null ? user.fullName : ''}" required disabled>
+                    </div>
+                    <div class="field-group">
+                        <label>Email Address</label>
+                        <input type="email" th:value="${user != null ? user.email : ''}" disabled>
+                    </div>
+                    <div class="field-group">
+                        <label>Mobile Number</label>
+                        <input type="tel" name="phone" th:value="${user != null ? user.phone : ''}" disabled>
+                    </div>
+                    <div class="field-group">
+                        <label>Alternate Mobile</label>
+                        <input type="text" name="altPhone" th:value="${user != null ? user.altPhone : ''}" disabled>
+                    </div>
+                    <div class="field-group">
+                        <label>Date of Birth</label>
+                        <input type="date" name="dob" th:value="${user != null ? user.dob : ''}" disabled>
+                    </div>
+                    <div class="field-group">
+                        <label>Gender</label>
+                        <select name="gender" disabled>
+                            <option value="female" th:selected="${user != null and user.gender == 'female'}">Female</option>
+                            <option value="male" th:selected="${user != null and user.gender == 'male'}">Male</option>
+                            <option value="other" th:selected="${user != null and user.gender == 'other'}">Non-Binary / Other</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="profileActions" style="display:none;">
+                    <button type="submit" class="btn-save">Save Changes</button>
+                </div>
+            </form>
+        </section>
+
+        <!-- ─ ADDRESSES ───────────────────────────────────────────── -->
+        <section id="addresses" class="bot-section" style="--section-accent: var(--sage);">
+            <div class="section-bar">
+                <div>
+                    <div class="section-eyebrow">Delivery Details</div>
+                    <h2 class="section-heading">Your <em>Addresses</em></h2>
+                </div>
+                <button type="button" class="btn-edit" id="editAddressBtn" onclick="toggleEdit('address')">
+                    <i class="bi bi-pencil"></i> Edit
+                </button>
+            </div>
+
+            <form th:action="@{/profile/address/update}" method="post" id="addressForm">
+                <div class="form-grid">
+                    <div class="field-group addr-full">
+                        <label>Flat, House no., Building, Company, Apartment</label>
+                        <textarea name="address" rows="2" th:text="${user != null ? user.address : ''}" disabled></textarea>
+                    </div>
+                    <div class="field-group">
+                        <label>Town / City</label>
+                        <input type="text" name="city" th:value="${user != null ? user.city : ''}" disabled>
+                    </div>
+                    <div class="field-group">
+                        <label>State / Province / Region</label>
+                        <input type="text" name="state" th:value="${user != null ? user.state : ''}" disabled>
+                    </div>
+                    <div class="field-group">
+                        <label>PIN Code</label>
+                        <input type="text" name="pincode" th:value="${user != null ? user.pincode : ''}" disabled>
+                    </div>
+                </div>
+                <div id="addressActions" style="display:none;">
+                    <button type="submit" class="btn-save">Save Address</button>
+                </div>
+            </form>
+        </section>
+
+        <!-- ─ ORDERS ──────────────────────────────────────────────── -->
+        <section id="orders" class="bot-section" style="padding-bottom:2rem;">
+            <div class="section-bar">
+                <div>
+                    <div class="section-eyebrow">Purchase History</div>
+                    <h2 class="section-heading">Your <em>Orders</em></h2>
+                </div>
+                <a th:href="@{/order-history}" class="btn-edit" style="text-decoration:none; white-space:nowrap;">
+                    View All <i class="bi bi-arrow-right" style="font-size:0.7rem;"></i>
+                </a>
+            </div>
+
+            <!-- Empty state -->
+            <div th:if="${orders == null or orders.isEmpty()}" style="text-align:center; padding:2.5rem 1rem;">
+                <i class="bi bi-basket2" style="font-size:2.5rem; color:rgba(107,140,111,0.25); display:block; margin-bottom:1rem;"></i>
+                <p style="font-family:var(--serif); font-size:1.2rem; font-style:italic; color:var(--ink-soft); margin-bottom:1.2rem;">No orders placed yet</p>
+                <a th:href="@{/shop}" class="btn-save" style="display:inline-flex; align-items:center; gap:8px; text-decoration:none; font-size:0.75rem;">
+                    <i class="bi bi-bag"></i> Shop Blends
+                </a>
+            </div>
+
+            <!-- Order rows - latest 5 -->
+            <div th:if="${orders != null and !orders.isEmpty()}">
+                <div th:each="order, i : ${orders}" th:if="${i.index < 5}"
+                     style="border:1px solid rgba(180,160,120,0.18); border-radius:3px; margin-bottom:0.9rem; overflow:hidden; background:rgba(255,253,248,0.6);">
+                    <!-- Header -->
+                    <div style="display:flex; align-items:center; justify-content:space-between; padding:0.85rem 1.2rem; flex-wrap:wrap; gap:0.5rem; border-bottom:1px solid rgba(180,160,120,0.12); background:rgba(107,140,111,0.04);">
+                        <div style="display:flex; align-items:center; gap:1rem; flex-wrap:wrap;">
+                            <span style="font-family:var(--serif); font-size:1rem; font-weight:500; color:var(--ink);" th:text="'Order #' + ${order.id}">Order #1001</span>
+                            <span style="font-family:var(--sans); font-size:0.73rem; color:var(--ink-soft);">
+                                <i class="bi bi-calendar3" style="color:var(--sage); margin-right:4px;"></i>
+                                <span th:text="${#temporals.format(order.createdAt, 'dd MMM yyyy')}">12 Apr 2026</span>
+                            </span>
+                            <span style="font-family:var(--sans); font-size:0.73rem; color:var(--ink-soft);">
+                                <i class="bi bi-bag" style="color:var(--sage); margin-right:4px;"></i>
+                                <span th:text="${order.orderItems.size()} + ' item(s)'">2 item(s)</span>
+                            </span>
+                        </div>
+                        <div style="display:flex; align-items:center; gap:0.8rem;">
+                            <span th:class="'order-status-pill ' + ${#strings.toLowerCase(order.status)}" th:text="${order.status}">PENDING</span>
+                            <span style="font-family:var(--serif); font-size:1.05rem; font-weight:500; color:var(--ink);" th:text="'&#8377;' + ${order.totalAmount}">&#8377;999</span>
+                        </div>
+                    </div>
+                    <!-- Items -->
+                    <div style="padding:0.7rem 1.2rem;">
+                        <div th:each="item : ${order.orderItems}"
+                             style="display:flex; justify-content:space-between; align-items:center; padding:0.32rem 0; font-size:0.82rem; border-bottom:1px solid rgba(180,160,120,0.08);">
+                            <span style="color:var(--ink); flex:1;" th:text="${item.product != null ? item.product.name : 'Product'}">Botanical Elixir</span>
+                            <span style="color:var(--ink-soft); margin:0 1rem; white-space:nowrap;" th:text="'x ' + ${item.quantity}">x 1</span>
+                            <span style="font-family:var(--serif); color:var(--ink); white-space:nowrap;" th:text="'&#8377;' + ${item.getSubtotal()}">&#8377;999</span>
+                        </div>
+                        <div style="font-size:0.7rem; color:var(--ink-soft); margin-top:0.45rem; opacity:0.7;">
+                            <i class="bi bi-clock-history" style="color:var(--sage);"></i>
+                            Last updated: <span th:text="${#temporals.format(order.updatedAt, 'dd MMM yyyy, hh:mm a')}">Today</span>
+                        </div>
+                    </div>
+                </div>
+                <div th:if="${orders.size() > 5}" style="text-align:center; padding-top:0.5rem;">
+                    <a th:href="@{/order-history}" style="font-family:var(--sans); font-size:0.73rem; letter-spacing:1.5px; text-transform:uppercase; color:var(--sage-dark); text-decoration:none; display:inline-flex; align-items:center; gap:6px; font-weight:500;">
+                        View all <span th:text="${orders.size()}">0</span> orders &rarr;
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- ─ SAVED BLENDS ────────────────────────────────────────── -->
+        <section id="saved-blends" class="bot-section">
+            <div class="section-bar">
+                <div><div class="section-eyebrow">Your Curation</div><h2 class="section-heading">Saved <em>Blends</em></h2></div>
+                <a th:href="@{/saved-blends}" class="btn-edit" style="text-decoration:none;">View All →</a>
+            </div>
+            <div id="profileSavedGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:1rem;"></div>
+            <div id="profileSavedEmpty" style="text-align:center;padding:2rem 1rem;display:none;">
+                <i class="bi bi-heart" style="font-size:2rem;color:rgba(107,140,111,0.2);display:block;margin-bottom:0.6rem;"></i>
+                <p style="font-family:var(--serif);font-size:1rem;font-style:italic;color:var(--ink-soft);margin-bottom:1rem;">No blends saved yet</p>
+                <a th:href="@{/shop}" style="font-size:0.7rem;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--sage-dark);text-decoration:none;">Browse Blends →</a>
+            </div>
+        </section>
+
+        <!-- ─ RETURNS ─────────────────────────────────────────────── -->
+        <section id="returns" class="bot-section">
+            <div class="section-bar">
+                <div><div class="section-eyebrow">Fulfilment</div><h2 class="section-heading">Returns &amp; <em>Refunds</em></h2></div>
+            </div>
+            <div th:if="${orders == null or orders.isEmpty()}" style="text-align:center;padding:2rem 1rem;">
+                <i class="bi bi-arrow-return-left" style="font-size:2rem;color:rgba(107,140,111,0.2);display:block;margin-bottom:0.6rem;"></i>
+                <p style="font-family:var(--serif);font-size:1rem;font-style:italic;color:var(--ink-soft);">No orders eligible for return yet</p>
+            </div>
+            <div th:if="${orders != null and !orders.isEmpty()}">
+                <div th:each="order : ${orders}" th:if="${order.status == 'DELIVERED'}"
+                     style="border:1px solid rgba(180,160,120,0.18);border-radius:3px;padding:1rem 1.2rem;margin-bottom:0.8rem;background:rgba(255,253,248,0.6);display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:0.8rem;">
+                    <div>
+                        <div style="font-family:var(--serif);font-weight:500;margin-bottom:0.2rem;" th:text="'Order #' + ${order.id}">Order #1001</div>
+                        <div th:each="item : ${order.orderItems}" style="font-size:0.8rem;color:var(--ink-soft);" th:text="${item.product != null ? item.product.name : 'Product'} + ' x ' + ${item.quantity}">Item x 1</div>
+                        <div style="font-size:0.7rem;color:var(--ink-soft);margin-top:0.3rem;">Delivered: <span th:text="${#temporals.format(order.updatedAt, 'dd MMM yyyy')}">01 Apr 2026</span></div>
+                    </div>
+                    <div style="text-align:right;">
+                        <div style="font-size:0.68rem;color:#7A5C2E;font-weight:600;margin-bottom:0.5rem;">Refund: Within 7 days of delivery</div>
+                        <a th:href="@{/contact}" style="font-size:0.68rem;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:white;background:var(--sage-dark);border-radius:3px;padding:8px 16px;text-decoration:none;">Request Return</a>
+                    </div>
+                </div>
+                <div th:if="${#lists.isEmpty(orders.?[status == 'DELIVERED'])}" style="text-align:center;padding:1.5rem;">
+                    <p style="font-family:var(--serif);font-size:0.95rem;font-style:italic;color:var(--ink-soft);">No delivered orders eligible for return at this time.</p>
+                </div>
+            </div>
+            <div style="margin-top:1rem;padding:1rem;background:rgba(107,140,111,0.05);border:1px solid rgba(107,140,111,0.12);border-radius:4px;font-size:0.8rem;color:var(--ink-soft);">
+                <i class="bi bi-info-circle" style="color:var(--sage);margin-right:6px;"></i>
+                Returns accepted within 7 days of delivery. Refunds processed in 5–7 business days.
+                <a th:href="@{/contact}" style="color:var(--sage-dark);">Contact us</a> for assistance.
+            </div>
+        </section>
+
+        <!-- ─ YOUR REVIEWS ────────────────────────────────────────── -->
+        <section id="reviews" class="bot-section">
+            <div class="section-bar">
+                <div><div class="section-eyebrow">Community Feedback</div><h2 class="section-heading">Your <em>Reviews</em></h2></div>
+                <a th:href="@{/shop}" class="btn-edit" style="text-decoration:none;">See All →</a>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:1rem;">
+                <div style="padding:1.2rem;background:rgba(255,253,248,0.6);border:1px solid rgba(180,160,120,0.18);border-radius:4px;">
+                    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.5rem;"><span style="color:#a37c4e;font-size:0.9rem;letter-spacing:2px;">★★★★★</span><span style="font-size:0.7rem;color:var(--ink-soft);">12 Apr 2026</span></div>
+                    <div style="font-family:var(--serif);font-size:1rem;font-weight:500;color:var(--ink);margin-bottom:0.3rem;">Lunar Calm</div>
+                    <p style="font-size:0.82rem;color:var(--ink-soft);line-height:1.6;font-style:italic;">"A genuinely transformative blend — I sleep so much better. Highly recommend."</p>
+                </div>
+                <div style="padding:1.2rem;background:rgba(255,253,248,0.6);border:1px solid rgba(180,160,120,0.18);border-radius:4px;">
+                    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.5rem;"><span style="color:#a37c4e;font-size:0.9rem;letter-spacing:2px;">★★★★☆</span><span style="font-size:0.7rem;color:var(--ink-soft);">05 Mar 2026</span></div>
+                    <div style="font-family:var(--serif);font-size:1rem;font-weight:500;color:var(--ink);margin-bottom:0.3rem;">Morning Ritual Blend</div>
+                    <p style="font-size:0.82rem;color:var(--ink-soft);line-height:1.6;font-style:italic;">"Beautiful taste and premium packaging. Will definitely reorder."</p>
+                </div>
+            </div>
+            <div style="text-align:center;margin-top:1.2rem;">
+                <a th:href="@{/my-reviews}" style="font-size:0.7rem;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--sage-dark);text-decoration:none;border-bottom:1px solid rgba(61,92,65,0.3);padding-bottom:2px;">View All Your Reviews →</a>
+            </div>
+        </section>
+
+        <!-- ─ BUY PREMIUM ─────────────────────────────────────────── -->
+        <section id="premium" class="bot-section">
+            <div class="section-bar">
+                <div><div class="section-eyebrow">Exclusive Access</div><h2 class="section-heading" th:text="${siteContent.profile.membershipBannerTitle}">Theory of Bloom <em>Premium</em></h2></div>
+            </div>
+            <div th:if="${user != null and user.premium}" style="background:linear-gradient(135deg,#1A1208,#2C1804);border:1px solid rgba(163,124,78,0.35);border-radius:12px;padding:2rem;position:relative;overflow:hidden;text-align:center;">
+                <div style="position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(163,124,78,0.2),transparent 60%);pointer-events:none;"></div>
+                <div style="font-size:2rem;margin-bottom:0.5rem;">✦</div>
+                <div style="font-family:var(--serif);font-size:1.6rem;color:#C9954A;margin-bottom:0.3rem;">Premium Member</div>
+                <div style="font-size:0.75rem;color:rgba(255,255,255,0.5);margin-bottom:1.2rem;" th:text="'Member ID: #TB' + ${user.id}">Member ID</div>
+                <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
+                    <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:0.8rem 1.2rem;"><div style="font-size:0.55rem;letter-spacing:2px;text-transform:uppercase;color:rgba(163,124,78,0.6);">Status</div><div style="color:#fff;font-weight:500;">Active Premium</div></div>
+                </div>
+            </div>
+            <div th:if="${user == null or !user.premium}" style="background:linear-gradient(135deg,#FAF8F3,#EDE9DF);border:1px solid rgba(180,160,120,0.3);border-radius:12px;padding:2rem;">
+                <p style="font-size:0.88rem;color:var(--ink-soft);line-height:1.7;margin-bottom:1.5rem;" th:text="${siteContent.profile.membershipBannerBody}">Upgrade to unlock exclusive access, member-only blends, free shipping, personalised recommendations, and priority support.</p>
+                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:0.7rem;margin-bottom:1.5rem;">
+                    <div style="display:flex;align-items:center;gap:8px;font-size:0.8rem;"><i class="bi bi-check-circle-fill" style="color:var(--sage);"></i> Early Access to New Blends</div>
+                    <div style="display:flex;align-items:center;gap:8px;font-size:0.8rem;"><i class="bi bi-check-circle-fill" style="color:var(--sage);"></i> Member-Only Discounts</div>
+                    <div style="display:flex;align-items:center;gap:8px;font-size:0.8rem;"><i class="bi bi-check-circle-fill" style="color:var(--sage);"></i> Free Shipping on All Orders</div>
+                    <div style="display:flex;align-items:center;gap:8px;font-size:0.8rem;"><i class="bi bi-check-circle-fill" style="color:var(--sage);"></i> Personalised Wellness Guidance</div>
+                    <div style="display:flex;align-items:center;gap:8px;font-size:0.8rem;"><i class="bi bi-check-circle-fill" style="color:var(--sage);"></i> Priority Support</div>
+                    <div style="display:flex;align-items:center;gap:8px;font-size:0.8rem;"><i class="bi bi-check-circle-fill" style="color:var(--sage);"></i> Golden Member Card</div>
+                </div>
+                <a th:href="@{/membership}" style="display:inline-flex;align-items:center;gap:8px;font-size:0.75rem;font-weight:600;letter-spacing:2px;text-transform:uppercase;background:linear-gradient(135deg,#a37c4e,#C9954A);color:#fff;border:none;border-radius:3px;padding:14px 32px;text-decoration:none;box-shadow:0 4px 20px rgba(163,124,78,0.3);"><i class="bi bi-stars"></i> Enquire About Premium</a>
+            </div>
+        </section>
+
+        <!-- ─ ACCOUNT SETTINGS ────────────────────────────────────── -->
+        <section id="settings" class="bot-section">
+            <div class="section-bar">
+                <div><div class="section-eyebrow">Preferences &amp; Legal</div><h2 class="section-heading">Account <em>Settings</em></h2></div>
+            </div>
+            <div style="margin-bottom:1.8rem;padding-bottom:1.5rem;border-bottom:1px solid rgba(180,160,120,0.15);">
+                <div style="font-family:var(--serif);font-size:1.1rem;font-weight:500;color:var(--ink);margin-bottom:0.6rem;display:flex;align-items:center;gap:8px;"><i class="bi bi-star" style="color:var(--sage);"></i> Reviews</div>
+                <p style="font-size:0.82rem;color:var(--ink-soft);line-height:1.6;margin-bottom:0.7rem;">Your reviews help the community make better choices. Thank you for sharing.</p>
+                <a href="#reviews" onclick="document.getElementById('reviews').scrollIntoView({behavior:'smooth'});return false;" style="font-size:0.7rem;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--sage-dark);text-decoration:none;">View Your Reviews →</a>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:0.6rem;">
+                <div style="font-family:var(--serif);font-size:1.1rem;font-weight:500;color:var(--ink);margin-bottom:0.3rem;display:flex;align-items:center;gap:8px;"><i class="bi bi-shield-check" style="color:var(--sage);"></i> Legal</div>
+                <a th:href="@{/privacy-policy}" style="display:flex;align-items:center;justify-content:space-between;padding:0.9rem 1rem;background:rgba(255,253,248,0.6);border:1px solid rgba(180,160,120,0.15);border-radius:4px;text-decoration:none;color:var(--ink);font-size:0.85rem;"><span><i class="bi bi-file-earmark-text" style="color:var(--sage);margin-right:8px;"></i>Privacy Policy</span><i class="bi bi-chevron-right" style="font-size:0.7rem;color:var(--ink-soft);"></i></a>
+                <a th:href="@{/privacy-policy#terms}" style="display:flex;align-items:center;justify-content:space-between;padding:0.9rem 1rem;background:rgba(255,253,248,0.6);border:1px solid rgba(180,160,120,0.15);border-radius:4px;text-decoration:none;color:var(--ink);font-size:0.85rem;"><span><i class="bi bi-file-earmark-ruled" style="color:var(--sage);margin-right:8px;"></i>Terms &amp; Conditions</span><i class="bi bi-chevron-right" style="font-size:0.7rem;color:var(--ink-soft);"></i></a>
+                <a th:href="@{/contact}" style="display:flex;align-items:center;justify-content:space-between;padding:0.9rem 1rem;background:rgba(255,253,248,0.6);border:1px solid rgba(180,160,120,0.15);border-radius:4px;text-decoration:none;color:var(--ink);font-size:0.85rem;"><span><i class="bi bi-envelope" style="color:var(--sage);margin-right:8px;"></i>Contact Support</span><i class="bi bi-chevron-right" style="font-size:0.7rem;color:var(--ink-soft);"></i></a>
+            </div>
+        </section>
+
+    </main>
+
+</div>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script th:src="@{/js/header.js?v=5.0}"></script>
+<script>
+    function openSignoutModal() {
+        document.getElementById('signoutOverlay').classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+    function closeSignoutModal() {
+        document.getElementById('signoutOverlay').classList.remove('active');
+        document.body.style.overflow = '';
+    }
+    document.getElementById('signoutOverlay').addEventListener('click', function(e) {
+        if (e.target === this) closeSignoutModal();
+    });
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') closeSignoutModal();
+    });
+
+    function toggleEdit(section) {
+        const formId    = section === 'profile' ? 'profileForm'    : 'addressForm';
+        const actionId  = section === 'profile' ? 'profileActions' : 'addressActions';
+        const btnId     = section === 'profile' ? 'editProfileBtn' : 'editAddressBtn';
+        const form      = document.getElementById(formId);
+        const action    = document.getElementById(actionId);
+        const btn       = document.getElementById(btnId);
+        const fields    = form.querySelectorAll('input, select, textarea');
+        const isLocked  = action.style.display === 'none' || action.style.display === '';
+
+        if (isLocked) {
+            fields.forEach(f => { if (f.type !== 'email') f.disabled = false; });
+            action.style.display = 'block';
+            btn.innerHTML = '<i class="bi bi-x-circle"></i> Cancel';
+            btn.classList.add('editing');
+        } else {
+            fields.forEach(f => { if (f.type !== 'email') f.disabled = true; });
+            action.style.display = 'none';
+            btn.innerHTML = '<i class="bi bi-pencil"></i> Edit';
+            btn.classList.remove('editing');
+        }
+    }
+
+    document.querySelectorAll('.dash-nav a[href^="#"], .mob-nav-pill[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            e.preventDefault();
+            document.querySelectorAll('.dash-nav li, .mob-nav-pill').forEach(i => i.classList.remove('active'));
+            this.closest('li') && this.closest('li').classList.add('active');
+            this.classList.contains('mob-nav-pill') && this.classList.add('active');
+            const target = document.getElementById(this.getAttribute('href').substring(1));
+            if (target) window.scrollTo({ top: target.offsetTop - 100, behavior: 'smooth' });
+        });
+    });
+
+    /* ── Saved Blends mini-grid ── */
+    function initProfileSavedBlends() {
+        const saved = JSON.parse(localStorage.getItem('tob_saved') || '[]');
+        const grid = document.getElementById('profileSavedGrid');
+        const emptyState = document.getElementById('profileSavedEmpty');
+        if (!grid) return;
+        if (saved.length === 0) {
+            grid.style.display = 'none';
+            if (emptyState) emptyState.style.display = 'block';
+            return;
+        }
+        if (emptyState) emptyState.style.display = 'none';
+        grid.innerHTML = saved.slice(0, 4).map(id => `
+            <div style="border:1px solid rgba(180,160,120,0.2);border-radius:4px;overflow:hidden;background:rgba(255,253,248,0.7);">
+              <div style="height:110px;background:linear-gradient(135deg,#EDE9DF,#E2DBD0);display:flex;align-items:center;justify-content:center;color:rgba(107,140,111,0.25);font-size:1.5rem;"><i class="bi bi-flower1"></i></div>
+              <div style="padding:0.6rem 0.7rem;"><div style="font-family:var(--serif);font-size:0.85rem;font-weight:500;margin-bottom:0.2rem;">Saved Blend</div><a href="/saved-blends" style="font-size:0.62rem;color:var(--sage-dark);text-transform:uppercase;letter-spacing:1px;text-decoration:none;">View →</a></div>
+            </div>
+        `).join('');
+        if (saved.length > 4) {
+            grid.insertAdjacentHTML('beforeend',
+                `<div style="display:flex;align-items:center;justify-content:center;border:1px dashed rgba(180,160,120,0.3);border-radius:4px;padding:1rem;cursor:pointer;" onclick="location.href='/saved-blends'">
+                    <span style="font-size:0.7rem;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--sage-dark);">+${saved.length - 4} more →</span>
+                </div>`
+            );
+        }
+    }
+    document.addEventListener('DOMContentLoaded', initProfileSavedBlends);
+</script>
+
+</body>
+</html>
+
+
+
+
+
+

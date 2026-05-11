@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Create Account | Theory of Bloom</title>
+    <meta name="description" content="Join Theory of Bloom and begin your botanical wellness journey today.">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" th:href="@{/css/header.css?v=4.9}">
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            min-height: 100vh;
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem 1rem;
+            background: linear-gradient(180deg, #F6EBE9 0%, #EAE0DB 50%, #F3EBE7 100%);
+        }
+
+        .auth-card {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            max-width: 480px;
+            margin: 2rem 1rem;
+            padding: 3rem 2.8rem;
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(25px) saturate(1.2);
+            -webkit-backdrop-filter: blur(25px) saturate(1.2);
+            border-radius: 20px;
+            border: 1px solid rgba(201, 160, 112, 0.3); /* Soft antique gold border */
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.05);
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+        }
+        .auth-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.12);
+        }
+
+        /* -- Spotlight Glow Effect ----------------------------------- */
+        .auth-card::after {
+            content: ''; position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: radial-gradient(
+                600px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), 
+                rgba(201, 160, 112, 0.15), 
+                transparent 40%
+            );
+            pointer-events: none; opacity: 0;
+            transition: opacity 0.4s ease;
+            z-index: 20; border-radius: 20px;
+        }
+        .auth-card:hover::after { opacity: 1; }
+
+        @media (max-width: 768px) {
+            .auth-card::after {
+                opacity: 1;
+                background: radial-gradient(
+                    400px circle at top left, 
+                    rgba(201, 160, 112, 0.12), 
+                    transparent 60%
+                );
+                animation: pulseGlow 4s ease-in-out infinite alternate;
+            }
+        }
+        @keyframes pulseGlow {
+            0% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        /* -- Logo ---------------------------------------------------- */
+        .auth-logo-wrap { text-align: center; margin-bottom: -0.5rem; isolation: isolate; }
+
+        .auth-brand-sub {
+            font-size: 0.6rem; letter-spacing: 5px;
+            text-transform: uppercase; color: #A67C46;
+            text-align: center; font-family: 'Inter', sans-serif;
+            margin-bottom: 0.3rem;
+        }
+
+        /* -- Ornamental divider --------------------------------------- */
+        .auth-divider {
+            display: flex; align-items: center; gap: 10px;
+            margin: 1rem 0 1.2rem;
+        }
+        .auth-divider::before, .auth-divider::after {
+            content: ''; flex: 1; height: 1px;
+            background: #E6D5C3; /* Sandal */
+        }
+        .auth-divider span {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.75rem; font-weight: 400;
+            color: #7A6051; text-transform: uppercase; letter-spacing: 2px;
+        }
+
+        /* -- Titles --------------------------------------------------- */
+        .auth-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2.4rem; font-weight: 400;
+            color: #2C1E16; margin-bottom: 0.2rem;
+            text-align: center; letter-spacing: 1.5px;
+        }
+        .auth-subtitle {
+            font-size: 0.85rem; color: #5A4231;
+            margin-bottom: 1.5rem; text-align: center;
+            font-family: 'Inter', sans-serif; font-weight: 300; letter-spacing: 0.5px;
+        }
+
+        /* -- Inputs: Minimalist Underline Effect --------------------- */
+        .auth-input-group { position: relative; margin-bottom: 2.2rem; }
+        .auth-input-group input {
+            width: 100%; padding: 12px 0 8px;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid rgba(90, 66, 49, 0.2);
+            border-radius: 0; font-size: 1rem;
+            font-family: 'Inter', sans-serif; color: #2C1E16; font-weight: 300;
+            outline: none; transition: all 0.3s ease;
+        }
+        .auth-input-group input::placeholder { color: transparent; }
+        .auth-input-group::after {
+            content: ''; position: absolute; bottom: 0; left: 50%;
+            width: 0%; height: 1.5px;
+            background: linear-gradient(90deg, #C9A070, #A67C46);
+            transition: width 0.4s ease, left 0.4s ease;
+        }
+        .auth-input-group:focus-within::after {
+            width: 100%; left: 0;
+        }
+        .auth-input-group label {
+            position: absolute; left: 0; top: 18px;
+            color: #7A6051; pointer-events: none;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            font-size: 0.9rem; font-family: 'Inter', sans-serif; font-weight: 300; letter-spacing: 0.5px;
+        }
+        .auth-input-group input:focus ~ label,
+        .auth-input-group input:not(:placeholder-shown) ~ label {
+            top: -12px; font-size: 0.7rem; color: #A67C46; letter-spacing: 1.5px;
+            text-transform: uppercase; font-weight: 400;
+        }
+
+        /* -- Password toggle ------------------------------------------ */
+        .password-toggle {
+            position: absolute; right: 8px; top: 50%; transform: translateY(-50%);
+            background: none; border: none; color: #7A6051;
+            cursor: pointer; font-size: 0.95rem; transition: color 0.2s;
+        }
+        .password-toggle:hover { color: #2C1E16; }
+
+        /* -- Terms box ------------------------------------------------ */
+        .terms-scroll-box {
+            height: 110px; overflow-y: auto; padding: 12px 14px;
+            border: 1px solid rgba(90, 66, 49, 0.2);
+            border-radius: 12px; font-size: 0.75rem; color: #5A4231;
+            background: rgba(255, 255, 255, 0.3);
+            margin-bottom: 12px; line-height: 1.6;
+            font-family: 'Inter', sans-serif; font-weight: 300;
+        }
+        .terms-scroll-box::-webkit-scrollbar { width: 4px; }
+        .terms-scroll-box::-webkit-scrollbar-track { background: transparent; }
+        .terms-scroll-box::-webkit-scrollbar-thumb { background: rgba(90, 66, 49, 0.2); border-radius: 2px; }
+        .terms-check {
+            display: flex; align-items: center; gap: 10px;
+            font-size: 0.85rem; color: #2C1E16;
+            font-family: 'Inter', sans-serif; font-weight: 300;
+        }
+        .terms-check input[type="checkbox"] {
+            accent-color: #4A2E18; width: 15px; height: 15px; cursor: pointer;
+        }
+        .terms-check label { cursor: pointer; user-select: none; }
+
+        /* -- Submit button -------------------------------------------- */
+        .auth-btn {
+            width: 100%; padding: 14px;
+            background: linear-gradient(135deg, #D4AF37 0%, #C9954A 50%, #B8860B 100%);
+            border: none; border-radius: 8px;
+            font-size: 0.9rem; font-weight: 600;
+            letter-spacing: 1.5px; text-transform: uppercase;
+            color: #FFFFFF; cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 0.5rem; font-family: 'Inter', sans-serif;
+            box-shadow: 0 4px 10px rgba(201, 149, 74, 0.3);
+        }
+        .auth-btn:hover {
+            background: linear-gradient(135deg, #E6C255 0%, #D4AF37 50%, #C9954A 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 14px rgba(201, 149, 74, 0.4);
+        }
+
+        /* -- Trust badge ---------------------------------------------- */
+        .trust-badge {
+            text-align: center; margin-top: 0.7rem;
+            font-size: 0.72rem; color: #A89080;
+            font-family: 'Inter', sans-serif; font-weight: 300;
+            display: flex; align-items: center; justify-content: center; gap: 5px;
+        }
+
+        /* -- Bottom sign-in link -------------------------------------- */
+        .bottom-link {
+            text-align: center; margin-top: 1.4rem;
+            font-size: 0.81rem; color: #8A7060;
+            font-family: 'Inter', sans-serif; font-weight: 300;
+        }
+        .bottom-link a {
+            color: #0A192F; text-decoration: none; font-weight: 500;
+            border-bottom: 1px solid transparent; transition: all 0.2s;
+        }
+        .bottom-link a:hover { color: #112240; border-bottom-color: #D4AF37; }
+
+        /* -- Alerts --------------------------------------------------- */
+        .alert-custom {
+            background: rgba(248,242,232,0.95);
+            border-left: 3px solid #D4AF37;
+            border-radius: 10px; padding: 10px 14px;
+            margin-bottom: 1rem; color: #3A2810;
+            font-size: 0.82rem; font-family: 'Inter', sans-serif;
+            box-shadow: 0 2px 8px rgba(120,80,40,0.06);
+        }
+        .alert-custom.success { border-left-color: #8FA898; }
+
+        @media (max-width: 550px) {
+            .auth-card { padding: 1.6rem 1.4rem 1.4rem; border-radius: 22px; }
+            .auth-title { font-size: 1.65rem; }
+        }
+
+        /* -- Password requirements list -------------------------- */
+        .pw-rules {
+            display: none;
+            margin: -0.4rem 0 0.8rem 2px;
+            padding: 8px 12px;
+            background: rgba(248,244,238,0.7);
+            border: 1px solid rgba(184,154,106,0.18);
+            border-radius: 10px;
+            list-style: none;
+        }
+        .pw-rules.visible { display: block; }
+        .pw-rules li {
+            display: flex; align-items: center; gap: 7px;
+            font-size: 0.74rem; color: #8A7060;
+            font-family: 'Inter', sans-serif;
+            padding: 2.5px 0;
+            transition: color 0.2s;
+        }
+        .pw-rules li .rule-icon { font-size: 0.65rem; width: 13px; flex-shrink: 0; }
+        .pw-rules li.pass { color: #6A9070; }
+        .pw-rules li.fail { color: #C05050; }
+        .pw-rules li.pass .rule-icon::before { content: '${user != null and !#strings.isEmpty(user.fullName) ? #strings.substring(user.fullName,0,1) : 'U'}2713'; color: #5A9060; }
+        .pw-rules li:not(.pass):not(.fail) .rule-icon::before { content: '${user != null and !#strings.isEmpty(user.fullName) ? #strings.substring(user.fullName,0,1) : 'U'}25CB'; color: #C0A890; }
+        .pw-rules li.fail .rule-icon::before { content: '${user != null and !#strings.isEmpty(user.fullName) ? #strings.substring(user.fullName,0,1) : 'U'}2715'; color: #C05050; }
+
+        /* confirm mismatch hint */
+        .pw-mismatch {
+            font-size: 0.73rem; color: #C05050;
+            font-family: 'Inter', sans-serif;
+            margin: -0.5rem 0 0.5rem 4px;
+            display: none;
+        }
+        .pw-mismatch.visible { display: block; }
+
+    </style>
+</head>
+<body>
+
+
+
+<div class="auth-card">
+
+    <!-- Logo -->
+    <div class="auth-logo-wrap">
+        <svg style="width: 190px; height: 190px; display: block; margin: -1.5rem auto -0.5rem auto; filter: drop-shadow(0 3px 8px rgba(120,80,40,0.08));">
+            <filter id="removeBgR">
+                <feColorMatrix in="SourceGraphic" type="luminanceToAlpha" result="lum"/>
+                <feComponentTransfer in="lum" result="inv">
+                    <feFuncA type="linear" slope="-1.5" intercept="1.3"/>
+                </feComponentTransfer>
+                <feColorMatrix in="inv" type="matrix" values="0 0 0 0 0.1  0 0 0 0 0.1  0 0 0 0 0.1  0 0 0 1 0"/>
+            </filter>
+            <image href="/images/brand-logo.jpg" width="100%" height="100%" filter="url(#removeBgR)" preserveAspectRatio="xMidYMid meet"/>
+        </svg>
+    </div>
+    <div class="auth-brand-sub">Botanical Formulations</div>
+
+    
+
+    <div class="auth-title">Create Account</div>
+    <div class="auth-subtitle">Begin your daily botanical ritual.</div>
+
+    <!-- Alerts -->
+    <div th:if="${error}" class="alert-custom">
+        <i class="fas fa-exclamation-circle"></i>&nbsp; <span th:text="${error}">Error message</span>
+    </div>
+
+    <!-- Form -->
+    <form th:action="@{/register}" method="post" id="registerForm" autocomplete="on">
+
+        <div class="auth-input-group">
+            <input type="text" id="fullName" name="fullName" placeholder=" " required autocomplete="name">
+            <label for="fullName">Full Name</label>
+        </div>
+
+        <div class="auth-input-group">
+            <input type="email" id="email" name="email" placeholder=" " required autocomplete="email">
+            <label for="email">Email address</label>
+        </div>
+
+        <div class="auth-input-group">
+            <input type="password" id="password" name="password" placeholder=" " required autocomplete="new-password">
+            <label for="password">Password</label>
+            <button type="button" class="password-toggle" data-target="password" aria-label="Show/hide password">
+                <i class="far fa-eye-slash"></i>
+            </button>
+        </div>
+
+        <!-- Real-time password requirements -->
+        <ul class="pw-rules" id="pwRules">
+            <li id="rule-len"><span class="rule-icon"></span>At least 8 characters</li>
+            <li id="rule-upper"><span class="rule-icon"></span>At least one uppercase letter (A–Z)</li>
+            <li id="rule-num"><span class="rule-icon"></span>At least one number (0–9)</li>
+            <li id="rule-special"><span class="rule-icon"></span>At least one special character (!@#$%^&amp;*...)</li>
+        </ul>
+
+        <div class="auth-input-group">
+            <input type="password" id="confirmPassword" name="confirmPassword" placeholder=" " required autocomplete="new-password">
+            <label for="confirmPassword">Confirm Password</label>
+            <button type="button" class="password-toggle" data-target="confirmPassword" aria-label="Show/hide confirm password">
+                <i class="far fa-eye-slash"></i>
+            </button>
+        </div>
+        <div class="pw-mismatch" id="pwMismatch"><i class="fas fa-exclamation-circle" style="font-size:0.65rem;"></i>&nbsp; Passwords do not match.</div>
+
+        <!-- Terms & Conditions — clean single-line checkbox with links -->
+        <div style="margin-bottom: 1rem;">
+            <div class="terms-check">
+                <input type="checkbox" id="agreeTerms" name="agreeTerms" required>
+                <label for="agreeTerms">
+                    I agree to the
+                    <a href="/privacy-policy#terms" style="color:#8A6A3A; text-decoration:none; border-bottom:1px solid rgba(138,106,58,0.4);">Terms &amp; Conditions</a>
+                    and
+                    <a href="/privacy-policy#privacy" style="color:#8A6A3A; text-decoration:none; border-bottom:1px solid rgba(138,106,58,0.4);">Privacy Policy</a>.
+                </label>
+            </div>
+        </div>
+
+        <button type="submit" class="auth-btn" id="registerBtn">Create Account</button>
+
+        <div class="trust-badge">
+            <i class="fas fa-lock" style="font-size: 0.65rem;"></i> Secure &amp; Privacy Safe
+        </div>
+    </form>
+
+    <div class="bottom-link">
+        Already have an account?&nbsp; <a th:href="@{/login}">Sign In</a>
+    </div>
+
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+    /* -- Password toggle ----------------------------------- */
+    document.querySelectorAll('.password-toggle').forEach(btn => {
+        btn.addEventListener('click', e => {
+            e.stopPropagation();
+            const inp = document.getElementById(btn.dataset.target);
+            if (!inp) return;
+            inp.type = inp.type === 'password' ? 'text' : 'password';
+            btn.querySelector('i').classList.toggle('fa-eye-slash');
+            btn.querySelector('i').classList.toggle('fa-eye');
+        });
+    });
+
+    /* -- Password rules ----------------------------------- */
+    const pwInput   = document.getElementById('password');
+    const confInput = document.getElementById('confirmPassword');
+    const pwRules   = document.getElementById('pwRules');
+    const mismatch  = document.getElementById('pwMismatch');
+
+    const rules = [
+        { id: 'rule-len',     test: v => v.length >= 8 },
+        { id: 'rule-upper',   test: v => /[A-Z]/.test(v) },
+        { id: 'rule-num',     test: v => /[0-9]/.test(v) },
+        { id: 'rule-special', test: v => /[^A-Za-z0-9]/.test(v) },
+    ];
+
+    function validateRules(val) {
+        let allPass = true;
+        rules.forEach(r => {
+            const li = document.getElementById(r.id);
+            const pass = r.test(val);
+            li.classList.toggle('pass', pass);
+            li.classList.toggle('fail', val.length > 0 && !pass);
+            if (!pass) allPass = false;
+        });
+        return allPass;
+    }
+
+    pwInput.addEventListener('focus', () => pwRules.classList.add('visible'));
+    pwInput.addEventListener('input', () => {
+        validateRules(pwInput.value);
+        if (confInput.value) checkMatch();
+    });
+
+    function checkMatch() {
+        const match = pwInput.value === confInput.value;
+        mismatch.classList.toggle('visible', confInput.value.length > 0 && !match);
+        return match;
+    }
+    confInput.addEventListener('input', checkMatch);
+
+    /* -- Form submit guard ----------------------------------- */
+    const registerForm = document.getElementById('registerForm');
+    if (registerForm) {
+        registerForm.addEventListener('submit', (e) => {
+            const allRulesPass = validateRules(pwInput.value);
+            const passwordsMatch = checkMatch();
+            pwRules.classList.add('visible');
+
+            if (!allRulesPass || !passwordsMatch) {
+                e.preventDefault();
+                if (!allRulesPass) {
+                    pwInput.focus();
+                } else {
+                    confInput.focus();
+                }
+                return;
+            }
+
+            const btn = document.getElementById('registerBtn');
+            if (btn) {
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>&nbsp; Registering...';
+            }
+        });
+    }
+
+    /* -- Spotlight Cursor Effect ------------------------------------ */
+    const cards = document.querySelectorAll('.auth-card');
+    cards.forEach(card => {
+        card.addEventListener('mousemove', (e) => {
+            const rect = card.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            card.style.setProperty('--mouse-x', `${x}px`);
+            card.style.setProperty('--mouse-y', `${y}px`);
+        });
+    });
+});
+</script>
+<script th:src="@{/js/header.js?v=5.0}"></script>
+</body>
+
+
+
+
+
+

@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bloom Membership | Theory of Bloom</title>
+<meta name="description" content="Earn Bloom Points on every purchase and unlock exclusive membership benefits.">
+<link rel="icon" type="image/png" th:href="@{/images/flower-logo.png}">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<link rel="stylesheet" th:href="@{/css/header.css?v=4.9}">
+<style>
+html{scroll-behavior:smooth}
+:root{
+  --cream:#F4F1EB;--parchment:#FDFAF5;
+  --sage:#A37C4E;--sage-dark:#2A1F10;--sage-pale:#F5EDE0;
+  --gold:#a37c4e;--gold-lt:#C9954A;
+  --ink:#2A2118;--ink-soft:#5C4D3C;
+  --border:rgba(163,124,78,0.18);
+  --serif:'Cormorant Garamond',serif;--sans:'Inter',sans-serif;
+}
+body{font-family:var(--sans);color:var(--ink);background:#F6EBE9;-webkit-font-smoothing:antialiased;}
+
+/* ── Hero Banner (Dark Editorial) ── */
+.ed-hero-banner { 
+    max-width: 1360px; margin: 24px auto 0; border-radius: 24px; 
+    background: linear-gradient(135deg, #0A192F 0%, #112240 100%);
+    padding: 80px 40px; text-align: center; position: relative; overflow: hidden;
+    box-shadow: 0 20px 40px rgba(10, 25, 47, 0.15);
+    border: 1px solid rgba(255,255,255,0.05);
+}
+.ed-hero-banner::before {
+    content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+    background: radial-gradient(circle at center, rgba(201, 160, 112, 0.15) 0%, transparent 60%);
+    pointer-events: none;
+}
+.ed-hero-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(2.4rem, 5vw, 3.5rem); color: #FFFFFF; font-weight: 300; margin-bottom: 16px; letter-spacing: 2px; }
+.ed-hero-title em { font-style: italic; color: #C9A070; }
+.ed-hero-sub { font-size: 1.05rem; color: #EAE0DB; font-weight: 300; letter-spacing: 1px; max-width: 600px; margin: 0 auto; line-height: 1.6; }
+
+/* Premium Footer */
+.shop-footer { background: #130D09; color: rgba(246, 235, 233, 0.7); padding: 80px 24px 100px; text-align: center; margin-top: 40px; }
+.shop-footer-inner { max-width: 800px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; gap: 40px; }
+.shop-footer-brand { display: flex; flex-direction: column; gap: 12px; }
+.shop-footer-name { font-family: 'Cormorant Garamond', serif; font-size: 2.2rem; color: #FFFFFF; letter-spacing: 4px; font-weight: 300; margin: 0; }
+.shop-footer-name em { font-style: italic; color: #C9A070; }
+.shop-footer-tag { font-size: 0.85rem; letter-spacing: 2px; text-transform: uppercase; margin: 0; }
+.shop-footer-links { display: flex; gap: 32px; flex-wrap: wrap; justify-content: center; }
+.shop-footer-links a { color: #FFFFFF; text-decoration: none; font-size: 0.8rem; font-weight: 500; letter-spacing: 1.5px; text-transform: uppercase; transition: color 0.3s; }
+.shop-footer-links a:hover { color: #C9A070; }
+.shop-footer-copy { font-size: 0.75rem; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 32px; width: 100%; }
+
+/* ── Points Card (light) ── */
+.mem-wrap{max-width:960px;margin:0 auto;padding:3rem 1.5rem 6rem;}
+
+.points-card{
+  background:linear-gradient(135deg,#fff,#F5F2EB);
+  border:1px solid rgba(163,124,78,0.2);border-radius:16px;
+  padding:2.5rem;margin-bottom:2rem;position:relative;overflow:hidden;
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:2rem;
+  box-shadow:0 8px 32px rgba(42,33,24,0.08);
+}
+.points-card::before{content:'';position:absolute;top:-40px;right:-40px;width:220px;height:220px;
+  border-radius:50%;background:radial-gradient(circle,rgba(163,124,78,0.08),transparent 70%);pointer-events:none;}
+.points-num{font-family:var(--serif);font-size:clamp(3rem,7vw,5rem);font-weight:400;color:#A37C4E;line-height:1;}
+.points-label{font-size:0.65rem;letter-spacing:4px;text-transform:uppercase;color:rgba(42,33,24,0.55);margin-top:0.3rem;}
+.points-progress-wrap{flex:1;min-width:220px;}
+.points-progress-label{font-size:0.72rem;color:var(--ink-soft);margin-bottom:0.5rem;display:flex;justify-content:space-between;}
+.points-bar{height:6px;background:rgba(163,124,78,0.12);border-radius:3px;overflow:hidden;margin-bottom:0.5rem;}
+.points-bar-fill{height:100%;background:linear-gradient(to right,#5C4D3C,#A37C4E);border-radius:3px;transition:width 1s ease;}
+.points-next{font-size:0.7rem;color:var(--ink-soft);}
+
+/* ── Tier cards ── */
+.tier-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1.2rem;margin-bottom:2.5rem;}
+.tier-card{background:linear-gradient(145deg,#FDFCFA,#F5F2EB);border:1px solid rgba(180,160,120,0.2);
+  border-radius:12px;padding:2rem;position:relative;overflow:hidden;transition:transform 0.3s,box-shadow 0.3s;}
+.tier-card:hover{transform:translateY(-4px);box-shadow:0 12px 32px rgba(90,70,40,0.12);}
+.tier-card.active-tier{border-color:rgba(201,149,74,0.4);box-shadow:0 0 0 3px rgba(201,149,74,0.1);}
+.tier-badge{font-size:0.6rem;letter-spacing:3px;text-transform:uppercase;font-weight:600;padding:4px 10px;border-radius:20px;display:inline-block;margin-bottom:1rem;}
+.tier-badge.seed{background:rgba(163,124,78,0.1);color:var(--sage-dark);}
+.tier-badge.bloom{background:rgba(163,124,78,0.12);color:var(--gold);}
+.tier-badge.platinum{background:linear-gradient(135deg,rgba(163,124,78,0.2),rgba(201,149,74,0.2));color:#C9954A;}
+.tier-name{font-family:var(--serif);font-size:1.5rem;font-weight:500;color:var(--ink);margin-bottom:0.3rem;}
+.tier-pts{font-size:0.7rem;color:var(--ink-soft);margin-bottom:1.2rem;}
+.tier-perk{font-size:0.78rem;color:var(--ink-soft);display:flex;align-items:center;gap:8px;margin-bottom:0.5rem;}
+.tier-perk i{color:var(--sage);font-size:0.85rem;flex-shrink:0;}
+.current-badge{position:absolute;top:1rem;right:1rem;font-size:0.6rem;letter-spacing:1.5px;text-transform:uppercase;
+  background:var(--sage-dark);color:#fff;padding:4px 10px;border-radius:20px;}
+
+/* ── How points work ── */
+.earn-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1rem;margin-bottom:2.5rem;}
+.earn-card{background:linear-gradient(145deg,#FDFCFA,#F5F2EB);border:1px solid var(--border);
+  border-radius:10px;padding:1.5rem;text-align:center;}
+.earn-icon{font-size:2rem;margin-bottom:0.8rem;}
+.earn-pts{font-family:var(--serif);font-size:1.6rem;font-weight:500;color:var(--gold-lt);margin-bottom:0.2rem;}
+.earn-label{font-size:0.72rem;color:var(--ink-soft);}
+
+/* ── Redeem CTA ── */
+.redeem-cta{background:linear-gradient(135deg,#2A2118,#1A0F02);border-radius:12px;
+  padding:2.5rem;text-align:center;margin-bottom:2rem;}
+.redeem-cta h2{font-family:var(--serif);font-size:1.8rem;color:#EDE9DF;margin-bottom:0.5rem;}
+.redeem-cta h2 em{font-style:italic;color:#C9954A;}
+.redeem-cta p{font-size:0.82rem;color:rgba(237,233,223,0.6);margin-bottom:1.5rem;}
+.btn-sage{display:inline-flex;align-items:center;gap:8px;font-size:0.72rem;font-weight:600;
+  letter-spacing:2px;text-transform:uppercase;color:#EDE9DF;background:linear-gradient(135deg,#2A1F10,#3D2E1A);
+  padding:12px 28px;border-radius:3px;text-decoration:none;border:none;cursor:pointer;transition:all 0.3s;}
+.btn-sage:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(42,33,24,0.4);color:#fff;}
+.btn-gold{display:inline-flex;align-items:center;gap:8px;font-size:0.72rem;font-weight:600;
+  letter-spacing:2px;text-transform:uppercase;color:#1A1208;background:linear-gradient(135deg,#C9954A,#a37c4e);
+  padding:12px 28px;border-radius:3px;text-decoration:none;border:none;cursor:pointer;transition:all 0.3s;}
+.btn-gold:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(163,124,78,0.4);color:#1A1208;}
+
+/* ── Back to Profile Button ── */
+.back-profile-btn {
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--sage-dark);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid var(--border);
+  padding: 8px 16px;
+  border-radius: 4px;
+  transition: all 0.3s;
+}
+.back-profile-btn:hover,
+.back-profile-btn:active {
+  color: var(--gold);
+  border-color: var(--gold);
+}
+
+@media(max-width:600px){.points-card{flex-direction:column;}.mem-wrap{padding:2rem 1rem 4rem;}}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="tob-header" id="tobHeader">
+  <div class="tob-top tob-top-row1">
+    <div class="tob-brand">
+      <a th:href="@{/}" style="display:flex; align-items:center; text-decoration:none; color:inherit;">
+        <img th:src="@{/images/flower-logo.png}" alt="Logo" class="tob-logo">
+        <div class="tob-brand-name">Theory <em>of</em> Bloom</div>
+      </a>
+    </div>
+    <div class="tob-actions">
+      <div class="tob-search-wrap tob-cat-search">
+        <form class="tob-search-form" th:action="@{/shop}" method="get">
+          <input type="text" name="query" th:value="${searchKeyword}" class="tob-search-input" placeholder="Search our botanical library...">
+          <button type="submit" class="tob-search-btn"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16"><path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/></svg></button>
+        </form>
+      </div>
+      <div class="tob-action-item" sec:authorize="!isAuthenticated()"><a th:href="@{/login}" class="tob-icon-btn" style="text-decoration:none;"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M6 3.5a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-2a.5.5 0 0 0-1 0v2A1.5 1.5 0 0 0 6.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-8A1.5 1.5 0 0 0 5 3.5v2a.5.5 0 0 0 1 0z"/><path fill-rule="evenodd" d="M11.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H1.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708z"/></svg><span class="tob-icon-label">Login</span></a></div>
+      <div class="tob-action-item" sec:authorize="isAuthenticated()">
+        <button class="tob-icon-btn" type="button"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 16 16"><path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/><path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"/></svg><span class="tob-icon-label" th:text="${user != null and !#strings.isEmpty(user.fullName) ? #strings.arraySplit(user.fullName, ' ')[0] : 'Account'}">Account</span></button>
+        <div class="tob-drop"><div class="tob-drop-header">Account Centre</div><a class="tob-drop-item" th:href="@{/profile}"><i class="fas fa-user-circle fa-sm"></i> My Profile</a><a class="tob-drop-item" th:href="@{/order-history}"><i class="fas fa-box fa-sm"></i> Orders</a><a class="tob-drop-item" th:href="@{/saved-blends}"><i class="fas fa-heart fa-sm"></i> Saved Blends</a><a class="tob-drop-item" th:href="@{/profile#settings}"><i class="fas fa-cog fa-sm"></i> Settings</a><div class="tob-drop-divider"></div><button class="tob-drop-item danger" type="button" onclick="openSignoutModal()" style="width:100%;text-align:left;background:none;border:none;cursor:pointer;"><i class="fas fa-sign-out-alt fa-sm"></i> Sign Out</button></div>
+      </div>
+      <div class="tob-action-item">
+        <button class="tob-icon-btn"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16"><path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0"/></svg><span class="tob-icon-label">More</span></button>
+        <div class="tob-drop"><div class="tob-drop-header">Explore</div><a class="tob-drop-item" th:href="@{/}"><i class="fas fa-home fa-sm"></i> Home</a><a class="tob-drop-item" th:href="@{/contact}"><i class="fas fa-envelope fa-sm"></i> Contact Us</a><a class="tob-drop-item" th:href="@{/privacy-policy}"><i class="fas fa-shield-alt fa-sm"></i> Privacy Policy</a></div>
+      </div>
+      <a th:href="@{/cart}" class="tob-icon-btn tob-cart-btn"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 16 16"><path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .49.598l-1 5a.5.5 0 0 1-.465.401l-9.397.472L4.415 11H13a.5.5 0 0 1 0 1H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5M3.102 4l.84 4.479 9.144-.459L13.89 4zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4m7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4m-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2m7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2"/></svg><span class="tob-icon-label">Cart</span></a>
+    </div>
+  </div>
+</header>
+
+  <!-- BREADCRUMB -->
+  <nav style="display:flex;align-items:center;justify-content:center;gap:6px;font-family:'Inter',sans-serif;font-size:0.72rem;font-weight:500;letter-spacing:0.5px;padding-top:2rem;" aria-label="Breadcrumb">
+    <a th:href="@{/}" style="color:#A37C4E;text-decoration:none;transition:color 0.2s;">Home</a>
+    <span style="color:rgba(90,86,82,0.4);font-size:0.65rem;">&#8250;</span>
+    <span style="color:#5A5652;font-weight:600;">Membership</span>
+  </nav>
+
+  <!-- HERO BANNER -->
+  <div class="ed-hero-banner" style="margin-bottom: 3rem;">
+    <h1 class="ed-hero-title">Bloom <em>Membership</em></h1>
+    <p class="ed-hero-sub">Earn points on every purchase. Unlock exclusive tiers and rewards.</p>
+  </div>
+
+  <div class="mem-wrap" style="padding-top: 0;">
+
+  <!-- Points Balance Card -->
+  <div class="points-card">
+    <div>
+      <div class="points-label" style="color:rgba(163,124,78,0.6);margin-bottom:0.3rem;">Your Bloom Points</div>
+      <div class="points-num" th:text="${user != null and user.points != null ? user.points : 0}">0</div>
+      <div class="points-label">points balance</div>
+      <div style="margin-top:1rem;">
+        <span th:if="${user != null and user.premium}" style="font-size:0.65rem;letter-spacing:3px;text-transform:uppercase;background:linear-gradient(135deg,#C9954A,#a37c4e);color:#1A1208;padding:4px 12px;border-radius:20px;font-weight:600;">✦ Platinum Member</span>
+        <span th:unless="${user != null and user.premium}" style="font-size:0.65rem;letter-spacing:3px;text-transform:uppercase;background:rgba(163,124,78,0.2);color:#C9954A;padding:4px 12px;border-radius:20px;">Bloom Member</span>
+      </div>
+    </div>
+    <div class="points-progress-wrap">
+      <div class="points-progress-label">
+        <span style="color:rgba(245,240,232,0.65);">Progress to Platinum</span>
+        <span style="color:#C9954A;" th:text="${user != null and user.points != null ? user.points : 0} + ' / 500 pts'">0 / 500 pts</span>
+      </div>
+      <div class="points-bar">
+        <div class="points-bar-fill" id="pointsBarFill" style="width:0%"></div>
+      </div>
+      <div class="points-next">Earn <strong style="color:#C9954A;">500 points</strong> to unlock Platinum membership &amp; ₹500 off</div>
+      <div style="margin-top:1.5rem;display:flex;gap:10px;flex-wrap:wrap;">
+        <a th:href="@{/shop}" class="btn-gold" style="font-size:0.65rem;padding:10px 20px;">Shop &amp; Earn <i class="bi bi-arrow-right"></i></a>
+        <button id="redeemBtn" onclick="redeemPoints()" th:disabled="${user == null or user.points == null or user.points < 500}"
+          class="btn-sage" style="font-size:0.65rem;padding:10px 20px;">Redeem Membership <i class="bi bi-stars"></i></button>
+        <button onclick="openRazorpay()" class="btn-gold" style="font-size:0.65rem;padding:10px 20px;background:linear-gradient(135deg,#2A1F10,#3D2E1A);color:#fff;">
+          <i class="bi bi-credit-card"></i> Buy Membership
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tier Cards -->
+  <h2 style="font-family:var(--serif);font-size:1.6rem;font-weight:400;color:var(--ink);margin-bottom:1.2rem;">Membership <em style="font-style:italic;color:var(--sage-dark);">Tiers</em></h2>
+  <div class="tier-grid">
+
+    <!-- Seed -->
+    <div th:class="${user == null or user.points == null or user.points < 100} ? 'tier-card active-tier' : 'tier-card'">
+      <span th:if="${user == null or user.points == null or user.points < 100}" class="current-badge">Current</span>
+      <span class="tier-badge seed"><i class="bi bi-brightness-alt-high-fill"></i> Seed</span>
+      <div class="tier-name">Seed</div>
+      <div class="tier-pts">0 – 99 points</div>
+      <div class="tier-perk"><i class="bi bi-check-circle-fill"></i> Earn 1 pt per ₹100 spent</div>
+      <div class="tier-perk"><i class="bi bi-check-circle-fill"></i> Birthday surprise gift</div>
+      <div class="tier-perk"><i class="bi bi-check-circle-fill"></i> Access to new launches</div>
+    </div>
+
+    <!-- Bloom -->
+    <div th:class="${user != null and user.points != null and user.points >= 100 and user.points < 500} ? 'tier-card active-tier' : 'tier-card'">
+      <span th:if="${user != null and user.points != null and user.points >= 100 and user.points < 500}" class="current-badge">Current</span>
+      <span class="tier-badge bloom"><i class="bi bi-flower1"></i> Bloom</span>
+      <div class="tier-name">Bloom</div>
+      <div class="tier-pts">100 – 499 points</div>
+      <div class="tier-perk"><i class="bi bi-check-circle-fill"></i> Earn 1.5x points per purchase</div>
+      <div class="tier-perk"><i class="bi bi-check-circle-fill"></i> Free delivery on orders ₹499+</div>
+      <div class="tier-perk"><i class="bi bi-check-circle-fill"></i> Early access to sales</div>
+      <div class="tier-perk"><i class="bi bi-check-circle-fill"></i> Exclusive blend previews</div>
+    </div>
+
+    <!-- Platinum -->
+    <div th:class="${user != null and user.premium} ? 'tier-card active-tier' : 'tier-card'" style="background:linear-gradient(145deg,#FDFCFA,#F5F2E8);">
+      <span th:if="${user != null and user.premium}" class="current-badge" style="background:linear-gradient(135deg,#C9954A,#a37c4e);">✦ Active</span>
+      <span class="tier-badge platinum">✦ Platinum (1 Year)</span>
+      <div class="tier-name" style="color:#A37C4E;">Platinum</div>
+      <div class="tier-pts">1-Year Membership · ₹500 one-time redemption</div>
+      <div class="tier-perk"><i class="bi bi-check-circle-fill" style="color:#C9954A;"></i> 2x points on every order</div>
+      <div class="tier-perk"><i class="bi bi-check-circle-fill" style="color:#C9954A;"></i> Free delivery on all orders</div>
+      <div class="tier-perk"><i class="bi bi-check-circle-fill" style="color:#C9954A;"></i> ₹500 welcome bonus credit</div>
+      <div class="tier-perk"><i class="bi bi-check-circle-fill" style="color:#C9954A;"></i> Priority customer support</div>
+      <div class="tier-perk"><i class="bi bi-check-circle-fill" style="color:#C9954A;"></i> Exclusive Platinum blends</div>
+    </div>
+  </div>
+
+  <!-- How to Earn -->
+  <h2 style="font-family:var(--serif);font-size:1.6rem;font-weight:400;color:var(--ink);margin-bottom:1.2rem;">How to <em style="font-style:italic;color:var(--sage-dark);">Earn Points</em></h2>
+  <div class="earn-grid">
+    <div class="earn-card">
+      <div class="earn-icon"><i class="bi bi-bag-fill" style="color:var(--sage);"></i></div>
+      <div class="earn-pts">1 pt</div>
+      <div class="earn-label">per ₹100 spent on any order</div>
+    </div>
+    <div class="earn-card">
+      <div class="earn-icon"><i class="bi bi-star-fill" style="color:#C9954A;"></i></div>
+      <div class="earn-pts">10 pts</div>
+      <div class="earn-label">for writing a product review</div>
+    </div>
+    <div class="earn-card">
+      <div class="earn-icon"><i class="bi bi-gift-fill" style="color:var(--sage-dark);"></i></div>
+      <div class="earn-pts">25 pts</div>
+      <div class="earn-label">birthday bonus (once a year)</div>
+    </div>
+    <div class="earn-card">
+      <div class="earn-icon"><i class="bi bi-box-seam-fill" style="color:var(--gold);"></i></div>
+      <div class="earn-pts">5 pts</div>
+      <div class="earn-label">for every repeat purchase</div>
+    </div>
+  </div>
+
+  <!-- Redeem CTA -->
+  <div class="redeem-cta">
+    <h2>Redeem for <em>Platinum</em></h2>
+    <p>When you reach 500 Bloom Points, redeem them for a Platinum membership — which includes ₹500 credit, free delivery on all orders, and 2x points going forward.</p>
+    <button id="redeemBtn2" onclick="redeemPoints()" th:disabled="${user == null or user.points == null or user.points < 500}"
+      class="btn-gold">Redeem 500 Points → Platinum <i class="bi bi-stars"></i></button>
+  </div>
+  <!-- Buy Membership CTA -->
+  <div style="background:linear-gradient(135deg,#FDFBF7,#F5EDE0);border:1px solid rgba(163,124,78,0.2);border-radius:12px;padding:2.5rem;text-align:center;margin-bottom:2rem;">
+    <div style="font-size:2rem;margin-bottom:0.8rem;"><i class="bi bi-flower1" style="color: #A37C4E;"></i></div>
+    <h2 style="font-family:var(--serif);font-size:1.8rem;color:#2A2118;margin-bottom:0.5rem;">Buy <em style="font-style:italic;color:#A37C4E;">1-Year Platinum</em> Directly</h2>
+    <p style="font-size:0.82rem;color:#5C4D3C;margin-bottom:1.5rem;">Skip the points — purchase a 1-year Platinum membership directly for ₹499 and unlock all premium benefits immediately.</p>
+    <button onclick="openRazorpay()" style="display:inline-flex;align-items:center;gap:10px;font-family:var(--sans);font-size:0.78rem;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#fff;background:linear-gradient(135deg,#2A1F10,#3D2E1A);border:none;border-radius:6px;padding:14px 32px;cursor:pointer;box-shadow:0 8px 24px rgba(42,33,24,0.25);transition:all 0.3s;">
+      <i class="bi bi-credit-card"></i> Buy 1-Year Membership — ₹499
+    </button>
+  </div>
+
+</div><!-- /mem-wrap -->
+
+<!-- Redeem Success Modal -->
+<div id="redeemModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);backdrop-filter:blur(4px);z-index:9999;align-items:center;justify-content:center;">
+  <div style="background:linear-gradient(145deg,#FEFDF9,#F5F1E8);border:1px solid rgba(201,149,74,0.3);border-radius:12px;padding:2.5rem;max-width:400px;width:90%;text-align:center;box-shadow:0 24px 60px rgba(42,33,24,0.25);">
+    <div style="font-size:2.5rem;color:#C9954A;margin-bottom:1rem;">✦</div>
+    <h3 style="font-family:var(--serif);font-size:1.8rem;font-weight:400;color:var(--ink);margin-bottom:0.5rem;">Welcome to <em style="font-style:italic;color:#C9954A;">Platinum</em></h3>
+    <p style="font-size:0.82rem;color:var(--ink-soft);margin-bottom:1.5rem;line-height:1.7;">Your 500 points have been redeemed. You are now a Platinum member and your ₹500 credit has been applied to your account.</p>
+    <button onclick="document.getElementById('redeemModal').style.display='none';window.location.reload();" class="btn-gold" style="width:100%;justify-content:center;">Continue →</button>
+  </div>
+</div>
+
+<!-- Signout Modal -->
+<div id="signoutOverlay" style="display:none;position:fixed;inset:0;background:rgba(42,33,24,0.55);backdrop-filter:blur(3px);z-index:9999;align-items:center;justify-content:center;">
+  <div style="background:#FAF8F4;border-radius:6px;padding:2.5rem;max-width:380px;width:90%;text-align:center;">
+    <h3 style="font-family:var(--serif);font-size:1.5rem;color:var(--ink);margin-bottom:0.5rem;">Sign <em>Out?</em></h3>
+    <p style="font-size:0.82rem;color:var(--ink-soft);margin-bottom:1.8rem;">Are you sure you want to sign out?</p>
+    <div style="display:flex;gap:0.8rem;justify-content:center;">
+      <button onclick="closeSignoutModal()" style="font-family:var(--sans);font-size:0.72rem;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;color:var(--ink-soft);background:transparent;border:1px solid var(--border);border-radius:3px;padding:11px 22px;cursor:pointer;">Stay</button>
+      <a th:href="@{/logout}" style="font-family:var(--sans);font-size:0.72rem;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:#fff;background:#7a2020;border-radius:3px;padding:11px 22px;text-decoration:none;display:inline-block;">Sign Out</a>
+    </div>
+  </div>
+</div>
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script th:src="@{/js/header.js?v=5.0}"></script>
+<script>
+function openSignoutModal(){const m=document.getElementById('signoutOverlay');m.style.display='flex';}
+function closeSignoutModal(){document.getElementById('signoutOverlay').style.display='none';}
+
+// Animate points bar
+document.addEventListener('DOMContentLoaded', function(){
+  const pts = parseInt(document.querySelector('.points-num')?.textContent) || 0;
+  const fill = document.getElementById('pointsBarFill');
+  if(fill) { setTimeout(() => { fill.style.width = Math.min(100, (pts/500)*100) + '%'; }, 300); }
+  const btns = document.querySelectorAll('#redeemBtn,#redeemBtn2');
+  btns.forEach(b => {
+    if(pts < 500){ b.style.opacity='0.4'; b.style.cursor='not-allowed'; b.disabled=true; }
+  });
+});
+
+function redeemPoints(){
+  const pts = parseInt(document.querySelector('.points-num')?.textContent) || 0;
+  if(pts < 500){ alert('You need at least 500 Bloom Points to redeem Platinum membership.'); return; }
+  fetch('/membership/upgrade/ajax', { method: 'POST' }).then(() => {
+    document.getElementById('redeemModal').style.display = 'flex';
+  });
+}
+
+function openRazorpay() {
+  const options = {
+    key: 'rzp_test_YourKeyHere',   // Replace with your live Razorpay key
+    amount: 49900,                  // Amount in paise (₹499)
+    currency: 'INR',
+    name: 'Theory of Bloom',
+    description: 'Platinum Membership',
+    image: '/images/flower-logo.png',
+    handler: function(response) {
+      // On success — update the backend then show confirmation
+      fetch('/membership/upgrade/ajax', { method: 'POST' }).then(() => {
+        document.getElementById('razorpaySuccess').style.display = 'flex';
+      });
+    },
+    prefill: {
+      name: document.querySelector('.tob-icon-label')?.textContent || '',
+      email: '',
+      contact: ''
+    },
+    theme: { color: '#5C4D3C' }
+  };
+  const rzp = new Razorpay(options);
+  rzp.open();
+}
+</script>
+
+<!-- Razorpay Success Modal -->
+<div id="razorpaySuccess" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);backdrop-filter:blur(4px);z-index:9999;align-items:center;justify-content:center;">
+  <div style="background:linear-gradient(145deg,#FEFDF9,#F5F1E8);border:1px solid rgba(163,124,78,0.3);border-radius:12px;padding:2.5rem;max-width:400px;width:90%;text-align:center;">
+    <div style="font-size:2.5rem;color:#A37C4E;margin-bottom:1rem;">✦</div>
+    <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:400;color:#2A2118;margin-bottom:0.5rem;">Welcome to <em style="font-style:italic;color:#A37C4E;">Platinum</em></h3>
+    <p style="font-size:0.82rem;color:#5C4D3C;margin-bottom:1.5rem;line-height:1.7;">Your membership has been activated! Enjoy 2x points, free delivery on all orders, and exclusive Platinum blends.</p>
+    <button onclick="document.getElementById('razorpaySuccess').style.display='none';window.location.reload();" style="font-family:'Inter',sans-serif;font-size:0.72rem;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#fff;background:linear-gradient(135deg,#2A1F10,#3D2E1A);border:none;border-radius:4px;padding:12px 28px;cursor:pointer;width:100%;">Continue →</button>
+  </div>
+</div>
+  <!-- FOOTER -->
+  <footer class="shop-footer">
+    <div class="shop-footer-inner">
+      <div class="shop-footer-brand">
+        <p class="shop-footer-name">THEORY <em>of</em> BLOOM</p>
+        <p class="shop-footer-tag" th:text="${siteContent.shop.footerTagline}">Crafted by Nature. Perfected by Science.</p>
+      </div>
+      <div class="shop-footer-links">
+        <a th:href="@{/shop}">All Blends</a>
+        <th:block th:each="cat : ${#strings.listSplit(siteContent.shop.filterCategories, ',')}">
+          <a th:href="@{/shop(category=${#strings.trim(cat)})}" th:text="${#strings.trim(cat)}">Category</a>
+        </th:block>
+      </div>
+      <p class="shop-footer-copy" th:text="${siteContent.footer.copyrightText}">© 2026 Theory of Bloom. All rights reserved.</p>
+    </div>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${post.title} + ' | Theory of Bloom'"></title>
+    <link rel="icon" type="image/png" th:href="@{/images/flower-logo.png}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,700&family=Cinzel:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/shop.css?v=4.0}">
+    <link rel="stylesheet" th:href="@{/css/header.css?v=4.9}">
+    <style>
+        .post-container {
+            max-width: 800px;
+            margin: 8rem auto 5rem;
+            padding: 0 2rem;
+        }
+        .post-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        .post-meta {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9rem;
+            color: #4A6B5D;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+        }
+        .post-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 3.5rem;
+            line-height: 1.1;
+            color: #111;
+            margin-bottom: 1.5rem;
+        }
+        .post-author {
+            font-family: 'Inter', sans-serif;
+            color: #777;
+            font-size: 0.95rem;
+        }
+        .post-hero-img {
+            width: 100%;
+            height: 500px;
+            object-fit: cover;
+            margin-bottom: 3rem;
+        }
+        .post-content {
+            font-family: 'Inter', sans-serif;
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #444;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body class="bg-cream">
+
+<!-- HEADER -->
+<header class="tob-header" id="tobHeader">
+  <div class="tob-top tob-top-row1">
+    <div class="tob-brand">
+      <a th:href="@{/}" style="display:flex; align-items:center; text-decoration:none; color:inherit;">
+        <img th:src="@{/images/flower-logo.png}" alt="Logo" class="tob-logo">
+        <div class="tob-brand-name">Theory <em>of</em> Bloom</div>
+      </a>
+    </div>
+    <div class="tob-actions">
+      <div class="tob-search-wrap tob-cat-search">
+        <form class="tob-search-form" th:action="@{/shop}" method="get">
+          <input type="text" name="query" th:value="${searchKeyword}" class="tob-search-input" placeholder="Search our botanical library...">
+          <button type="submit" class="tob-search-btn"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16"><path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/></svg></button>
+        </form>
+      </div>
+      <div class="tob-action-item" sec:authorize="!isAuthenticated()"><a th:href="@{/login}" class="tob-icon-btn" style="text-decoration:none;"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M6 3.5a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-2a.5.5 0 0 0-1 0v2A1.5 1.5 0 0 0 6.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-8A1.5 1.5 0 0 0 5 3.5v2a.5.5 0 0 0 1 0z"/><path fill-rule="evenodd" d="M11.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H1.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708z"/></svg><span class="tob-icon-label">Login</span></a></div>
+      <div class="tob-action-item" sec:authorize="isAuthenticated()">
+        <button class="tob-icon-btn" type="button"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 16 16"><path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/><path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"/></svg><span class="tob-icon-label" th:text="${user != null and !#strings.isEmpty(user.fullName) ? #strings.arraySplit(user.fullName, ' ')[0] : 'Account'}">Account</span></button>
+        <div class="tob-drop"><div class="tob-drop-header">Account Centre</div><a class="tob-drop-item" th:href="@{/profile}"><i class="fas fa-user-circle fa-sm"></i> My Profile</a><a class="tob-drop-item" th:href="@{/order-history}"><i class="fas fa-box fa-sm"></i> Orders</a><a class="tob-drop-item" th:href="@{/saved-blends}"><i class="fas fa-heart fa-sm"></i> Saved Blends</a><a class="tob-drop-item" th:href="@{/profile#settings}"><i class="fas fa-cog fa-sm"></i> Settings</a><div class="tob-drop-divider"></div><button class="tob-drop-item danger" type="button" onclick="openSignoutModal()" style="width:100%;text-align:left;background:none;border:none;cursor:pointer;"><i class="fas fa-sign-out-alt fa-sm"></i> Sign Out</button></div>
+      </div>
+      <div class="tob-action-item">
+        <button class="tob-icon-btn"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16"><path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0"/></svg><span class="tob-icon-label">More</span></button>
+        <div class="tob-drop"><div class="tob-drop-header">Explore</div><a class="tob-drop-item" th:href="@{/}"><i class="fas fa-home fa-sm"></i> Home</a><a class="tob-drop-item" th:href="@{/contact}"><i class="fas fa-envelope fa-sm"></i> Contact Us</a><a class="tob-drop-item" th:href="@{/privacy-policy}"><i class="fas fa-shield-alt fa-sm"></i> Privacy Policy</a></div>
+      </div>
+      <a th:href="@{/cart}" class="tob-icon-btn tob-cart-btn"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 16 16"><path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .49.598l-1 5a.5.5 0 0 1-.465.401l-9.397.472L4.415 11H13a.5.5 0 0 1 0 1H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5M3.102 4l.84 4.479 9.144-.459L13.89 4zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4m7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4m-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2m7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2"/></svg><span class="tob-icon-label">Cart</span></a>
+    </div>
+  </div>
+</header>
+
+<!-- MOBILE HEADER -->
+<div class="tob-mobile-header" id="tobMobileHeader">
+  <div class="tob-mob-bar">
+    <button class="tob-mob-ham-btn" type="button" onclick="tobOpenMenu()" aria-label="Open menu" id="tobHamBtn">
+      <span class="tob-ham-line"></span>
+      <span class="tob-ham-line"></span>
+      <span class="tob-ham-line tob-ham-line--short"></span>
+    </button>
+    <div class="tob-mob-center">
+      <img th:src="@{/images/flower-logo.png}" class="tob-mob-logo-img" alt="Theory of Bloom logo">
+      <span class="tob-mob-name">Theory <em>of</em> Bloom</span>
+    </div>
+    <div class="tob-mob-icons">
+      <div class="tob-mob-account">
+        <button class="tob-mob-icon" type="button" onclick="tobToggleAccDrop(event)" sec:authorize="isAuthenticated()"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#a37c4e" viewBox="0 0 16 16"><path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/><path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"/></svg></button>
+        <a th:href="@{/login}" class="tob-mob-icon" sec:authorize="!isAuthenticated()"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#a37c4e" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M6 3.5a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-2a.5.5 0 0 0-1 0v2A1.5 1.5 0 0 0 6.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-8A1.5 1.5 0 0 0 5 3.5v2a.5.5 0 0 0 1 0z"/><path fill-rule="evenodd" d="M11.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H1.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708z"/></svg></a>
+        <div class="tob-drawer-backdrop" id="tobMobBackdrop"></div>
+        <div class="tob-mob-acc-drawer" id="tobMobDrawer">
+          <div class="drawer-profile-header">
+            <div class="drawer-header-top">
+              <div class="drawer-avatar" th:text="${user != null and !#strings.isEmpty(user.fullName) ? #strings.substring(user.fullName,0,1) : 'U'}">U</div>
+              <div class="drawer-name-wrap">
+                <div class="drawer-name" th:text="${user != null ? user.fullName : 'Valued Member'}">User Name</div>
+                <div class="drawer-status" th:text="${user != null and user.premium ? '✦ Premium Member' : 'Standard Member'}">Standard Member</div>
+              </div>
+            </div>
+            <div class="drawer-header-meta">
+              <div class="meta-item"><span class="meta-label">Member ID</span><span class="meta-value" th:text="${user != null ? '#TB' + user.id : '#TB0000'}">#TB1001</span></div>
+              <div class="meta-item"><span class="meta-label">Status</span><span class="meta-value" th:text="${user != null and user.premium ? 'Premium' : 'Normal'}">Normal</span></div>
+            </div>
+          </div>
+          <div class="drawer-menu">
+            <a th:href="@{/profile}" class="drawer-menu-item"><i class="bi bi-person-circle"></i><div class="drawer-item-content"><span class="drawer-item-title">Account Centre</span><span class="drawer-item-sub">Manage your botanical ritual</span></div></a>
+            <a th:href="@{/order-history}" class="drawer-menu-item"><i class="bi bi-box-seam"></i><div class="drawer-item-content"><span class="drawer-item-title">Purchase History</span><span class="drawer-item-sub">Track your formulations</span></div><span class="drawer-badge">Active</span></a>
+            <a th:href="@{/saved-blends}" class="drawer-menu-item"><i class="bi bi-heart"></i><div class="drawer-item-content"><span class="drawer-item-title">Saved Blends</span><span class="drawer-item-sub">Your curation library</span></div></a>
+            <a th:href="@{/profile#settings}" class="drawer-menu-item"><i class="bi bi-gear"></i><div class="drawer-item-content"><span class="drawer-item-title">System Settings</span><span class="drawer-item-sub">Privacy &amp; preferences</span></div></a>
+          </div>
+        </div>
+      </div>
+      <button class="tob-mob-icon" type="button" onclick="tobToggleSearch()"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#a37c4e" viewBox="0 0 16 16"><path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/></svg></button>
+      <a th:href="@{/cart}" class="tob-mob-icon cart-ic"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#a37c4e" viewBox="0 0 16 16"><path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .49.598l-1 5a.5.5 0 0 1-.465.401l-9.397.472L4.415 11H13a.5.5 0 0 1 0 1H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5M3.102 4l.84 4.479 9.144-.459L13.89 4zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4m7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4m-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2m7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2"/></svg></a>
+    </div>
+  </div>
+  <div class="tob-mob-search-bar" id="tobMobSearch">
+    <div class="tob-mob-search-inner">
+      <form th:action="@{/shop}" method="get" style="display:flex;gap:8px;width:100%;">
+        <input type="text" name="query" id="mobileSearch" class="tob-mob-search-input" placeholder="Search botanical blends…">
+        <button type="submit" class="tob-mob-search-submit"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/></svg></button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- FULLSCREEN MENU -->
+<div class="tob-overlay" id="tobOverlay">
+  <button class="tob-overlay-close" onclick="tobCloseMenu()">&times;</button>
+  <a th:href="@{/profile}" class="tob-overlay-acc" sec:authorize="isAuthenticated()"><div class="tob-overlay-acc-circle"><i class="fas fa-user"></i></div><div><span class="tob-overlay-acc-name" th:text="${user != null and !#strings.isEmpty(user.fullName) ? user.fullName : 'My Account'}">User Name</span><span class="tob-overlay-acc-sub">Manage Dashboard</span></div></a>
+  <ul class="tob-overlay-links">
+    <li><a th:href="@{/}">Home</a></li>
+    <li><a th:href="@{/shop}">Shop Blends</a></li>
+    <li><a th:href="@{/saved-blends}">Saved Blends</a></li>
+    <li><a th:href="@{/order-history}">Purchase History</a></li>
+    <li><a th:href="@{/contact}">Contact</a></li>
+  </ul>
+  <div class="tob-overlay-footer"><p>Theory <em>of</em> Bloom</p><small>Crafted by Nature. Perfected by Science.</small></div>
+</div>
+
+<article class="post-container">
+    <header class="post-header">
+        <div class="post-meta" th:text="${post.category}">Category</div>
+        <h1 class="post-title" th:text="${post.title}">Title</h1>
+        <div class="post-author" th:text="'Words by ' + ${post.author} + ' · ' + ${#temporals.format(post.createdAt, 'dd MMMM yyyy')}">Author</div>
+    </header>
+    
+    <img class="post-hero-img" th:if="${post.imageUrl != null}" th:src="${post.imageUrl}" alt="Hero">
+    
+    <div class="post-content" th:text="${post.content}">
+        Full blog content...
+    </div>
+</article>
+
+<!-- SIGN-OUT CONFIRMATION MODAL -->
+<div id="signoutOverlay" style="display:none;position:fixed;inset:0;background:rgba(42,33,24,0.55);backdrop-filter:blur(3px);z-index:9999;align-items:center;justify-content:center;">
+  <div style="background-color:#FAF8F4;background-image:linear-gradient(160deg,#FEFDF9 0%,#F5F1E8 100%);border:1px solid rgba(180,160,120,0.25);border-radius:4px;padding:2.5rem;max-width:400px;width:90%;text-align:center;box-shadow:0 20px 60px rgba(42,33,24,0.2);">
+    <div style="font-size:2rem;color:#4A6B5D;margin-bottom:1rem;"><i class="bi bi-box-arrow-right"></i></div>
+    <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.7rem;font-weight:400;color:#2A2118;margin-bottom:0.5rem;">Sign <em style="font-style:italic;color:#3D5C41;">Out?</em></h3>
+    <p style="font-size:0.82rem;color:#5C4D3C;margin-bottom:1.8rem;line-height:1.6;">Are you sure you want to sign out?</p>
+    <div style="display:flex;gap:0.8rem;justify-content:center;flex-wrap:wrap;">
+      <button onclick="closeSignoutModal()" style="font-family:'Inter',sans-serif;font-size:0.75rem;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;color:#5C4D3C;background:transparent;border:1px solid rgba(107,140,111,0.18);border-radius:3px;padding:11px 24px;cursor:pointer;">Stay Signed In</button>
+      <a th:href="@{/logout}" style="font-family:'Inter',sans-serif;font-size:0.75rem;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:#fff;background:#7a2020;border:1px solid #7a2020;border-radius:3px;padding:11px 24px;text-decoration:none;display:inline-block;">Yes, Sign Out</a>
+    </div>
+  </div>
+</div>
+<script>
+function openSignoutModal(){document.getElementById('signoutOverlay').style.display='flex';document.body.style.overflow='hidden';}
+function closeSignoutModal(){document.getElementById('signoutOverlay').style.display='none';document.body.style.overflow='';}
+document.getElementById('signoutOverlay').addEventListener('click',function(e){if(e.target===this)closeSignoutModal();});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')closeSignoutModal();});
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script th:src="@{/js/header.js?v=5.0}"></script>
+</body>
+</html>
+
+
+
+
+
+

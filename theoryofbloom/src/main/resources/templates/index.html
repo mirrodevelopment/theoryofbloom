@@ -1,0 +1,2980 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Theory of Bloom | Botanical Wellness Blends</title>
+  <meta name="description"
+    content="Theory of Bloom &mdash; premium botanical wellness blends crafted by nature, perfected by science. Shop LUNAR CALM, MORNING RITUAL, CLARITY BLOOM and more.">
+  <meta name="keywords" content="botanical wellness, floral blends, natural wellness, Theory of Bloom, herbal tea, wellness rituals">
+  <link rel="canonical" href="https://theoryofbloom.com/">
+  
+  <!-- Open Graph / Social Media Meta Tags -->
+  <meta property="og:title" content="Theory of Bloom | Botanical Wellness Blends">
+  <meta property="og:description" content="Premium botanical wellness blends crafted by nature, perfected by science. Elevate your daily ritual.">
+  <meta property="og:image" content="https://theoryofbloom.com/images/lux-book-1.png">
+  <meta property="og:url" content="https://theoryofbloom.com/">
+  <meta property="og:type" content="website">
+  
+  <!-- Twitter Card Meta Tags -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Theory of Bloom | Botanical Wellness Blends">
+  <meta name="twitter:description" content="Premium botanical wellness blends crafted by nature, perfected by science.">
+  <meta name="twitter:image" content="https://theoryofbloom.com/images/lux-book-1.png">
+
+  <link rel="icon" type="image/png" th:href="@{/images/flower-logo-white.png}">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600&family=Cinzel:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" th:href="@{/css/header.css?v=4.9}">
+  <link rel="stylesheet" th:href="@{/css/book-hero.css?v=4.0}">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+  <style>
+    :root {
+      --cream: #F5F0E8;
+      --cream-dk: #EBE5D8;
+      --ink: #1A1208;
+      --ink-soft: #4A3E2E;
+      --sage: #4A6B5D;
+      --sage-lt: #6B8C7A;
+      --gold: #a37c4e;
+      --gold-lt: #C9954A;
+      --sand: #D8C9A8;
+      --serif: 'Cormorant Garamond', serif;
+      --sans: 'Inter', sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--sans);
+      background-color: var(--cream);
+      color: var(--ink);
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative;
+      min-height: 92vh;
+      display: flex;
+      align-items: center;
+      background: linear-gradient(135deg, #FAF8F2 0%, #F0EAD9 35%, #E8DFCC 70%, #F5F0E8 100%);
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 60% 50% at 70% 40%, rgba(163, 124, 78, 0.08) 0%, transparent 60%), radial-gradient(ellipse 40% 60% at 20% 70%, rgba(74, 107, 93, 0.07) 0%, transparent 55%);
+    }
+
+    /* Decorative botanical rings */
+    .hero-ring {
+      position: absolute;
+      border-radius: 50%;
+      border: 1px solid rgba(163, 124, 78, 0.12);
+      pointer-events: none;
+      animation: ring-breathe 8s ease-in-out infinite;
+    }
+
+    .hero-ring-1 {
+      width: 500px;
+      height: 500px;
+      top: -100px;
+      right: -100px;
+      animation-delay: 0s;
+    }
+
+    .hero-ring-2 {
+      width: 340px;
+      height: 340px;
+      top: -30px;
+      right: 80px;
+      border-color: rgba(74, 107, 93, 0.1);
+      animation-delay: 2s;
+    }
+
+    .hero-ring-3 {
+      width: 200px;
+      height: 200px;
+      bottom: 80px;
+      left: 5%;
+      animation-delay: 4s;
+    }
+
+    @keyframes ring-breathe {
+
+      0%,
+      100% {
+        transform: scale(1);
+        opacity: 0.7;
+      }
+
+      50% {
+        transform: scale(1.04);
+        opacity: 1;
+      }
+    }
+
+    .hero-inner {
+      position: relative;
+      z-index: 2;
+      max-width: 1320px;
+      margin: 0 auto;
+      padding: 6rem 2rem 5rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      gap: 4rem;
+    }
+
+    @media(max-width:900px) {
+      .hero-inner {
+        grid-template-columns: 1fr;
+        text-align: center;
+        padding: 4rem 1.4rem;
+      }
+
+      .hero-img-wrap {
+        order: -1;
+      }
+    }
+
+    .hero-eyebrow {
+      font-family: var(--sans);
+      font-size: 0.65rem;
+      letter-spacing: 5px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .hero-eyebrow::before {
+      content: '';
+      display: inline-block;
+      width: 32px;
+      height: 1px;
+      background: var(--gold);
+    }
+
+    @media(max-width:900px) {
+      .hero-eyebrow {
+        justify-content: center;
+      }
+    }
+
+    .hero-h1 {
+      font-family: var(--serif);
+      font-size: clamp(2.8rem, 6vw, 5rem);
+      font-weight: 300;
+      line-height: 1.1;
+      color: var(--ink);
+      margin-bottom: 1.5rem;
+      letter-spacing: -0.5px;
+    }
+
+    .hero-h1 em {
+      font-style: italic;
+      color: var(--sage);
+      font-weight: 400;
+    }
+
+    .hero-sub {
+      font-family: var(--sans);
+      font-size: 1.05rem;
+      color: var(--ink-soft);
+      line-height: 1.7;
+      max-width: 460px;
+      margin-bottom: 2.5rem;
+    }
+
+    @media(max-width:900px) {
+      .hero-sub {
+        margin: 0 auto 2.5rem;
+      }
+    }
+
+    .hero-cta-row {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    @media(max-width:900px) {
+      .hero-cta-row {
+        justify-content: center;
+      }
+    }
+
+    .btn-primary-tob {
+      font-family: var(--sans);
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      background: var(--ink);
+      color: #fff;
+      border: none;
+      border-radius: 3px;
+      padding: 15px 36px;
+      text-decoration: none;
+      display: inline-block;
+      transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .btn-primary-tob:hover {
+      background: var(--sage);
+      color: #fff;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(74, 107, 93, 0.25);
+    }
+
+    .btn-outline-tob {
+      font-family: var(--sans);
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      background: transparent;
+      color: var(--ink);
+      border: 1px solid rgba(26, 18, 8, 0.25);
+      border-radius: 3px;
+      padding: 14px 32px;
+      text-decoration: none;
+      display: inline-block;
+      transition: all 0.3s;
+    }
+
+    .btn-outline-tob:hover {
+      border-color: var(--ink);
+      background: var(--ink);
+      color: #fff;
+      transform: translateY(-1px);
+    }
+
+    .hero-img-wrap {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .hero-img-bg {
+      position: absolute;
+      width: 420px;
+      height: 420px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(163, 124, 78, 0.1) 0%, transparent 70%);
+    }
+
+    .hero-img {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 480px;
+      border-radius: 4px;
+      object-fit: cover;
+      box-shadow: 0 20px 60px rgba(26, 18, 8, 0.12), 0 4px 16px rgba(26, 18, 8, 0.06);
+      animation: hero-float 6s ease-in-out infinite;
+    }
+
+    @keyframes hero-float {
+
+      0%,
+      100% {
+        transform: translateY(0);
+      }
+
+      50% {
+        transform: translateY(-10px);
+      }
+    }
+
+    .hero-badge-float {
+      position: absolute;
+      bottom: -16px;
+      left: -16px;
+      background: #fff;
+      border: 1px solid var(--sand);
+      border-radius: 4px;
+      padding: 12px 18px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+      z-index: 2;
+    }
+
+    .hero-badge-float i {
+      color: var(--sage);
+      font-size: 1.2rem;
+    }
+
+    .hero-badge-float span {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--ink);
+      line-height: 1.3;
+    }
+
+    .hero-badge-float small {
+      display: block;
+      font-size: 0.65rem;
+      color: var(--ink-soft);
+      font-weight: 400;
+    }
+
+    /* ── Section commons ── */
+    .section-eyebrow {
+      font-family: var(--sans);
+      font-size: 0.62rem;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 0.6rem;
+    }
+
+    .section-title {
+      font-family: var(--serif);
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 400;
+      color: var(--ink);
+      line-height: 1.15;
+      margin-bottom: 1rem;
+    }
+
+    .section-title em {
+      font-style: italic;
+      color: #B03030;
+    }
+
+    .section-rule {
+      width: 60px;
+      height: 1px;
+      background: linear-gradient(to right, var(--gold), transparent);
+      margin: 0 auto 1.5rem;
+    }
+
+    /* ── PHILOSOPHY ── */
+    .philosophy {
+      padding: 7rem 2rem;
+      background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='512' height='512'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' seed='5' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='512' height='512' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E"), linear-gradient(160deg, #FDFBF7 0%, #F5F0E8 100%);
+      background-size: 512px 512px, cover;
+      text-align: center;
+    }
+
+    .philosophy-inner {
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    .philosophy-quote {
+      font-family: var(--serif);
+      font-size: clamp(1.4rem, 3vw, 2rem);
+      font-weight: 300;
+      font-style: italic;
+      color: var(--ink);
+      line-height: 1.6;
+      margin: 1.5rem 0;
+      position: relative;
+      padding: 0 2rem;
+    }
+
+    .philosophy-quote::before,
+    .philosophy-quote::after {
+      content: '"';
+      font-size: 4rem;
+      line-height: 0;
+      color: var(--gold);
+      opacity: 0.25;
+      position: absolute;
+      top: 0.6rem;
+    }
+
+    .philosophy-quote::before {
+      left: 0;
+    }
+
+    .philosophy-quote::after {
+      content: '"';
+      right: 0;
+      bottom: 0;
+      top: auto;
+    }
+
+    .philosophy-body {
+      font-size: 1rem;
+      color: var(--ink-soft);
+      line-height: 1.8;
+      margin-bottom: 2rem;
+    }
+
+    /* ── PRODUCTS SLIDER ── */
+    .products-section {
+      padding: 6rem 0;
+      background: var(--cream-dk);
+    }
+
+    .products-head {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 2rem 3rem;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    @media(max-width:640px) {
+      .products-head {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+
+    .scroll-track-wrap {
+      overflow-x: auto;
+      padding: 0 2rem 2rem;
+      scrollbar-width: thin;
+      scrollbar-color: var(--sand) transparent;
+    }
+
+    .scroll-track-wrap::-webkit-scrollbar {
+      height: 4px;
+    }
+
+    .scroll-track-wrap::-webkit-scrollbar-thumb {
+      background: var(--sand);
+      border-radius: 4px;
+    }
+
+    .scroll-track {
+      display: inline-flex;
+      gap: 2rem;
+      padding-bottom: 1rem;
+    }
+
+    .prod-card {
+      width: 280px;
+      flex: 0 0 auto;
+      background: #fff;
+      border: 1px solid rgba(216, 201, 168, 0.35);
+      border-radius: 4px;
+      overflow: hidden;
+      position: relative;
+      cursor: pointer;
+      transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      text-decoration: none;
+      color: inherit;
+      display: block;
+    }
+
+    .prod-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 16px 48px rgba(74, 107, 93, 0.15), 0 4px 16px rgba(0, 0, 0, 0.05);
+      border-color: rgba(163, 124, 78, 0.3);
+    }
+
+    .prod-card:active {
+      transform: translateY(-4px) scale(0.99);
+    }
+
+    .prod-card-img {
+      width: 100%;
+      height: 320px;
+      object-fit: cover;
+      transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      filter: saturate(0.9);
+    }
+
+    .prod-card:hover .prod-card-img {
+      transform: scale(1.04);
+      filter: saturate(1.05);
+    }
+
+    .prod-card-like {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      width: 34px;
+      height: 34px;
+      background: rgba(255, 255, 255, 0.9);
+      border: none;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: var(--ink-soft);
+      font-size: 0.9rem;
+      transition: all 0.3s;
+      z-index: 5;
+      backdrop-filter: blur(4px);
+    }
+
+    .prod-card-like:hover,
+    .prod-card-like.liked {
+      color: #C44;
+      background: #fff;
+      transform: scale(1.15);
+    }
+
+    .prod-card-like.liked i {
+      font-weight: 900;
+    }
+
+    .prod-card-tag {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(4px);
+      font-family: var(--sans);
+      font-size: 0.58rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: #B03030;
+      padding: 4px 10px;
+      border-radius: 2px;
+    }
+
+    .prod-card-body {
+      padding: 1.4rem 1.2rem 1.6rem;
+    }
+
+    .prod-card-name {
+      font-family: var(--serif);
+      font-size: 1.15rem;
+      font-weight: 500;
+      color: var(--ink);
+      margin-bottom: 0.3rem;
+    }
+
+    .prod-card-desc {
+      font-size: 0.8rem;
+      color: var(--ink-soft);
+      line-height: 1.5;
+      margin-bottom: 0.8rem;
+    }
+
+    .prod-card-foot {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .prod-card-price {
+      font-family: var(--serif);
+      font-size: 1.1rem;
+      font-weight: 500;
+      color: var(--ink);
+    }
+
+    .prod-card-wt {
+      font-size: 0.7rem;
+      color: var(--ink-soft);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    /* ── SCIENCE ── */
+    .science-section {
+      padding: 7rem 2rem;
+      background: #FAF8F3;
+    }
+
+    .science-grid {
+      max-width: 1100px;
+      margin: 3rem auto 0;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 2rem;
+    }
+
+    .science-card {
+      padding: 2rem 1.5rem;
+      background: linear-gradient(160deg, #fff 0%, #F5F0E8 100%);
+      border: 1px solid rgba(216, 201, 168, 0.4);
+      border-radius: 4px;
+      text-align: center;
+      transition: all 0.35s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .science-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, transparent, rgba(163, 124, 78, 0.05));
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .science-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 32px rgba(74, 107, 93, 0.1);
+    }
+
+    .science-card:hover::before {
+      opacity: 1;
+    }
+
+    .sci-icon {
+      width: 58px;
+      height: 58px;
+      background: linear-gradient(135deg, rgba(74, 107, 93, 0.1), rgba(163, 124, 78, 0.1));
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1rem;
+      font-size: 1.4rem;
+      color: var(--sage);
+      transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .science-card:hover .sci-icon {
+      transform: rotate(-12deg) scale(1.12);
+    }
+
+    .sci-title {
+      font-family: var(--serif);
+      font-size: 1.1rem;
+      font-weight: 500;
+      color: var(--ink);
+      margin-bottom: 0.5rem;
+    }
+
+    .sci-body {
+      font-size: 0.82rem;
+      color: var(--ink-soft);
+      line-height: 1.6;
+    }
+
+    /* ── RITUAL ── */
+    .ritual-section {
+      padding: 0;
+      background: var(--ink);
+      overflow: hidden;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+
+    @media(max-width:768px) {
+      .ritual-section {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .ritual-img {
+      width: 100%;
+      height: 520px;
+      object-fit: cover;
+      filter: brightness(0.85) saturate(0.9);
+      transition: transform 0.8s, filter 0.5s;
+      display: block;
+    }
+
+    .ritual-section:hover .ritual-img {
+      transform: scale(1.03);
+      filter: brightness(0.9) saturate(1);
+    }
+
+    .ritual-content {
+      padding: 5rem 4rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      background: var(--ink);
+    }
+
+    @media(max-width:768px) {
+      .ritual-content {
+        padding: 3.5rem 2rem;
+      }
+    }
+
+    .ritual-eyebrow {
+      font-family: var(--sans);
+      font-size: 0.6rem;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1rem;
+    }
+
+    .ritual-h2 {
+      font-family: var(--serif);
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 300;
+      color: #fff;
+      line-height: 1.2;
+      margin-bottom: 1.2rem;
+    }
+
+    .ritual-h2 em {
+      font-style: italic;
+      color: var(--gold-lt);
+    }
+
+    .ritual-body {
+      font-size: 0.92rem;
+      color: rgba(255, 255, 255, 0.6);
+      line-height: 1.8;
+      margin-bottom: 2rem;
+    }
+
+    .btn-ritual {
+      font-family: var(--sans);
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      background: transparent;
+      color: var(--gold);
+      border: 1px solid rgba(163, 124, 78, 0.5);
+      border-radius: 3px;
+      padding: 13px 30px;
+      text-decoration: none;
+      display: inline-block;
+      transition: all 0.3s;
+      width: fit-content;
+    }
+
+    .btn-ritual:hover {
+      background: var(--gold);
+      color: var(--ink);
+      border-color: var(--gold);
+    }
+
+    /* ── BLOG SECTION ── */
+    .blog-section {
+      padding: 7rem 2rem;
+      background: var(--cream);
+    }
+
+    .blog-head {
+      text-align: center;
+      max-width: 600px;
+      margin: 0 auto 3.5rem;
+    }
+
+    .blog-grid {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+    }
+
+    .blog-card {
+      background: #fff;
+      border: 1px solid rgba(216, 201, 168, 0.35);
+      border-radius: 4px;
+      overflow: hidden;
+      text-decoration: none;
+      color: inherit;
+      transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .blog-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 16px 40px rgba(74, 107, 93, 0.12);
+    }
+
+    .blog-card-img {
+      width: 100%;
+      height: 220px;
+      object-fit: cover;
+      filter: saturate(0.85);
+      transition: all 0.5s;
+    }
+
+    .blog-card:hover .blog-card-img {
+      filter: saturate(1.05);
+      transform: scale(1.03);
+    }
+
+    .blog-card-img-wrap {
+      overflow: hidden;
+    }
+
+    .blog-card-body {
+      padding: 1.6rem;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .blog-card-tag {
+      font-family: var(--sans);
+      font-size: 0.6rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #B03030;
+      margin-bottom: 0.7rem;
+    }
+
+    .blog-card-title {
+      font-family: var(--serif);
+      font-size: 1.3rem;
+      font-weight: 400;
+      color: var(--ink);
+      line-height: 1.3;
+      margin-bottom: 0.6rem;
+    }
+
+    .blog-card-title em {
+      font-style: italic;
+      color: #B03030;
+    }
+
+    .blog-card-excerpt {
+      font-size: 0.82rem;
+      color: var(--ink-soft);
+      line-height: 1.6;
+      flex: 1;
+      margin-bottom: 1.2rem;
+    }
+
+    .blog-card-meta {
+      font-size: 0.7rem;
+      color: var(--ink-soft);
+      opacity: 0.6;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* ── TESTIMONIALS ── */
+    .testimonials-section {
+      padding: 7rem 2rem;
+      background: linear-gradient(160deg, #F0EDD6 0%, #E8E2CF 100%);
+    }
+
+    .testi-grid {
+      max-width: 1100px;
+      margin: 3rem auto 0;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .testi-card {
+      background: rgba(255, 255, 255, 0.7);
+      border: 1px solid rgba(216, 201, 168, 0.4);
+      border-radius: 4px;
+      padding: 2rem;
+      backdrop-filter: blur(8px);
+      position: relative;
+      overflow: hidden;
+      transition: all 0.35s;
+    }
+
+    .testi-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 32px rgba(74, 107, 93, 0.1);
+      background: rgba(255, 255, 255, 0.9);
+    }
+
+    .testi-stars {
+      color: var(--gold);
+      font-size: 0.85rem;
+      margin-bottom: 1rem;
+      letter-spacing: 2px;
+    }
+
+    .testi-quote {
+      font-family: var(--serif);
+      font-size: 1.05rem;
+      font-style: italic;
+      color: var(--ink);
+      line-height: 1.7;
+      margin-bottom: 1.2rem;
+    }
+
+    .testi-name {
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: #B03030;
+    }
+
+    .testi-loc {
+      font-size: 0.7rem;
+      color: var(--ink-soft);
+      opacity: 0.7;
+    }
+
+    /* ── METHOD ── */
+    .method-section {
+      padding: 7rem 2rem;
+      background: #FAF8F3;
+    }
+
+    .method-inner {
+      max-width: 800px;
+      margin: 3rem auto 0;
+    }
+
+    .method-step {
+      display: flex;
+      align-items: flex-start;
+      gap: 2rem;
+      padding: 1.8rem 0;
+      border-bottom: 1px solid rgba(216, 201, 168, 0.4);
+      transition: all 0.3s;
+      cursor: default;
+    }
+
+    .method-step:last-child {
+      border-bottom: none;
+    }
+
+    .method-step:hover .method-num {
+      color: var(--gold);
+      transform: scale(1.1);
+    }
+
+    .method-num {
+      font-family: var(--serif);
+      font-size: 3rem;
+      font-weight: 300;
+      color: rgba(163, 124, 78, 0.3);
+      line-height: 1;
+      flex-shrink: 0;
+      transition: all 0.3s;
+    }
+
+    .method-text h4 {
+      font-family: var(--serif);
+      font-size: 1.3rem;
+      font-weight: 500;
+      color: var(--ink);
+      margin-bottom: 0.4rem;
+    }
+
+    .method-text p {
+      font-size: 0.88rem;
+      color: var(--ink-soft);
+      line-height: 1.7;
+    }
+
+    /* ── PREMIUM BANNER ── */
+    .premium-banner {
+      padding: 5rem 2rem;
+      background: linear-gradient(135deg, var(--ink) 0%, #2C1804 60%, #1A1208 100%);
+      position: relative;
+      overflow: hidden;
+      text-align: center;
+    }
+
+    .premium-banner::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 50% 60% at 80% 20%, rgba(163, 124, 78, 0.18) 0%, transparent 50%), radial-gradient(ellipse 40% 50% at 10% 80%, rgba(74, 107, 93, 0.12) 0%, transparent 50%);
+    }
+
+    .premium-banner-inner {
+      position: relative;
+      z-index: 1;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .premium-crown {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      display: block;
+    }
+
+    .premium-title {
+      font-family: var(--serif);
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 300;
+      color: #fff;
+      line-height: 1.2;
+      margin-bottom: 0.8rem;
+    }
+
+    .premium-title em {
+      font-style: italic;
+      color: var(--gold-lt);
+    }
+
+    .premium-body {
+      font-size: 0.9rem;
+      color: rgba(255, 255, 255, 0.6);
+      margin-bottom: 2rem;
+      line-height: 1.7;
+    }
+
+    .btn-premium {
+      font-family: var(--sans);
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      background: linear-gradient(135deg, var(--gold) 0%, #C9954A 100%);
+      color: var(--ink);
+      border: none;
+      border-radius: 3px;
+      padding: 14px 36px;
+      text-decoration: none;
+      display: inline-block;
+      transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+      box-shadow: 0 4px 20px rgba(163, 124, 78, 0.35);
+    }
+
+    .btn-premium:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 32px rgba(163, 124, 78, 0.45);
+      color: var(--ink);
+    }
+
+    /* ── FOOTER ── */
+    .tob-footer {
+      background: linear-gradient(160deg, #1A1208 0%, #0F0A04 100%);
+      color: rgba(255, 255, 255, 0.6);
+      padding: 5rem 2rem 2rem;
+    }
+
+    .tob-footer-grid {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1.4fr;
+      gap: 3rem;
+    }
+
+    @media(max-width:900px) {
+      .tob-footer-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+      }
+    }
+
+    @media(max-width:560px) {
+      .tob-footer-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .footer-brand-logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 1.2rem;
+    }
+
+    .footer-logo-img {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      box-shadow: 0 0 0 2px var(--gold), 0 0 0 4px rgba(163, 124, 78, 0.2);
+    }
+
+    .footer-brand-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.1rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--gold);
+      line-height: 1.1;
+    }
+
+    .footer-brand-text em {
+      font-style: italic;
+      font-weight: 700;
+      font-size: 1rem;
+      text-transform: lowercase;
+    }
+
+    .footer-tagline {
+      font-size: 0.82rem;
+      color: rgba(255, 255, 255, 0.4);
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
+    }
+
+    .footer-copy {
+      font-size: 0.7rem;
+      color: rgba(255, 255, 255, 0.3);
+      margin-top: 1rem;
+    }
+
+    .footer-col-head {
+      font-family: var(--sans);
+      font-size: 0.6rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1.2rem;
+      font-weight: 600;
+    }
+
+    .footer-links {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+    }
+
+    .footer-links a {
+      font-size: 0.85rem;
+      color: rgba(255, 255, 255, 0.5);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .footer-links a:hover {
+      color: var(--gold);
+    }
+
+    .footer-contact-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin-bottom: 1rem;
+      font-size: 0.82rem;
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    .footer-contact-item i {
+      color: var(--gold);
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .footer-contact-item a {
+      color: rgba(255, 255, 255, 0.5);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .footer-contact-item a:hover {
+      color: var(--gold);
+    }
+
+    .footer-bottom {
+      max-width: 1200px;
+      margin: 3rem auto 0;
+      padding-top: 1.8rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.07);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+      font-size: 0.72rem;
+      color: rgba(255, 255, 255, 0.3);
+    }
+
+    .footer-bottom-links {
+      display: flex;
+      gap: 1.5rem;
+    }
+
+    .footer-bottom-links a {
+      color: rgba(255, 255, 255, 0.3);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .footer-bottom-links a:hover {
+      color: var(--gold);
+    }
+
+    /* ── Scroll reveal ── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: none;
+    }
+
+    .reveal-l {
+      opacity: 0;
+      transform: translateX(-28px);
+      transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .reveal-l.visible {
+      opacity: 1;
+      transform: none;
+    }
+
+    @media(max-width:768px) {
+      .hero {
+        min-height: unset;
+      }
+
+      .ritual-section {
+        display: block;
+      }
+
+      .ritual-img {
+        height: 300px;
+        width: 100%;
+      }
+    }
+
+    /* ── MOBILE COLLAPSED FIX ── */
+    @media(max-width:600px) {
+      body {
+        overflow-x: hidden;
+      }
+
+      .hero-inner {
+        padding: 3rem 1.2rem 2.5rem;
+      }
+
+      .hero-sub {
+        font-size: 0.95rem;
+      }
+
+      .philosophy {
+        padding: 4rem 1.2rem;
+      }
+
+      .science-section,
+      .method-section {
+        padding: 4rem 1.2rem;
+      }
+
+      .blog-section {
+        padding: 4rem 1.2rem;
+      }
+
+      .testimonials-section {
+        padding: 4rem 1.2rem;
+      }
+
+      .premium-banner {
+        padding: 3.5rem 1.2rem;
+      }
+
+      .ritual-content {
+        padding: 2.5rem 1.2rem;
+      }
+
+      .tob-footer {
+        padding: 3rem 1.2rem 2rem;
+      }
+
+      .tob-footer-grid {
+        grid-template-columns: 1fr !important;
+        gap: 1.5rem !important;
+      }
+    }
+
+    /* ===== LUXURY PRODUCT CAROUSEL (ULTIMATE SLIDER UI/UX) ===== */
+    :root {
+      --sapphire-gold: #a37c4e;
+      --font-display: 'Cormorant Garamond', serif;
+      --font-serif: 'Cormorant Garamond', serif;
+      --font-sans: 'Inter', sans-serif;
+      --text-dark: #1A1208;
+      --text-medium: #4A3E2E;
+      --text-light: #888;
+      --section-gap: 3rem;
+    }
+
+    .card-carousel {
+      background: #fff;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      position: relative;
+      padding: var(--section-gap) 0;
+    }
+
+    @media (min-width: 1024px) {
+      .card-carousel {
+        min-height: 55vh;
+        padding: 40px 0;
+      }
+    }
+
+    @media (min-width: 768px) and (max-width: 1023px) {
+      .card-carousel {
+        min-height: 65vh;
+        padding: 40px 0;
+      }
+    }
+
+    @media (max-width: 767px) {
+      .card-carousel {
+        min-height: 70vh;
+      }
+    }
+
+    .carousel-header {
+      text-align: center;
+      margin-bottom: 40px;
+      z-index: 10;
+    }
+
+    .carousel-badge {
+      display: inline-block;
+      font-size: 10px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--sapphire-gold);
+      margin-bottom: 12px;
+    }
+
+    .carousel-main-title {
+      font-family: var(--font-display);
+      font-size: clamp(34px, 6vw, 54px);
+      font-weight: 400;
+      line-height: 1.1;
+      color: var(--text-dark);
+      margin-bottom: 16px;
+    }
+
+    .carousel-subtitle {
+      font-size: 15px;
+      color: var(--text-light);
+      max-width: 580px;
+      margin: 0 auto;
+      font-weight: 300;
+    }
+
+    .card-swiper {
+      width: 100%;
+      padding: 20px 0 80px !important;
+      perspective: 2000px;
+    }
+
+    .card-swiper .swiper-wrapper {
+      align-items: center;
+    }
+
+    .card-swiper .swiper-slide {
+      height: auto;
+      transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.6s ease, filter 0.6s ease;
+      opacity: 1;
+      filter: none;
+      transform: scale(1);
+      pointer-events: auto;
+    }
+
+    @media (min-width: 768px) {
+
+      .card-swiper .swiper-slide-prev,
+      .card-swiper .swiper-slide-next {
+        opacity: 1;
+        filter: none;
+        transform: scale(1);
+        pointer-events: auto;
+      }
+    }
+
+    .card-swiper .swiper-slide-active {
+      opacity: 1 !important;
+      filter: blur(0) saturate(100%) !important;
+      transform: scale(1) !important;
+      z-index: 100;
+      pointer-events: auto;
+    }
+
+    .card-swiper .swiper-slide-active .carousel-card {
+      box-shadow: 0 25px 70px rgba(0, 0, 0, 0.25), 0 0 30px rgba(212, 175, 55, 0.45);
+      border-color: rgba(212, 175, 55, 0.5);
+    }
+
+    .carousel-card {
+      background: #fff;
+      border: 1px solid rgba(26, 18, 8, 0.4);
+      border-radius: 16px;
+      overflow: hidden;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      height: 480px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+      padding: 15px;
+      position: relative;
+      cursor: pointer;
+      transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .feat-carousel-section .swiper-slide-active .carousel-card:hover,
+    .feat-carousel-section .carousel-card:hover {
+      transform: scale(1.02) translateY(-8px) !important;
+      box-shadow: 0 0 0 1px #1A1208, 0 15px 40px rgba(26, 18, 8, 0.2) !important;
+      border-color: #1A1208 !important;
+    }
+
+    .carousel-card:active {
+      transform: scale(0.97) !important;
+      box-shadow: 0 4px 20px rgba(163, 124, 78, 0.3) !important;
+    }
+
+    .carousel-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.4) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    .card-image-wrapper {
+      width: 100%;
+      height: 60%;
+      overflow: hidden;
+      background: #fdfdfd;
+      border-bottom: 1px solid rgba(26, 18, 8, 0.05);
+      position: relative;
+    }
+
+    .text-fallback-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: transparent !important;
+      padding: 1.5rem;
+      text-align: center;
+    }
+
+    .text-fallback-wrapper .fallback-title {
+      font-family: var(--font-display);
+      font-size: clamp(1.8rem, 4vw, 2.4rem);
+      font-weight: 400;
+      color: #A39688;
+      margin: 0;
+      line-height: 1.2;
+    }
+
+    .card-content {
+      padding: 12px 20px 15px;
+      height: 35%;
+      display: flex;
+      flex-direction: column;
+      text-align: center;
+      justify-content: space-between;
+      background: transparent !important;
+    }
+
+    .card-number {
+      font-family: var(--font-sans);
+      font-size: 9px;
+      letter-spacing: 5px;
+      color: var(--sapphire-gold);
+      display: block;
+      margin-bottom: 8px;
+      opacity: 0.8;
+    }
+
+    .card-title {
+      display: none;
+    }
+
+    .card-description {
+      font-size: 13px;
+      color: var(--text-medium);
+      line-height: 1.5;
+      margin-bottom: 5px;
+      font-weight: 300;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .card-footer {
+      padding-top: 8px;
+      margin-top: auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    .card-price {
+      font-family: var(--font-sans);
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-dark);
+    }
+
+    .card-minimal-add {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: #1a1a1a;
+      color: white;
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      z-index: 5;
+    }
+
+    .card-minimal-add:hover {
+      transform: scale(1.1);
+      background: var(--sapphire-gold);
+    }
+
+    .card-minimal-add:active {
+      transform: scale(0.9) !important;
+    }
+
+    .plus-icon {
+      font-size: 22px;
+      font-weight: 300;
+      line-height: 1;
+      margin-top: -2px;
+    }
+
+    .card-swiper .swiper-pagination {
+      display: none !important;
+    }
+
+    .card-swiper .swiper-pagination-bullet {
+      display: none;
+    }
+
+    .card-swiper .swiper-pagination-bullet-active {
+      display: none;
+    }
+
+    @media (max-width: 767px) {
+      .card-swiper .swiper-slide {
+        opacity: 1;
+        filter: none;
+        transform: scale(1);
+      }
+
+      .card-swiper .swiper-slide-active {
+        opacity: 1;
+        transform: scale(1);
+      }
+
+      .carousel-card {
+        height: 460px;
+      }
+
+      .text-fallback-wrapper .fallback-title {
+        font-size: 1.6rem;
+      }
+    }
+
+    @media (min-width: 1024px) and (max-width: 1440px) {
+      .card-carousel {
+        min-height: 58vh;
+        padding: 35px 0;
+      }
+
+      .card-swiper .swiper-slide {
+        opacity: 1;
+        transform: scale(1);
+      }
+
+      .card-swiper .swiper-slide-prev,
+      .card-swiper .swiper-slide-next {
+        opacity: 1;
+        transform: scale(1);
+      }
+
+      .card-swiper .swiper-slide-active {
+        opacity: 1 !important;
+        transform: scale(1) !important;
+      }
+
+      .card-image-wrapper {
+        aspect-ratio: 1.6/1;
+        min-height: 120px;
+        flex-shrink: 0;
+      }
+
+      .carousel-card {
+        height: 420px;
+      }
+
+      .card-minimal-add {
+        width: 27px;
+        height: 27px;
+      }
+
+      .plus-icon {
+        font-size: 16px;
+      }
+    }
+
+    @media (min-width: 768px) and (max-width: 1023px) {
+      .carousel-card {
+        margin: 0;
+        border-radius: 0px;
+      }
+    }
+
+    /* ── Product card click ripple ── */
+    .carousel-card .ripple {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(163, 124, 78, 0.25);
+      transform: scale(0);
+      animation: card-ripple 0.6s linear;
+      pointer-events: none;
+      z-index: 10;
+    }
+
+    @keyframes card-ripple {
+      to {
+        transform: scale(4);
+        opacity: 0;
+      }
+    }
+
+    /* ===== FEATURED BLENDS — WARM TERRACOTTA / DUSTY BLUSH PALETTE =====       Inspired by the reference but using warm terracotta, dusty rose & ivory for a fresh feel. */
+    .feat-carousel-section {
+      background: var(--cream-dk) !important;
+      padding: 7rem 0 5rem !important;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Ambient glow — disabled for cleaner theme */
+    .feat-carousel-section::before {
+      display: none;
+    }
+
+    /* Ambient glow — disabled */
+    .feat-carousel-section::after {
+      display: none;
+    }
+
+    @keyframes feat-bloom-pulse {
+      from {
+        transform: scale(0.92) translateY(0);
+        opacity: 0.70;
+      }
+
+      to {
+        transform: scale(1.06) translateY(-10px);
+        opacity: 1;
+      }
+    }
+
+    /* Heading: warm ink on blush */
+    .feat-carousel-section .carousel-header {
+      position: relative;
+      z-index: 2;
+    }
+
+    .feat-carousel-section .carousel-badge {
+      color: #9B5E42;
+      letter-spacing: 5px;
+    }
+
+    .feat-carousel-section .carousel-main-title {
+      color: #2C1810;
+      text-shadow: none;
+    }
+
+    .feat-carousel-section .carousel-main-title em {
+      color: #B03030;
+      font-style: italic;
+    }
+
+    .feat-carousel-section .carousel-subtitle {
+      color: rgba(80, 50, 35, 0.55);
+    }
+
+    /* View All link */
+    .feat-view-all {
+      font-family: var(--font-sans);
+      font-size: 0.72rem;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: rgba(120, 70, 45, 0.55);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(155, 94, 66, 0.3);
+      padding-bottom: 2px;
+      transition: color 0.25s, border-color 0.25s;
+    }
+
+    .feat-view-all:hover {
+      color: #9B5E42;
+      border-color: #9B5E42;
+    }
+
+    /* ── INACTIVE CARDS: Minimal styling ── */
+    .feat-carousel-section .carousel-card {
+      background: #FFFFFF;
+      border: 1px solid rgba(26, 18, 8, 0.4);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+      position: relative;
+      overflow: hidden;
+      transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    /* Removed elaborate gradients for cleaner look */
+    .feat-carousel-section .carousel-card::before {
+      display: none !important;
+    }
+
+    .feat-carousel-section .carousel-card::after {
+      display: none;
+    }
+
+    .feat-carousel-section .swiper-slide-active .carousel-card::after {
+      display: none;
+    }
+
+    /* Inactive card text: standard text */
+    .feat-carousel-section .card-image-wrapper {
+      background: #FAFAFA;
+      border-radius: 0;
+      border-bottom: 1px solid rgba(26, 18, 8, 0.05);
+      overflow: hidden;
+    }
+
+    .feat-carousel-section .card-title {
+      color: rgba(60, 30, 15, 0.60);
+      font-weight: 400;
+    }
+
+    .feat-carousel-section .card-description {
+      color: #7A6F65 !important;
+    }
+
+    .feat-carousel-section .card-price {
+      color: #9C7D63 !important;
+      font-weight: 500 !important;
+    }
+
+    .feat-carousel-section .card-number {
+      color: #A4907F !important;
+    }
+
+    .feat-carousel-section .card-footer {
+      border-top-color: rgba(195, 130, 100, 0.08) !important;
+    }
+
+    .feat-carousel-section .card-minimal-add {
+      background: #FAFAFA !important;
+      border: 1px solid #EBEBEB !important;
+      color: #B8A89A !important;
+      box-shadow: none !important;
+    }
+
+    /* ── ACTIVE CENTER CARD: Clean elevation ── */
+    .feat-carousel-section .swiper-slide-active .carousel-card {
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
+      border-color: rgba(26, 18, 8, 0.2) !important;
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.08) !important;
+      animation: feat-card-lift 4.5s ease-in-out infinite;
+    }
+
+    /* Distinct Light Color Palettes for each Slide */
+    .feat-carousel-section .swiper-slide:nth-child(5n+1) .carousel-card {
+      background: #FDF2EF !important;
+    }
+
+    /* Rose warm tint */
+    .feat-carousel-section .swiper-slide:nth-child(5n+2) .carousel-card {
+      background: #F0F6F2 !important;
+    }
+
+    /* Sage tint */
+    .feat-carousel-section .swiper-slide:nth-child(5n+3) .carousel-card {
+      background: #F4F6F9 !important;
+    }
+
+    /* Dew tint */
+    .feat-carousel-section .swiper-slide:nth-child(5n+4) .carousel-card {
+      background: #FCF7EE !important;
+    }
+
+    /* Lemon warm tint */
+    .feat-carousel-section .swiper-slide:nth-child(5n+5) .carousel-card {
+      background: #F8F4FA !important;
+    }
+
+    /* Lilac tint */
+    /* Make image/content wrappers inherently transparent so parent pastel colors bleed through */
+    .feat-carousel-section .swiper-slide-active .card-image-wrapper {
+      background: transparent !important;
+      border-bottom-color: rgba(26, 18, 8, 0.05) !important;
+    }
+
+    .feat-carousel-section .swiper-slide-active .card-content {
+      background: transparent !important;
+    }
+
+    /* Active card text — contrasting against light blocks */
+    .feat-carousel-section .swiper-slide-active .fallback-title {
+      color: #4A3C31 !important;
+      font-weight: 400 !important;
+    }
+
+    .feat-carousel-section .swiper-slide-active .card-description {
+      color: #6C5B4F !important;
+    }
+
+    .feat-carousel-section .swiper-slide-active .card-price {
+      color: #8C6A53 !important;
+      font-weight: 500 !important;
+    }
+
+    .feat-carousel-section .swiper-slide-active .card-footer {
+      border-top-color: rgba(155, 94, 66, 0.1) !important;
+    }
+
+    .feat-carousel-section .swiper-slide-active .card-number {
+      color: #9B5E42 !important;
+      opacity: 1 !important;
+    }
+
+    .feat-carousel-section .swiper-slide-active .card-minimal-add {
+      background: var(--ink) !important;
+      border-color: transparent !important;
+      box-shadow: 0 4px 16px rgba(26, 18, 8, 0.2) !important;
+      color: #fff !important;
+    }
+
+    .feat-carousel-section .swiper-slide-active .card-minimal-add:hover {
+      background: #9B5E42 !important;
+      transform: scale(1.12) rotate(90deg);
+    }
+
+    @keyframes feat-card-lift {
+
+      0%,
+      100% {
+        transform: translateY(0) scale(1);
+      }
+
+      50% {
+        transform: translateY(-8px) scale(1);
+      }
+    }
+
+    /* Inactive card add button hover */
+    .feat-carousel-section .card-minimal-add:hover {
+      background: rgba(155, 94, 66, 0.20) !important;
+      border-color: rgba(155, 94, 66, 0.40) !important;
+      transform: scale(1.1) rotate(90deg);
+    }
+
+    /* Pagination */
+    .feat-carousel-section .swiper-pagination-bullet {
+      background: rgba(155, 94, 66, 0.25) !important;
+    }
+
+    .feat-carousel-section .swiper-pagination-bullet-active {
+      background: #9B5E42 !important;
+    }
+
+    /* Carousel Navigation Arrows */
+    .feat-carousel-section .swiper-button-next,
+    .feat-carousel-section .swiper-button-prev,
+    .products-section .swiper-button-next,
+    .products-section .swiper-button-prev {
+      width: 52px;
+      height: 52px;
+      background: rgba(255, 255, 255, 0.85);
+      border: 1px solid rgba(155, 94, 66, 0.3);
+      border-radius: 50%;
+      color: #9B5E42;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+      z-index: 10;
+      backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .feat-carousel-section .swiper-button-next:after,
+    .feat-carousel-section .swiper-button-prev:after,
+    .products-section .swiper-button-next:after,
+    .products-section .swiper-button-prev:after {
+      display: none;
+    }
+
+    .feat-carousel-section .swiper-button-next i,
+    .feat-carousel-section .swiper-button-prev i,
+    .products-section .swiper-button-next i,
+    .products-section .swiper-button-prev i {
+      font-size: 1.1rem;
+      line-height: 1;
+    }
+
+    .feat-carousel-section .swiper-button-next:hover,
+    .feat-carousel-section .swiper-button-prev:hover,
+    .products-section .swiper-button-next:hover,
+    .products-section .swiper-button-prev:hover {
+      background: #9B5E42;
+      color: #fff;
+      border-color: #9B5E42;
+      transform: translateY(-50%) scale(1.1) !important;
+      box-shadow: 0 8px 24px rgba(155, 94, 66, 0.25);
+    }
+
+    .feat-carousel-section .swiper-button-prev,
+    .products-section .swiper-button-prev {
+      left: 3%;
+    }
+
+    .feat-carousel-section .swiper-button-next,
+    .products-section .swiper-button-next {
+      right: 3%;
+    }
+
+    @media (max-width: 1200px) {
+
+      .feat-carousel-section .swiper-button-next,
+      .feat-carousel-section .swiper-button-prev,
+      .products-section .swiper-button-next,
+      .products-section .swiper-button-prev {
+        display: none;
+      }
+    }
+
+    /* --- Product Badges --- */
+    .product-badge {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: #fff;
+      padding: 6px 12px;
+      border-radius: 4px;
+      z-index: 10;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      pointer-events: none;
+    }
+
+    .badge-bestseller {
+      background: #B03030;
+    }
+
+    .badge-toprated {
+      background: #A37C4E;
+    }
+
+    .badge-new {
+      background: #C9954A;
+    }
+
+    /* Responsive */
+    @media (min-width: 1024px) and (max-width: 1440px) {
+      .feat-carousel-section {
+        padding: 5rem 0 4rem !important;
+      }
+    }
+
+    @media (max-width: 767px) {
+      .feat-carousel-section {
+        padding: 4rem 0 3rem !important;
+      }
+    }
+  </style>
+  <style>
+    /* ══════════════ BOTANICAL BOOK HERO ══════════════ */
+    /* Hide filter spinner background and reset width */
+    /* Hide filter spinner background and reset width */
+    .tob-spinner-wrap {
+      background: none !important;
+      box-shadow: none !important;
+      border: none !important;
+      max-width: none !important;
+      width: 100% !important;
+    }
+
+    .tob-spinner-wrap::before {
+      display: none !important;
+    }
+  </style>
+</head>
+
+<body> <!-- DESKTOP HEADER -->
+  <header class="tob-header" id="tobHeader"> <!-- Row 1: Brand + Actions -->
+    <div class="tob-top tob-top-row1">
+      <div class="tob-brand"> <img th:src="@{/images/flower-logo.png}" alt="Theory of Bloom logo" class="tob-logo">
+        <span class="tob-brand-name">Theory <em>of</em> Bloom</span>
+      </div>
+      <div class="tob-actions">
+        <div class="tob-search-wrap tob-cat-search">
+          <form th:action="@{/shop}" method="get" class="tob-search-form">
+            <input type="text" name="search" id="desktopSearch" class="tob-search-input"
+              placeholder="Search for botanicals, blends and more…">
+            <button type="submit" class="tob-search-btn" aria-label="Search">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
+                <path
+                  d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
+              </svg>
+            </button>
+          </form>
+        </div>
+        <div class="tob-action-item" sec:authorize="!isAuthenticated()"><a th:href="@{/login}" class="tob-icon-btn"
+            style="text-decoration:none;"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22"
+              fill="currentColor" viewBox="0 0 16 16">
+              <path fill-rule="evenodd"
+                d="M6 3.5a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-2a.5.5 0 0 0-1 0v2A1.5 1.5 0 0 0 6.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-8A1.5 1.5 0 0 0 5 3.5v2a.5.5 0 0 0 1 0z" />
+              <path fill-rule="evenodd"
+                d="M11.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H1.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708z" />
+            </svg><span class="tob-icon-label">Login</span></a></div>
+        <div class="tob-action-item" sec:authorize="isAuthenticated()"> <button class="tob-icon-btn" type="button"><svg
+              xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 16 16">
+              <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
+              <path fill-rule="evenodd"
+                d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1" />
+            </svg><span class="tob-icon-label"
+              th:text="${user != null and !#strings.isEmpty(user.fullName) ? #strings.arraySplit(user.fullName, ' ')[0] : 'Account'}">Account</span></button>
+          <div class="tob-drop">
+            <div class="tob-drop-header">Account Centre</div><a class="tob-drop-item" th:href="@{/profile}"><i
+                class="fas fa-user-circle fa-sm"></i> My Profile</a><a class="tob-drop-item"
+              th:href="@{/order-history}"><i class="fas fa-box fa-sm"></i> Orders</a><a class="tob-drop-item"
+              th:href="@{/saved-blends}"><i class="fas fa-heart fa-sm"></i> Saved Blends</a><a class="tob-drop-item"
+              th:href="@{/profile#settings}"><i class="fas fa-cog fa-sm"></i> Settings</a>
+            <div class="tob-drop-divider"></div><button class="tob-drop-item danger" type="button"
+              onclick="openSignoutModal()"
+              style="width:100%;text-align:left;background:none;border:none;cursor:pointer;"><i
+                class="fas fa-sign-out-alt fa-sm"></i> Sign Out</button>
+          </div>
+        </div>
+
+        <div class="tob-action-item"> <button class="tob-icon-btn" type="button"><svg xmlns="http://www.w3.org/2000/svg"
+              width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+              <path
+                d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0" />
+            </svg><span class="tob-icon-label">More</span></button>
+          <div class="tob-drop">
+            <div class="tob-drop-header">Explore</div><a class="tob-drop-item" th:href="@{/contact}"><i
+                class="fas fa-envelope fa-sm"></i> Contact Us</a><a class="tob-drop-item"
+              th:href="@{/privacy-policy}"><i class="fas fa-shield-alt fa-sm"></i> Privacy Policy</a>
+          </div>
+        </div>
+        <a th:href="@{/cart}" class="tob-icon-btn tob-cart-btn" style="text-decoration:none;"><svg
+            xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 16 16">
+            <path
+              d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .49.598l-1 5a.5.5 0 0 1-.465.401l-9.397.472L4.415 11H13a.5.5 0 0 1 0 1H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5M3.102 4l.84 4.479 9.144-.459L13.89 4zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4m7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4m-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2m7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2" />
+          </svg><span class="tob-icon-label">Cart</span></a>
+      </div>
+    </div> <!-- Row 2: Category pill-bar -->
+    <div class="tob-bottom tob-cat-row">
+      <!-- 3D Spinner Category Filter -->
+      <div class="tob-spinner-wrap">
+        <div class="tob-spinner-tilt">
+          <div class="tob-spinner-ring">
+            <th:block th:each="cat, iter : ${#strings.listSplit(siteContent.home.spinnerCategories, ',')}">
+              <a th:href="@{/shop(category=${#strings.trim(cat)})}" class="tob-spinner-item"
+                th:style="'--i:' + ${iter.index}">
+                <i class="bi"
+                  th:classappend="${iter.index == 0 ? 'bi-moon-stars' : (iter.index == 1 ? 'bi-stars' : (iter.index == 2 ? 'bi-lightning-charge' : (iter.index == 3 ? 'bi-shield-check' : (iter.index == 4 ? 'bi-lightning' : 'bi-sunrise'))))}"></i>
+                <span th:text="${#strings.trim(cat)}">Category</span>
+              </a>
+              <span class="tob-spinner-bullet" th:if="${!iter.last}"
+                th:style="'--i:' + (${iter.index} + 0.5)">&bull;</span>
+            </th:block>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header> <!-- MOBILE HEADER -->
+  <div class="tob-mobile-header" id="tobMobileHeader"> <!-- Bar: Hamburger | Brand | Account+Cart+More -->
+    <div class="tob-mob-bar"> <button class="tob-mob-ham-btn" type="button" onclick="tobOpenMenu()"
+        aria-label="Open menu" id="tobHamBtn"> <span class="tob-ham-line"></span> <span class="tob-ham-line"></span>
+        <span class="tob-ham-line tob-ham-line--short"></span> </button>
+      <div class="tob-mob-center"> <img th:src="@{/images/flower-logo.png}" class="tob-mob-logo-img"
+          alt="Theory of Bloom logo"> <span class="tob-mob-name">Theory <em>of</em> Bloom</span> </div>
+      <div class="tob-mob-icons">
+        <div class="tob-mob-account"> <button class="tob-mob-icon" type="button" onclick="tobToggleAccDrop(event)"
+            sec:authorize="isAuthenticated()"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+              fill="#a37c4e" viewBox="0 0 16 16">
+              <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
+              <path fill-rule="evenodd"
+                d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1" />
+            </svg></button> <a th:href="@{/login}" class="tob-mob-icon" sec:authorize="!isAuthenticated()"><svg
+              xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#a37c4e" viewBox="0 0 16 16">
+              <path fill-rule="evenodd"
+                d="M6 3.5a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-2a.5.5 0 0 0-1 0v2A1.5 1.5 0 0 0 6.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-8A1.5 1.5 0 0 0 5 3.5v2a.5.5 0 0 0 1 0z" />
+              <path fill-rule="evenodd"
+                d="M11.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H1.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708z" />
+            </svg></a>
+          <div class="tob-drawer-backdrop" id="tobMobBackdrop"></div>
+          <div class="tob-mob-acc-drawer" id="tobMobDrawer">
+            <div class="drawer-profile-header">
+              <div class="drawer-header-top">
+                <div class="drawer-avatar"
+                  th:text="${user != null and !#strings.isEmpty(user.fullName) ? #strings.substring(user.fullName,0,1) : 'U'}">
+                  U</div>
+                <div class="drawer-name-wrap">
+                  <div class="drawer-name" th:text="${user != null ? user.fullName : 'Valued Member'}">User Name</div>
+                  <div class="drawer-status"
+                    th:text="${user != null and user.premium ? '✦ Premium Member' : 'Standard Member'}">Standard Member
+                  </div>
+                </div>
+              </div>
+              <div class="drawer-header-meta">
+                <div class="meta-item"><span class="meta-label">Member ID</span><span class="meta-value"
+                    th:text="${user != null ? '#TB' + user.id : '#TB0000'}">#TB1001</span></div>
+                <div class="meta-item"><span class="meta-label">Status</span><span class="meta-value"
+                    th:text="${user != null and user.premium ? 'Premium' : 'Normal'}">Normal</span></div>
+              </div>
+            </div>
+            <div class="drawer-menu"> <a th:href="@{/profile}" class="drawer-menu-item"><i
+                  class="bi bi-person-circle"></i>
+                <div class="drawer-item-content"><span class="drawer-item-title">Account Centre</span><span
+                    class="drawer-item-sub">Manage your botanical ritual</span></div>
+              </a> <a th:href="@{/order-history}" class="drawer-menu-item"><i class="bi bi-box-seam"></i>
+                <div class="drawer-item-content"><span class="drawer-item-title">Purchase History</span><span
+                    class="drawer-item-sub">Track your formulations</span></div><span class="drawer-badge">Active</span>
+              </a> <a th:href="@{/saved-blends}" class="drawer-menu-item"><i class="bi bi-heart"></i>
+                <div class="drawer-item-content"><span class="drawer-item-title">Saved Blends</span><span
+                    class="drawer-item-sub">Your curation library</span></div>
+              </a> <a th:href="@{/profile#settings}" class="drawer-menu-item"><i class="bi bi-gear"></i>
+                <div class="drawer-item-content"><span class="drawer-item-title">System Settings</span><span
+                    class="drawer-item-sub">Privacy &amp; preferences</span></div>
+              </a> </div>
+          </div>
+        </div> <a th:href="@{/cart}" class="tob-mob-icon cart-ic"><svg xmlns="http://www.w3.org/2000/svg" width="20"
+            height="20" fill="#a37c4e" viewBox="0 0 16 16">
+            <path
+              d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .49.598l-1 5a.5.5 0 0 1-.465.401l-9.397.472L4.415 11H13a.5.5 0 0 1 0 1H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5M3.102 4l.84 4.479 9.144-.459L13.89 4zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4m7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4m-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2m7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2" />
+          </svg></a>
+      </div>
+    </div>
+    <div class="tob-spinner-wrap">
+      <div class="tob-spinner-tilt">
+        <div class="tob-spinner-ring">
+          <th:block th:each="cat, iter : ${#strings.listSplit(siteContent.home.spinnerCategories, ',')}">
+            <a th:href="@{/shop(category=${#strings.trim(cat)})}" class="tob-spinner-item"
+              th:style="'--i:' + ${iter.index}">
+              <i class="bi"
+                th:classappend="${iter.index == 0 ? 'bi-moon-stars' : (iter.index == 1 ? 'bi-stars' : (iter.index == 2 ? 'bi-lightning-charge' : (iter.index == 3 ? 'bi-shield-check' : (iter.index == 4 ? 'bi-lightning' : 'bi-sunrise'))))}"></i>
+              <span th:text="${#strings.trim(cat)}">Category</span>
+            </a>
+            <span class="tob-spinner-bullet" th:if="${!iter.last}"
+              th:style="'--i:' + (${iter.index} + 0.5)">&bull;</span>
+          </th:block>
+        </div>
+      </div>
+    </div>
+  </div> <!-- FULLSCREEN MENU OVERLAY -->
+  <div class="tob-overlay" id="tobOverlay"> <button class="tob-overlay-close" onclick="tobCloseMenu()"
+      aria-label="Close">&#x2715;</button>
+    <div class="tob-overlay-acc" sec:authorize="isAuthenticated()">
+      <div class="tob-overlay-acc-circle"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+          fill="currentColor" viewBox="0 0 16 16">
+          <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
+          <path fill-rule="evenodd"
+            d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1" />
+        </svg></div>
+      <div class="tob-overlay-acc-text"><span class="tob-overlay-acc-name"
+          th:text="${user != null and !#strings.isEmpty(user.fullName) ? user.fullName : 'My Account'}">User
+          Name</span><span class="tob-overlay-acc-sub">Manage Dashboard</span></div>
+    </div>
+    <ul class="tob-overlay-links">
+      <li><a th:href="@{/}">Home</a></li>
+      <li><a th:href="@{/shop}">Shop Blends</a></li>
+      <li><a th:href="@{/saved-blends}">Saved Blends</a></li>
+      <li><a th:href="@{/profile}">Account Centre</a></li>
+      <li><a th:href="@{/contact}">Contact</a></li>
+    </ul>
+    <div class="tob-overlay-footer">
+      <p>Theory <em>of</em> Bloom</p><small>Crafted by Nature. Perfected by Science.</small>
+    </div>
+  </div>
+
+  <!-- ── MOBILE HERO BANNER (visible only on mobile, above the book) ── -->
+  <div class="mobile-hero-banner">
+    <h1 class="mobile-hero-title">Crafted by Nature.<br>Perfected by Science.</h1>
+    <p class="mobile-hero-text">A collection of floral wellness blends designed to calm the mind, nourish the body, and
+      elevate your daily ritual.</p>
+    <div class="mobile-hero-btns">
+      <a href="/shop" class="mobile-hero-btn">Shop Blends</a>
+      <a href="#philosophy" class="mobile-hero-btn">Discover Your Ritual</a>
+    </div>
+  </div>
+
+  <!-- ══════════ 3D ROTATING BOOK HERO ══════════ -->
+  <section class="hero-book">
+    <div class="container-fluid p-0">
+      <div class="flip-book-container is-cover">
+        <div id="cover-left-content" class="cover-left-content">
+          <div style="max-width: 80%;">
+            <h1 class="cover-left-title" style="font-weight: 700;">Crafted by Nature.<br>Perfected by Science.</h1>
+            <p class="cover-left-text">A collection of floral wellness blends designed to calm the mind, nourish the
+              body, and elevate your daily ritual.</p>
+            <div class="cover-left-buttons">
+              <a href="/shop" class="btn-outline-tob" style="display:inline-block; margin-right: 15px;">Shop Blends</a>
+              <a href="#philosophy" class="btn-outline-tob" style="display:inline-block;">Discover Your Ritual</a>
+            </div>
+          </div>
+        </div>
+        <div id="cover-right-content" class="cover-right-content">
+          <div style="max-width: 80%; text-align: left;">
+            <p class="cover-right-quote">"In every cup, a moment of profound stillness.<br>A return to the earth, a
+              return to yourself."</p>
+          </div>
+        </div>
+        <div class="flip-book" id="bookHero">
+          <!-- PAGE 1 (Cover - Single Page) -->
+          <div class="page cover-page" data-density="hard">
+            <div class="page-content magazine-layout center-content">
+              <img th:src="@{/images/Theory_of_Bloom_Logo-removebg-preview.png}" alt="Theory of Bloom"
+                style="display: block; margin: 0 auto 2rem; max-width: 60%; object-fit: contain; filter: brightness(0) invert(1);">
+              <p class="mag-caption" style="margin-top: 1rem;">Where nature becomes ritual</p>
+              <div class="flip-tag" onclick="document.getElementById('btn-book-next').click()">Flip Here <i class="bi bi-arrow-right"></i></div>
+            </div>
+          </div>
+
+          <!-- SPREAD 1 -->
+          <!-- Page 1 (Left) -->
+          <div class="page">
+            <div class="page-content magazine-layout">
+              <h2 class="mag-title">Theory of Bloom</h2>
+              <div class="mag-rule"></div>
+              <p class="mag-text">Where nature becomes ritual. We believe in the power of slow living and the gentle
+                restoration found in carefully curated botanicals.</p>
+              <div class="mag-img-small"
+                style="background: url('/images/botanical-jar-1.png') center/contain no-repeat;"></div>
+            </div>
+          </div>
+          <!-- Page 2 (Right) -->
+          <div class="page">
+            <div class="page-content magazine-layout center-content">
+              <div class="mag-video-frame">
+                <video autoplay muted loop playsinline>
+                  <source src="/images/tea-steam.mp4" type="video/mp4" />
+                </video>
+              </div>
+              <p class="mag-caption">The morning ritual.</p>
+            </div>
+          </div>
+
+          <!-- SPREAD 2 -->
+          <!-- Page 3 (Left) -->
+          <div class="page">
+            <div class="page-content magazine-layout center-content">
+              <div class="mag-video-frame">
+                <video autoplay muted loop playsinline>
+                  <source src="/images/flower-bloom.mp4" type="video/mp4" />
+                </video>
+              </div>
+              <p class="mag-caption">Infusions that breathe life.</p>
+            </div>
+          </div>
+          <!-- Page 4 (Right) -->
+          <div class="page">
+            <div class="page-content magazine-layout">
+              <h2 class="mag-subtitle">Crafted from Nature</h2>
+              <p class="mag-text">Every ingredient is ethically sourced, selected for purity and potency. Our blends are
+                designed to enhance your daily wellness ritual and restore balance to your body.</p>
+              <div class="mag-img-wide" style="background: url('/images/wide-botanical-4.png') center/cover no-repeat;">
+              </div>
+            </div>
+          </div>
+
+          <!-- SPREAD 3 -->
+          <!-- Page 5 (Left) -->
+          <div class="page">
+            <div class="page-content magazine-layout">
+              <div class="mag-img-tall"
+                style="background: url('/images/botanical-jar-2.png') center/contain no-repeat;"></div>
+            </div>
+          </div>
+          <!-- Page 6 (Right) -->
+          <div class="page">
+            <div class="page-content magazine-layout" style="justify-content: center;">
+              <h1 class="mag-big-type">BLOOM</h1>
+              <p class="mag-text" style="text-align:center; margin-top: 2rem;">A celebration of vibrant, deliberate
+                living. Luminous well-being poured with intention.</p>
+            </div>
+          </div>
+
+          <!-- SPREAD 4 -->
+          <!-- Page 7 (Left) -->
+          <div class="page">
+            <div class="page-content magazine-layout">
+              <h2 class="mag-subtitle">The Collection</h2>
+              <p class="mag-text">Explore our signature apothecary blends, thoughtfully formulated to harmonize mind,
+                body, and spirit. From grounding earthy roots to uplifting floral notes.</p>
+              <ul class="mag-list">
+                <li>Chamomile & Lavender</li>
+                <li>Tulsi & Ashwagandha</li>
+                <li>Wild Rose & Hibiscus</li>
+              </ul>
+            </div>
+          </div>
+          <!-- Page 9 (Right) -->
+          <div class="page">
+            <div class="page-content magazine-layout">
+              <div class="mag-img-tall"
+                style="background: url('/images/botanical-jar-4.png') center/contain no-repeat;"></div>
+            </div>
+          </div>
+          <!-- Page 10 (Back Cover - Single Page) -->
+          <div class="page back-cover" data-density="hard">
+            <div class="page-content magazine-layout center-content"
+              style="justify-content: space-between; padding: 4rem 2rem;">
+              <div style="margin-top: auto;">
+                <div style="width: 40px; height: 1px; background: var(--gold); margin: 0 auto 20px;"></div>
+                <h3
+                  style="font-family:'Cormorant Garamond', serif; font-size: 1.5rem; color: var(--paper); font-style: italic;">
+                  Elevating the everyday.</h3>
+              </div>
+              <div style="margin-top: auto;">
+                <h2 class="mag-title cover-text" style="font-size:clamp(1.5rem,3vw,2.5rem); margin-bottom: 0.5rem;">
+                  Theory of Bloom</h2>
+                <p class="mag-caption cover-text" style="font-size: 0.75rem;">theoryofbloom.com</p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+      <div class="book-controls">
+        <button id="btn-book-prev" class="book-arrow" aria-label="Previous Page"><i class="bi bi-chevron-left"></i></button>
+        <div class="book-dots" id="bookDots">
+          <span class="book-dot active" data-target="0"></span>
+          <span class="book-dot" data-target="1"></span>
+          <span class="book-dot" data-target="3"></span>
+          <span class="book-dot" data-target="5"></span>
+          <span class="book-dot" data-target="7"></span>
+          <span class="book-dot" data-target="9"></span>
+        </div>
+        <button id="btn-book-next" class="book-arrow" aria-label="Next Page"><i class="bi bi-chevron-right"></i></button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── PHILOSOPHY ── -->
+  <section class="philosophy">
+    <div class="philosophy-inner reveal">
+      <div class="section-eyebrow">Our Ethos</div>
+      <h2 class="section-title">Brand <em>Philosophy</em></h2>
+      <div class="section-rule"></div>
+      <div class="philosophy-quote" th:utext="${siteContent.home.philosophyQuote}"> At Theory of Bloom, wellness is not
+        a quick fix &mdash; it is a<br>quiet, daily unfolding. </div>
+      <p class="philosophy-body" th:utext="${siteContent.home.philosophyBody}"> Rooted in nature and refined through
+        thoughtful formulation, our blends are created to support<br>the body gently, yet effectively. Every ingredient
+        is chosen not just for its benefit, but for how it<br>works in harmony with others &mdash; bringing balance,
+        clarity and calm into your everyday life. </p> <a th:href="@{/shop}" class="btn-outline-tob">Begin Your Bloom
+        &rarr;</a>
+    </div>
+  </section> <!-- FEATURED BLENDS -->
+  <section class="products-section feat-carousel-section">
+    <div class="carousel-header reveal"><span class="carousel-badge">New &amp; Notable</span>
+      <h2 class="carousel-main-title">Featured <em>Blends</em></h2>
+      <p class="carousel-subtitle">Curated formulations for every ritual.</p>
+    </div>
+    <div style="text-align:center;margin:-20px 0 0;position:relative;z-index:2;padding-bottom:16px;"><a
+        th:href="@{/shop}" class="feat-view-all">View All Blends &rarr;</a></div>
+    <div class="swiper upcoming-swiper" style="width: 100%; padding: 40px 0; overflow: hidden;">
+      <div class="swiper-wrapper"> <!-- Cards -->
+        <div class="swiper-slide" th:each="prod, iterStat : ${featuredProducts}" th:if="${iterStat.index < 5}">
+          <div class="carousel-card" th:onclick="'handleCardClick(event, this, \'/shop/product/' + ${prod.id} + '\')'">
+            <div class="card-image-wrapper" style="background:transparent;">
+              <div th:if="${iterStat.index == 0}" class="product-badge badge-bestseller">BESTSELLER</div>
+              <div th:if="${iterStat.index == 1}" class="product-badge badge-toprated">TOP RATED</div>
+              <div th:if="${iterStat.index == 2}" class="product-badge badge-new">NEW</div> <img
+                th:src="${prod.imageUrl != null ? prod.imageUrl : '/images/placeholder.png'}" th:alt="${prod.name}"
+                style="width:100%;height:100%;object-fit:cover;display:block;"
+                onerror="this.parentElement.innerHTML='<div style=&quot;display:flex;align-items:center;justify-content:center;width:100%;height:100%;font-family:Cormorant Garamond,serif;font-size:1.6rem;color:#A39688;&quot;>' + this.alt + '</div>'">
+            </div>
+            <div class="card-content">
+              <h4 th:text="${prod.name}"
+                style="font-family: var(--serif); font-size: 1.4rem; font-weight: 600; color: var(--ink); margin-bottom: 12px; line-height: 1.2;">
+                Product Name</h4>
+              <div>
+                <p class="card-description" th:text="${prod.shortDescription}">Product description here.</p>
+              </div>
+              <div class="card-footer"> <span class="card-price" th:text="'&#8377;' + ${prod.price}">&#8377;0</span>
+                <button class="card-minimal-add"
+                  th:onclick="'event.stopPropagation();addToCartCarouselAjax(this, ' + ${prod.id} + ')'"
+                  title="Add to cart"> <span class="plus-icon">+</span> </button>
+              </div>
+            </div>
+          </div>
+        </div> <!-- Duplicate for loop to ensure enough slides for looping -->
+        <div class="swiper-slide" th:each="prod, iterStat : ${featuredProducts}" th:if="${iterStat.index < 5}">
+          <div class="carousel-card" th:onclick="'handleCardClick(event, this, \'/shop/product/' + ${prod.id} + '\')'">
+            <div class="card-image-wrapper" style="background:transparent;">
+              <div th:if="${iterStat.index == 0}" class="product-badge badge-bestseller">BESTSELLER</div>
+              <div th:if="${iterStat.index == 1}" class="product-badge badge-toprated">TOP RATED</div>
+              <div th:if="${iterStat.index == 2}" class="product-badge badge-new">NEW</div> <img
+                th:src="${prod.imageUrl != null ? prod.imageUrl : '/images/placeholder.png'}" th:alt="${prod.name}"
+                style="width:100%;height:100%;object-fit:cover;display:block;"
+                onerror="this.parentElement.innerHTML='<div style=&quot;display:flex;align-items:center;justify-content:center;width:100%;height:100%;font-family:Cormorant Garamond,serif;font-size:1.6rem;color:#A39688;&quot;>' + this.alt + '</div>'">
+            </div>
+            <div class="card-content">
+              <h4 th:text="${prod.name}"
+                style="font-family: var(--serif); font-size: 1.4rem; font-weight: 600; color: var(--ink); margin-bottom: 12px; line-height: 1.2;">
+                Product Name</h4>
+              <div>
+                <p class="card-description" th:text="${prod.shortDescription}">Product description here.</p>
+              </div>
+              <div class="card-footer"> <span class="card-price" th:text="'&#8377;' + ${prod.price}">&#8377;0</span>
+                <button class="card-minimal-add"
+                  th:onclick="'event.stopPropagation();addToCartCarouselAjax(this, ' + ${prod.id} + ')'"
+                  title="Add to cart"> <span class="plus-icon">+</span> </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="swiper-pagination"></div>
+      <div class="swiper-button-prev" aria-label="Previous slide" role="button" tabindex="0"><i class="bi bi-chevron-left"></i></div>
+      <div class="swiper-button-next" aria-label="Next slide" role="button" tabindex="0"><i class="bi bi-chevron-right"></i></div>
+    </div>
+  </section> <!-- ── BOTANICAL SCIENCE ── -->
+  <section class="science-section">
+    <div style="text-align:center;" class="reveal">
+      <div class="section-eyebrow">Why It Works</div>
+      <h2 class="section-title">Botanical Science,<br><em>Thoughtfully Crafted</em></h2>
+    </div>
+    <div class="science-grid">
+      <div class="science-card reveal">
+        <div class="sci-icon"><i class="fas fa-leaf"></i></div>
+        <div class="sci-title">100% Whole Botanicals</div>
+        <p class="sci-body">Premium flowers, herbs &amp; fruits carefully selected for daily wellness support.</p>
+      </div>
+      <div class="science-card reveal" style="transition-delay:0.1s;">
+        <div class="sci-icon"><i class="fas fa-times-circle"></i></div>
+        <div class="sci-title">No Artificial Flavours</div>
+        <p class="sci-body">Pure natural ingredients only. No synthetic additives, preservatives or sweeteners.</p>
+      </div>
+      <div class="science-card reveal" style="transition-delay:0.2s;">
+        <div class="sci-icon"><i class="fas fa-magic"></i></div>
+        <div class="sci-title">Small Batch Blended</div>
+        <p class="sci-body">Made in limited batches to maintain freshness, potency, and botanical integrity.</p>
+      </div>
+      <div class="science-card reveal" style="transition-delay:0.3s;">
+        <div class="sci-icon"><i class="fas fa-mug-hot"></i></div>
+        <div class="sci-title">Designed For Daily Ritual</div>
+        <p class="sci-body">Easy to incorporate into your routine — gentle enough for everyday use.</p>
+      </div>
+    </div>
+  </section> <!-- ── RITUAL ── -->
+  <section class="ritual-section"> <img th:src="${siteContent.home.ritualImageUrl}" alt="Pouring botanical tea"
+      class="ritual-img" onerror="this.src='https://placehold.co/700x520/F5F4D6/FF0000?text=Daily+Ritual'">
+    <div class="ritual-content reveal-l">
+      <div class="ritual-eyebrow" th:text="${siteContent.home.ritualEyebrow}">Your Daily Practice</div>
+      <h2 class="ritual-h2" th:utext="${siteContent.home.ritualHeading}">A Daily Ritual,<br>Not Just a <em>Drink.</em>
+      </h2>
+      <p class="ritual-body" th:text="${siteContent.home.ritualBody}">Slow down. Sip intentionally. Let your body find
+        its natural rhythm. Each cup is an invitation to pause, reflect, and nourish your whole self &mdash; inside and
+        out.</p> <a th:href="@{/shop}" class="btn-ritual">Discover Your Ritual &rarr;</a>
+    </div>
+  </section> <!-- ── BLOG / JOURNAL ── -->
+  <!-- ── BOTANICAL LIBRARY ── -->
+  <section class="botlib-section">
+    <div class="botlib-header reveal">
+      <span class="botlib-eyebrow">Wellness Journal</span>
+      <h2 class="botlib-title">From Our <em>Botanical</em> Library</h2>
+      <p class="botlib-sub">Rituals, recipes and reflections from the world of botanical wellness.</p>
+    </div>
+
+    <div class="botlib-jc-grid">
+      <!-- Card 1 -->
+      <div class="botlib-jc-card" style="background-color: #D35C3A;">
+        <div class="botlib-jc-inner">
+          <h3 class="botlib-jc-title">Transparency That<br>You Can Trust</h3>
+          <div class="botlib-jc-line"></div>
+          <p class="botlib-jc-text">At Theory of Bloom, we formulate with certified organic and natural ingredients that meet the highest global standards. We believe in complete ingredient transparency, so you always know exactly what your body and mind are receiving.</p>
+        </div>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="botlib-jc-card" style="background-color: #E9A345;">
+        <div class="botlib-jc-inner">
+          <h3 class="botlib-jc-title">Clinically Proven<br>Botanical Extracts</h3>
+          <div class="botlib-jc-line"></div>
+          <p class="botlib-jc-text">We combine potent botanical extracts with clinically studied actives to deliver targeted, visible results with consistent usage. Each blend is designed to work with your body's biology, supporting long-term wellness over temporary fixes.</p>
+        </div>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="botlib-jc-card" style="background-color: #B73832;">
+        <div class="botlib-jc-inner">
+          <h3 class="botlib-jc-title">Organic Wellness,<br>Crafted with Care</h3>
+          <div class="botlib-jc-line"></div>
+          <p class="botlib-jc-text">From ethical sourcing to sustainable packaging, every decision is intentional. We work closely with trusted partners to source high-quality ingredients with integrity, while ensuring minimal impact on you as well as on the planet.</p>
+        </div>
+      </div>
+
+      <!-- Card 4 -->
+      <div class="botlib-jc-card" style="background-color: #3D5A46;">
+        <div class="botlib-jc-inner">
+          <h3 class="botlib-jc-title">Freshly Blended for<br>Maximum Potency</h3>
+          <div class="botlib-jc-line"></div>
+          <p class="botlib-jc-text">Our blends are batched in small runs to ensure the freshness of every ingredient and deliver maximum potency. Experience potent formulas for optimal wellness and balance, with results you can truly feel.</p>
+        </div>
+      </div>
+    </div>
+  </section> <!-- ── TESTIMONIALS ── -->
+  <section class="testimonials-section">
+    <div style="text-align:center;" class="reveal">
+      <div class="section-eyebrow">Customer Stories</div>
+      <h2 class="section-title" th:utext="${siteContent.home.testimonialsTitle}">What Our Community <em>Feels</em></h2>
+    </div>
+    <div class="testi-grid">
+      <div th:each="t, stat : ${siteContent.home.testimonials}" class="testi-card reveal"
+        th:style="'transition-delay:' + (${stat.index * 0.1}) + 's'">
+        <div class="testi-stars" th:text="${t.stars}">★★★★★</div>
+        <p class="testi-quote" th:text="'&quot;' + ${t.quote} + '&quot;'">"Lunar Calm has completely changed my nights."
+        </p>
+        <div class="testi-name" th:text="${t.name}">Vishesh Bhatra</div>
+        <div class="testi-loc" th:text="${t.location}">Mumbai</div>
+      </div> <!-- Fallback if empty -->
+      <div th:if="${#lists.isEmpty(siteContent.home.testimonials)}" class="testi-card reveal">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-quote">"Lunar Calm has completely changed my nights. I fall asleep faster and wake up feeling
+          genuinely restored."</p>
+        <div class="testi-name">Vishesh Bhatra</div>
+        <div class="testi-loc">Mumbai</div>
+      </div>
+    </div>
+  </section> <!-- ═══════ METHOD ═══════ -->
+  <section class="method-section">
+    <div style="text-align:center;" class="reveal">
+      <div class="section-eyebrow">Our Process</div>
+      <h2 class="section-title">Our Method of <em>Blooming</em></h2>
+    </div>
+    <div class="method-inner">
+      <div class="method-step reveal">
+        <div class="method-num">01</div>
+        <div class="method-text">
+          <h4>Sourced from Nature</h4>
+          <p>We select high-quality botanicals from trusted growers who share our commitment to purity and
+            sustainability.</p>
+        </div>
+      </div>
+      <div class="method-step reveal" style="transition-delay:0.1s;">
+        <div class="method-num">02</div>
+        <div class="method-text">
+          <h4>Carefully Formulated</h4>
+          <p>Each blend balances function, flavour, and daily usability &mdash; designed to be both therapeutic and
+            deeply enjoyable.</p>
+        </div>
+      </div>
+      <div class="method-step reveal" style="transition-delay:0.2s;">
+        <div class="method-num">03</div>
+        <div class="method-text">
+          <h4>Small Batch Blended</h4>
+          <p>Crafted in limited batches to maintain freshness, aroma, and the full therapeutic value of every
+            ingredient.</p>
+        </div>
+      </div>
+      <div class="method-step reveal" style="transition-delay:0.3s;">
+        <div class="method-num">04</div>
+        <div class="method-text">
+          <h4>Made for Ritual</h4>
+          <p>Created not just to be consumed, but to be experienced. Every cup is an invitation to slow down and be
+            present.</p>
+        </div>
+      </div>
+    </div>
+  </section> <!-- ═══════ OUR STORY ═══════ -->
+  <section class="our-story-section reveal">
+    <div class="our-story-inner">
+      <div class="our-story-eyebrow" th:text="${siteContent.home.ourStoryEyebrow}">Est. 2024 &middot; Botanical Wellness
+      </div>
+      <h2 class="our-story-title" th:utext="${siteContent.home.ourStoryTitle}">Our <em>Story</em></h2>
+      <div class="our-story-rule"></div>
+      <div class="our-story-body">
+        <p class="our-story-p" th:text="${siteContent.home.ourStoryP1}"> Theory of Bloom was created from a simple
+          belief that wellness should feel natural, not complicated. </p>
+        <p class="our-story-p" th:text="${siteContent.home.ourStoryP2}"> In a world of quick fixes, we choose to slow
+          down, return to nature, and create blends that support the body gently yet meaningfully. </p>
+        <p class="our-story-p our-story-p--highlight" th:text="${siteContent.home.ourStoryHighlight}"> This is our
+          theory &mdash; that when given the right care, the body knows how to bloom. </p>
+      </div>
+    </div>
+  </section>
+  <style>
+    .our-story-section {
+      padding: 7rem 2rem;
+      background: var(--cream);
+      position: relative;
+      overflow: hidden;
+      text-align: center;
+    }
+
+    .our-story-inner {
+      max-width: 760px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 2;
+    }
+
+    .our-story-eyebrow {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.6rem;
+      letter-spacing: 5px;
+      text-transform: uppercase;
+      color: rgba(176, 48, 48, 0.75);
+      margin-bottom: 1rem;
+    }
+
+    .our-story-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.4rem, 5vw, 3.6rem);
+      font-weight: 400;
+      color: var(--ink);
+      letter-spacing: 0.5px;
+      line-height: 1.1;
+      margin-bottom: 1.2rem;
+    }
+
+    .our-story-title em {
+      font-style: italic;
+      color: #B03030;
+    }
+
+    .our-story-rule {
+      width: 50px;
+      height: 1px;
+      background: linear-gradient(to right, transparent, rgba(163, 124, 78, 0.6), transparent);
+      margin: 0 auto 2.5rem;
+    }
+
+    .our-story-body {
+      display: flex;
+      flex-direction: column;
+      gap: 1.4rem;
+    }
+
+    .our-story-p {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+      font-weight: 300;
+      line-height: 1.8;
+      color: var(--ink-soft);
+      font-style: italic;
+    }
+
+    .our-story-p--highlight {
+      font-size: clamp(1.2rem, 2.8vw, 1.6rem);
+      color: #C9954A;
+      font-weight: 400;
+      margin-top: 0.5rem;
+    }
+
+    @media (max-width: 768px) {
+      .our-story-section {
+        padding: 5rem 1.5rem;
+      }
+    }
+  </style> <!-- ═══════ FOOTER ═══════ -->
+  <footer class="tob-footer">
+    <div class="tob-footer-grid"> <!-- Brand col -->
+      <div>
+        <div class="footer-brand-logo"> <img th:src="@{/images/flower-logo.png}" alt="Theory of Bloom"
+            class="footer-logo-img">
+          <div class="footer-brand-text">Theory <em>of</em> Bloom</div>
+        </div>
+        <p class="footer-tagline" th:text="${siteContent.footer.tagline}">Botanical wellness blends crafted by nature,
+          perfected by science. For those who believe the body knows the way &mdash; when given the right tools.</p>
+        <p class="footer-copy" th:text="${siteContent.footer.copyrightText}">&copy; 2026 Theory of Bloom. All rights
+          reserved.</p>
+      </div> <!-- Shop col -->
+      <div>
+        <div class="footer-col-head">Shop</div>
+        <ul class="footer-links">
+          <li><a th:href="@{/shop}">All Blends</a></li>
+          <th:block th:each="cat : ${#strings.listSplit(siteContent.shop.filterCategories, ',')}">
+            <li><a th:href="@{/shop(category=${#strings.trim(cat)})}" th:text="${#strings.trim(cat)}">Category</a></li>
+          </th:block>
+        </ul>
+      </div> <!-- Account col -->
+      <div>
+        <div class="footer-col-head">Account</div>
+        <ul class="footer-links">
+          <li><a th:href="@{/profile}">My Account</a></li>
+          <li><a th:href="@{/order-history}">My Orders</a></li>
+          <li><a th:href="@{/saved-blends}">Saved Blends</a></li>
+          <li><a th:href="@{/privacy-policy}">Privacy Policy</a></li>
+          <li><a th:href="@{/privacy-policy#terms}">Terms &amp; Conditions</a></li>
+        </ul>
+      </div> <!-- Contact col -->
+      <div>
+        <div class="footer-col-head">Contact Us</div>
+        <div class="footer-contact-item"><i class="bi bi-envelope"></i><span><a
+              th:href="'mailto:' + ${siteContent.footer.contactEmail}"
+              th:text="${siteContent.footer.contactEmail}">hello@theoryofbloom.com</a></span></div>
+      </div>
+    </div>
+    <div class="footer-bottom"> <span th:text="${siteContent.footer.bottomTagline}">&copy; 2026 Theory of Bloom &mdash;
+        Crafted by Nature. Perfected by Science.</span>
+      <div class="footer-bottom-links"> <a th:href="@{/privacy-policy}">Privacy Policy</a> <a
+          th:href="@{/privacy-policy#terms}">Terms &amp; Conditions</a> <a th:href="@{/contact}">Contact</a> </div>
+    </div>
+  </footer>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+  <script th:src="@{/js/header.js?v=7.0}"></script>
+  <script>    /* ── Saved blends toggle ── */    function toggleLike(e, btn) { e.preventDefault(); e.stopPropagation(); const id = btn.dataset.id; let saved = JSON.parse(localStorage.getItem('tob_saved') || '[]'); const icon = btn.querySelector('i'); if (saved.includes(id)) { saved = saved.filter(x => x !== id); btn.classList.remove('liked'); icon.className = 'bi bi-heart'; } else { saved.push(id); btn.classList.add('liked'); icon.className = 'bi bi-heart-fill'; btn.style.transform = 'scale(1.3)'; setTimeout(() => btn.style.transform = '', 300); } localStorage.setItem('tob_saved', JSON.stringify(saved)); }    /* Init saved state */    document.addEventListener('DOMContentLoaded', function () { const saved = JSON.parse(localStorage.getItem('tob_saved') || '[]'); document.querySelectorAll('.prod-card-like').forEach(btn => { if (saved.includes(btn.dataset.id)) { btn.classList.add('liked'); btn.querySelector('i').className = 'bi bi-heart-fill'; } }); });    /* ── Scroll reveal ── */    try { const observer = new IntersectionObserver(entries => { entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } }); }, { threshold: 0.12 }); document.querySelectorAll('.reveal,.reveal-l').forEach(el => observer.observe(el)); setTimeout(() => document.querySelectorAll('.reveal,.reveal-l').forEach(el => el.classList.add('visible')), 1500); } catch (e) { document.querySelectorAll('.reveal,.reveal-l').forEach(el => el.classList.add('visible')); }    /* ── Swiper Carousel ── */    const cardSwiper = new Swiper('.card-swiper', { effect: 'slide', grabCursor: true, centeredSlides: true, slidesPerView: 'auto', spaceBetween: 40, loop: true, speed: 800, autoplay: { delay: 3000, disableOnInteraction: false, }, pagination: { el: '.card-swiper .swiper-pagination', clickable: true }, keyboard: { enabled: true }, breakpoints: { 320: { slidesPerView: 1.25, spaceBetween: 40 }, 768: { slidesPerView: 3, spaceBetween: 30 }, 1024: { slidesPerView: 5, spaceBetween: 40 } }, touchRatio: 1.5, threshold: 3, resistance: true, resistanceRatio: 0.6, });    /* ── Upcoming Swiper (Sideways Wave / Coverflow) ── */    const upcomingSwiper = new Swiper('.upcoming-swiper', { effect: 'coverflow', coverflowEffect: { rotate: 15, stretch: 0, depth: 120, modifier: 1, slideShadows: false, }, grabCursor: true, centeredSlides: true, loop: true, speed: 800, autoplay: { delay: 3500, disableOnInteraction: false, }, pagination: { el: '.upcoming-swiper .swiper-pagination', clickable: true }, navigation: { nextEl: '.upcoming-swiper .swiper-button-next', prevEl: '.upcoming-swiper .swiper-button-prev', }, breakpoints: { 320: { slidesPerView: 1.5, spaceBetween: 20 }, 768: { slidesPerView: 3, spaceBetween: 30 }, 1024: { slidesPerView: 5, spaceBetween: 50 } } });    /* ── Seasonal Swiper ── */    const seasonalSwiper = new Swiper('.seasonal-swiper', { slidesPerView: 'auto', spaceBetween: 32, grabCursor: true, speed: 700, navigation: { nextEl: '.seasonal-swiper .swiper-button-next', prevEl: '.seasonal-swiper .swiper-button-prev', }, breakpoints: { 320: { slidesPerView: 1.25, spaceBetween: 20 }, 768: { slidesPerView: 2.5, spaceBetween: 30 }, 1024: { slidesPerView: 4, spaceBetween: 32 } } });    /* ── Card click handler with ripple effect ── */    function handleCardClick(event, card, url) {      /* Create ripple */ const ripple = document.createElement('span'); ripple.classList.add('ripple'); const rect = card.getBoundingClientRect(); const size = Math.max(rect.width, rect.height); ripple.style.width = ripple.style.height = size + 'px'; ripple.style.left = (event.clientX - rect.left - size / 2) + 'px'; ripple.style.top = (event.clientY - rect.top - size / 2) + 'px'; card.appendChild(ripple); ripple.addEventListener('animationend', () => ripple.remove());      /* Navigate after brief delay */ setTimeout(() => window.location.href = url, 280); }    /* ── Add to cart AJAX from carousel ── */    function addToCartCarouselAjax(btn, productId) { if (document.querySelector('.tob-action-item a[href*="/login"]')) { window.location.href = '/login'; return; } if (btn.disabled) return; btn.disabled = true; btn.style.background = 'var(--sapphire-gold)'; btn.innerHTML = '<span style="font-size:16px;">...</span>'; fetch('/cart/add/ajax', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'X-Requested-With': 'XMLHttpRequest' }, body: 'productId=' + encodeURIComponent(productId) + '&quantity=1' }).then(r => r.json()).then(data => { btn.innerHTML = '<span style="font-size:16px;">✓</span>'; showGlobalToast('Added to cart ✓'); setTimeout(() => { btn.style.background = '#1a1a1a'; btn.innerHTML = '<span class="plus-icon">+</span>'; btn.disabled = false; }, 1500); }).catch(() => { btn.innerHTML = '<span style="font-size:16px;">✓</span>'; showGlobalToast('Added to cart ✓'); setTimeout(() => { btn.style.background = '#1a1a1a'; btn.innerHTML = '<span class="plus-icon">+</span>'; btn.disabled = false; }, 1500); }); } function showGlobalToast(msg) { let t = document.getElementById('globalToast'); if (!t) { t = document.createElement('div'); t.id = 'globalToast'; t.style.cssText = 'display:none;background:linear-gradient(135deg,#3D5C41,#4A6B5D);color:#fff;font-family:Inter,sans-serif;font-size:0.78rem;font-weight:600;letter-spacing:1px;padding:12px 22px;border-radius:4px;position:fixed;bottom:24px;right:24px;z-index:9999;box-shadow:0 8px 24px rgba(61,92,65,0.25);align-items:center;gap:10px;opacity:0;transition:opacity 0.3s;'; document.body.appendChild(t); } t.innerHTML = '<i class="fas fa-check-circle"></i><span>' + msg + '</span>'; t.style.display = 'flex';      /* force reflow */ void t.offsetWidth; t.style.opacity = '1'; setTimeout(() => { t.style.opacity = '0'; setTimeout(() => { t.style.display = 'none'; }, 310); }, 2500); }  </script>
+  <!-- SIGN-OUT CONFIRMATION MODAL -->
+  <div class="signout-overlay" id="signoutOverlay"
+    style="display:none;position:fixed;inset:0;background:rgba(42,33,24,0.55);backdrop-filter:blur(3px);z-index:9999;align-items:center;justify-content:center;">
+    <div
+      style="background-color:#FAF8F4;background-image:linear-gradient(160deg,#FEFDF9 0%,#F5F1E8 100%);border:1px solid rgba(180,160,120,0.25);border-radius:4px;padding:2.5rem;max-width:400px;width:90%;text-align:center;box-shadow:0 20px 60px rgba(42,33,24,0.2);">
+      <div style="font-size:2rem;color:#4A6B5D;margin-bottom:1rem;"><i class="bi bi-box-arrow-right"></i></div>
+      <h3
+        style="font-family:'Cormorant Garamond',serif;font-size:1.7rem;font-weight:400;color:#2A2118;margin-bottom:0.5rem;">
+        Sign <em style="font-style:italic;color:#3D5C41;">Out?</em></h3>
+      <p style="font-size:0.82rem;color:#5C4D3C;margin-bottom:1.8rem;line-height:1.6;"
+        sec:authorize="isAuthenticated()">You are signed in as <strong
+          th:text="${user != null ? user.email : 'your account'}">user@email.com</strong>.<br>Are you sure you want to
+        sign out?</p>
+      <div style="display:flex;gap:0.8rem;justify-content:center;flex-wrap:wrap;"> <button onclick="closeSignoutModal()"
+          style="font-family:'Inter',sans-serif;font-size:0.75rem;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;color:#5C4D3C;background:transparent;border:1px solid rgba(107,140,111,0.18);border-radius:3px;padding:11px 24px;cursor:pointer;">Stay
+          Signed In</button> <a th:href="@{/logout}"
+          style="font-family:'Inter',sans-serif;font-size:0.75rem;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:#fff;background:#7a2020;border:1px solid #7a2020;border-radius:3px;padding:11px 24px;text-decoration:none;display:inline-block;">Yes,
+          Sign Out</a> </div>
+    </div>
+  </div>
+  <script>    function openSignoutModal() { document.getElementById('signoutOverlay').style.display = 'flex'; document.body.style.overflow = 'hidden'; } function closeSignoutModal() { document.getElementById('signoutOverlay').style.display = 'none'; document.body.style.overflow = ''; } document.getElementById('signoutOverlay').addEventListener('click', function (e) { if (e.target === this) closeSignoutModal(); }); document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeSignoutModal(); });  </script>
+  <script src="https://cdn.jsdelivr.net/npm/page-flip@2.0.7/dist/js/page-flip.browser.min.js"></script>
+  <script>
+    /* ══════════════════════════════════════════════════
+       THEORY OF BLOOM — ST-PAGE-FLIP ENGINE
+    ══════════════════════════════════════════════════ */
+    document.addEventListener("DOMContentLoaded", function () {
+      const pageFlip = new St.PageFlip(document.getElementById('bookHero'), {
+        width: 600,
+        height: 780,
+        size: "stretch",
+        minWidth: 315,
+        maxWidth: 1000,
+        minHeight: 420,
+        maxHeight: 1350,
+        maxShadowOpacity: 0.7,
+        drawShadow: true,
+        showCover: true,
+        mobileScrollSupport: false, /* Disabled — custom handler below gives symmetric curl */
+        swipeDistance: 30,          /* Minimum swipe distance to trigger flip */
+        usePortrait: true,
+        flippingTime: 800
+      });
+
+      pageFlip.loadFromHTML(document.querySelectorAll('.flip-book .page'));
+
+      const dots = document.querySelectorAll('#bookDots .book-dot');
+      pageFlip.on('flip', (e) => {
+        const bookContainer = document.querySelector('.flip-book-container');
+
+        if (e.data === 0) {
+          bookContainer.classList.add('is-cover');
+          bookContainer.classList.remove('is-back-cover');
+        } else if (e.data === 9) { // Assuming 9 is the back cover page index
+          bookContainer.classList.add('is-back-cover');
+          bookContainer.classList.remove('is-cover');
+        } else {
+          bookContainer.classList.remove('is-cover', 'is-back-cover');
+        }
+
+        const leftContent = document.getElementById('cover-left-content');
+        if (leftContent) {
+          if (e.data === 0) {
+            leftContent.style.opacity = '1';
+            leftContent.style.pointerEvents = 'auto';
+          } else {
+            leftContent.style.opacity = '0';
+            leftContent.style.pointerEvents = 'none';
+          }
+        }
+
+        const rightContent = document.getElementById('cover-right-content');
+        if (rightContent) {
+          if (e.data === 9) {
+            rightContent.style.opacity = '1';
+            rightContent.style.pointerEvents = 'auto';
+          } else {
+            rightContent.style.opacity = '0';
+            rightContent.style.pointerEvents = 'none';
+          }
+        }
+
+        let activeTarget = e.data === 0 ? 0 : (e.data === 9 ? 9 : (e.data % 2 === 0 ? e.data - 1 : e.data));
+        dots.forEach(dot => {
+          if (parseInt(dot.dataset.target) === activeTarget) {
+            dot.classList.add('active');
+          } else {
+            dot.classList.remove('active');
+          }
+        });
+      });
+
+      /* ══════════════════════════════════════════════════
+         CUSTOM SYMMETRIC TOUCH HANDLER
+         Drives the StPageFlip pointer-event API directly so
+         BOTH forward AND backward swipes use the same
+         realistic 3-D curl (not a simplified instant flip).
+      ══════════════════════════════════════════════════ */
+      (function attachTouchCurl() {
+        const bookEl = document.getElementById('bookHero');
+        const COMMIT_PX = 35; // min swipe px to commit
+        const LOCK_PX = 8;  // px before we lock direction
+
+        let startX = 0, startY = 0;
+        let curling = false, curlDir = null, locked = false;
+
+        /* Corner where the peel originates:
+           next  → bottom-right (page folds left)
+           prev  → bottom-left  (page folds right) */
+        function cornerPos(dir) {
+          const r = bookEl.getBoundingClientRect();
+          return dir === 'next'
+            ? { x: r.right, y: r.bottom }
+            : { x: r.left, y: r.bottom };
+        }
+
+        bookEl.addEventListener('touchstart', function (ev) {
+          const t = ev.touches[0];
+          startX = t.clientX; startY = t.clientY;
+          curling = false; curlDir = null; locked = false;
+        }, { passive: true });
+
+        bookEl.addEventListener('touchmove', function (ev) {
+          if (!ev.touches.length) return;
+          const t = ev.touches[0];
+          const dx = t.clientX - startX, dy = t.clientY - startY;
+          const adx = Math.abs(dx), ady = Math.abs(dy);
+
+          if (!locked && ady > adx && ady > LOCK_PX) return; // vertical scroll
+
+          if (!locked && adx > LOCK_PX) {
+            locked = true;
+            curlDir = dx < 0 ? 'next' : 'prev';
+            const cp = cornerPos(curlDir);
+            try {
+              bookEl.dispatchEvent(new PointerEvent('pointerdown', {
+                clientX: cp.x, clientY: cp.y,
+                bubbles: true, cancelable: true,
+                pointerId: 1, isPrimary: true, pointerType: 'touch'
+              }));
+              curling = true;
+            } catch (_) { curling = false; }
+          }
+
+          if (curling) {
+            ev.preventDefault();
+            const cp = cornerPos(curlDir);
+            try {
+              bookEl.dispatchEvent(new PointerEvent('pointermove', {
+                clientX: cp.x + dx, clientY: cp.y + dy,
+                bubbles: true, cancelable: true,
+                pointerId: 1, isPrimary: true, pointerType: 'touch'
+              }));
+            } catch (_) { }
+          }
+        }, { passive: false });
+
+        bookEl.addEventListener('touchend', function (ev) {
+          if (!curling || !locked) { curling = false; return; }
+          const t = ev.changedTouches[0];
+          const dx = t.clientX - startX;
+          const dy = t.clientY - startY;
+          const cp = cornerPos(curlDir);
+          try {
+            bookEl.dispatchEvent(new PointerEvent('pointerup', {
+              clientX: cp.x + dx, clientY: cp.y + dy,
+              bubbles: true, cancelable: true,
+              pointerId: 1, isPrimary: true, pointerType: 'touch'
+            }));
+          } catch (_) { }
+          
+          if (Math.abs(dx) >= COMMIT_PX) {
+            setTimeout(() => {
+              try {
+                if (curlDir === 'next') pageFlip.flipNext('bottom');
+                else pageFlip.flipPrev('bottom');
+              } catch (_) { }
+            }, 40);
+          }
+          curling = false; locked = false; curlDir = null;
+        }, { passive: true });
+
+        bookEl.addEventListener('touchcancel', function () {
+          if (curling) {
+            try {
+              bookEl.dispatchEvent(new PointerEvent('pointercancel',
+                { bubbles: true, pointerId: 1, pointerType: 'touch' }));
+            } catch (_) { }
+          }
+          curling = false; locked = false; curlDir = null;
+        }, { passive: true });
+      })();
+
+      let autoFlipInterval = setInterval(() => {
+        const currentIdx = pageFlip.getCurrentPageIndex();
+        const maxIdx = pageFlip.getOrientation() === 'portrait' ? pageFlip.getPageCount() - 1 : pageFlip.getPageCount() - 2;
+        if (currentIdx < maxIdx) {
+          pageFlip.flipNext('bottom');
+        } else {
+          pageFlip.flip(0);
+        }
+      }, 3000);
+
+      const stopAuto = () => clearInterval(autoFlipInterval);
+
+      // Stop auto-flip on user interaction
+      document.getElementById('bookHero').addEventListener('pointerdown', stopAuto);
+
+      // Controls setup
+      document.getElementById('btn-book-prev').addEventListener('click', () => {
+        stopAuto();
+        pageFlip.flipPrev();
+      });
+
+      document.getElementById('btn-book-next').addEventListener('click', () => {
+        stopAuto();
+        pageFlip.flipNext();
+      });
+
+      dots.forEach(dot => {
+        dot.addEventListener('click', (e) => {
+          stopAuto();
+          const target = parseInt(e.target.dataset.target);
+          pageFlip.flip(target);
+        });
+      });
+    });
+  </script>
+</body>
+
+</html>

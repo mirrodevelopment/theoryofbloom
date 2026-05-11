@@ -1,0 +1,119 @@
+  <!-- MOBILE HEADER -->
+  <div class="tob-mobile-header" id="tobMobileHeader">
+    <!-- Bar: Hamburger | Brand | Account+Cart+More -->
+    <div class="tob-mob-bar">
+      <button class="tob-mob-ham-btn" type="button" onclick="tobOpenMenu()" aria-label="Open menu" id="tobHamBtn">
+        <span class="tob-ham-line"></span>
+        <span class="tob-ham-line"></span>
+        <span class="tob-ham-line tob-ham-line--short"></span>
+      </button>
+      <div class="tob-mob-center">
+        <img th:src="@{/images/flower-logo.png}" class="tob-mob-logo-img" alt="Theory of Bloom logo">
+        <span class="tob-mob-name">Theory <em>of</em> Bloom</span>
+      </div>
+      <div class="tob-mob-icons">
+        <div class="tob-mob-account">
+          <button class="tob-mob-icon" type="button" onclick="tobToggleAccDrop(event)"
+            sec:authorize="isAuthenticated()"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+              fill="#a37c4e" viewBox="0 0 16 16">
+              <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
+              <path fill-rule="evenodd"
+                d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1" />
+            </svg></button>
+          <a th:href="@{/login}" class="tob-mob-icon" sec:authorize="!isAuthenticated()"><svg
+              xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#a37c4e" viewBox="0 0 16 16">
+              <path fill-rule="evenodd"
+                d="M6 3.5a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-2a.5.5 0 0 0-1 0v2A1.5 1.5 0 0 0 6.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-8A1.5 1.5 0 0 0 5 3.5v2a.5.5 0 0 0 1 0z" />
+              <path fill-rule="evenodd"
+                d="M11.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H1.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708z" />
+            </svg></a>
+          <div class="tob-drawer-backdrop" id="tobMobBackdrop"></div>
+          <div class="tob-mob-acc-drawer" id="tobMobDrawer">
+            <div class="drawer-profile-header">
+              <div class="drawer-header-top">
+                <div class="drawer-avatar"
+                  th:text="${user != null and !#strings.isEmpty(user.fullName) ? #strings.substring(user.fullName,0,1) : 'U'}">
+                  U</div>
+                <div class="drawer-name-wrap">
+                  <div class="drawer-name" th:text="${user != null ? user.fullName : 'Valued Member'}">User Name</div>
+                  <div class="drawer-status"
+                    th:text="${user != null and user.premium ? '✦ Premium Member' : 'Standard Member'}">Standard Member
+                  </div>
+                </div>
+              </div>
+              <div class="drawer-header-meta">
+                <div class="meta-item"><span class="meta-label">Member ID</span><span class="meta-value"
+                    th:text="${user != null ? '#TB' + user.id : '#TB0000'}">#TB1001</span></div>
+                <div class="meta-item"><span class="meta-label">Status</span><span class="meta-value"
+                    th:text="${user != null and user.premium ? 'Premium' : 'Normal'}">Normal</span></div>
+              </div>
+            </div>
+            <div class="drawer-menu">
+              <a th:href="@{/profile}" class="drawer-menu-item"><i class="bi bi-person-circle"></i>
+                <div class="drawer-item-content"><span class="drawer-item-title">Account Centre</span><span
+                    class="drawer-item-sub">Manage your botanical ritual</span></div>
+              </a>
+              <a th:href="@{/order-history}" class="drawer-menu-item"><i class="bi bi-box-seam"></i>
+                <div class="drawer-item-content"><span class="drawer-item-title">Purchase History</span><span
+                    class="drawer-item-sub">Track your formulations</span></div><span class="drawer-badge">Active</span>
+              </a>
+              <a th:href="@{/saved-blends}" class="drawer-menu-item"><i class="bi bi-heart"></i>
+                <div class="drawer-item-content"><span class="drawer-item-title">Saved Blends</span><span
+                    class="drawer-item-sub">Your curation library</span></div>
+              </a>
+              <a th:href="@{/profile#settings}" class="drawer-menu-item"><i class="bi bi-gear"></i>
+                <div class="drawer-item-content"><span class="drawer-item-title">System Settings</span><span
+                    class="drawer-item-sub">Privacy &amp; preferences</span></div>
+              </a>
+            </div>
+          </div>
+        </div>
+        <a th:href="@{/cart}" class="tob-mob-icon cart-ic"><svg xmlns="http://www.w3.org/2000/svg" width="20"
+            height="20" fill="#a37c4e" viewBox="0 0 16 16">
+            <path
+              d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .49.598l-1 5a.5.5 0 0 1-.465.401l-9.397.472L4.415 11H13a.5.5 0 0 1 0 1H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5M3.102 4l.84 4.479 9.144-.459L13.89 4zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4m7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4m-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2m7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2" />
+          </svg></a>
+      </div>
+    </div>
+    <!-- Category pill-bar (mobile) -->
+    <div class="tob-mob-cat-bar">
+      <a th:href="@{/shop(category='Sleep & Calm')}" class="tob-mob-cat-pill"><i class="bi bi-moon-stars"></i> Sleep
+        &amp; Calm</a>
+      <a th:href="@{/shop(category='Skin & Glow')}" class="tob-mob-cat-pill"><i class="bi bi-stars"></i> Skin &amp;
+        Glow</a>
+      <a th:href="@{/shop(category='Focus & Clarity')}" class="tob-mob-cat-pill"><i class="bi bi-lightning-charge"></i>
+        Focus &amp; Clarity</a>
+      <a th:href="@{/shop(category='Immunity')}" class="tob-mob-cat-pill"><i class="bi bi-shield-check"></i>
+        Immunity</a>
+      <a th:href="@{/shop(category='Masculine')}" class="tob-mob-cat-pill"><i class="bi bi-lightning"></i> Masculine</a>
+      <a th:href="@{/shop(category='Morning')}" class="tob-mob-cat-pill"><i class="bi bi-sunrise"></i> Morning</a>
+    </div>
+  </div>
+
+  <!-- FULLSCREEN MENU OVERLAY (line-style, minimal) -->
+  <div class="tob-overlay" id="tobOverlay">
+    <button class="tob-overlay-close" onclick="tobCloseMenu()" aria-label="Close">✕</button>
+    <div class="tob-overlay-acc" sec:authorize="isAuthenticated()">
+      <div class="tob-overlay-acc-circle"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+          fill="currentColor" viewBox="0 0 16 16">
+          <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
+          <path fill-rule="evenodd"
+            d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1" />
+        </svg></div>
+      <div class="tob-overlay-acc-text"><span class="tob-overlay-acc-name"
+          th:text="${user != null ? user.fullName : 'Guest'}">User Name</span><span class="tob-overlay-acc-sub">Manage
+          Dashboard</span></div>
+    </div>
+    <ul class="tob-overlay-links">
+      <li><a th:href="@{/}">Home</a></li>
+      <li><a th:href="@{/shop}">Shop Blends</a></li>
+      <li><a th:href="@{/saved-blends}">Saved Blends</a></li>
+      <li><a th:href="@{/profile}">Account Centre</a></li>
+      <li><a th:href="@{/contact}">Contact</a></li>
+    </ul>
+    <div class="tob-overlay-footer">
+      <p>Theory <em>of</em> Bloom</p><small>Crafted by Nature. Perfected by Science.</small>
+    </div>
+  </div>
+
+  <!-- ═══════ HERO ═══════ -->

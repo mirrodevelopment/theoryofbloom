@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "theory-of-bloom",
+  "private_key_id": "218ae94277731fc370b9332b916f3c94b7e094dc",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDMraIFUniX9eJ4\nB6bBcPYoNBneLPfVlTre40pWqA+XYvilyNsxFvdXotPjhcaT4wK+q5ga7v/hfVrU\n0HYsTkvzAAZJaJ8eMf+T7whlmi35oihTzDFS0P3Oj5eibe7tXWAcNMboIXga5zVJ\nrN/wyQsmMnWM6WFpsy3MGAo+iiQAJ5fgiqKrFoxgNRiTUFmEt74F+nbOcrrCvCKT\nuqXkdpLYQ1d8zMeMGCYk4jFcPWxBG4mb9LBF1fJLQMFRi2iSU9oAlpdBhP4Bkj4E\nCx6JMAFV19VwD4Ayg8/VPSuUDCfCTnXWabi1uQhnYruISK0JLif62zY/7bgnfktX\naByY55QZAgMBAAECggEARGiEDmNSCvgTiSqFgYHPxAAl5SwCaVBHLNeqsOvayi46\nDK7lE7MpWBED4LeFd0gYUsHnRJk8zJCpGxfRZ12D5OPNNhvRkrYDRd5OYCb31sdr\n0xYcJiHTsoYrmA5GHO9ogATjthH5ooREOyucbU3EfC/BOieGd117oQsn4V8qSSJZ\ncbMgPZOpYNkXIYzGADJCm+w8FdHx70nMY5oP83oPCIQEkhxF3RaeZ6InINxcfCgE\nlgUMNMt5f74SORXrzXYCj65Py0QifELrIGuXqgL1qY7vaae9x1/70Q+d0FVdxPeC\nDyAYE5I5NOe5Wqf2caBKBQnbN69YlrPclADpemWIQQKBgQDtpddwuX8/g/ewJuby\nHuDR/PfhwEAqyizasaKUGqBnQmeaDt6n7O0H6SGubpuWUgwJ4XDH8TFWz1uqPAdT\nWy0W5+3IkQpPtBouyFXO9IgGUm11GSonWZO81OsKR/NQbR+PKaWGBc/O9mqh+LUd\nMKY2kIETPVXKRDU5QG9qqOqluwKBgQDcfACW6hDEfHfYT5GFKnb1l+PSLgKZri82\n5ZJTFFTs6TlF3b64SiAjTYKhL8niXPZuvBXtQ7kycnTeVw6XU43MMVU5uig9ua10\nXCrWhxFzewpXczxmshGCcJKoT20DKA4YJtnOOftmnIdcSo8Po+fsfcEraDJi4LV9\ntWNQMUMGOwKBgDmNAvpygaVhERegpCcYYTuZNnJ+O0vhgDFJ+WRCenvnMe22Eie6\nkcBrrdNvR9CEeBPge46AE4HBX6J/PQrrtqSocAY1UbjxlbGkpFslDtfxGD7WZEX5\nRHTjXzQzLnJYqt7hqAsn1yZ4uGQXNc0m3emy3v9IyEDeecEuoIzE8WZHAoGBAKpC\nV3IybaBNPX6ccxMSJ6qfEB5NyVRDXdJWlRfyq2IG92MsSQqmswqP4D/4Vz2l6+a2\n93ewxGJgYD8RmwLgUq9LqTRavJhtubQROENRKfizGtlM82eaOkswAxBVxSia1cdw\nuOC3hZtHZH+wU6kQORg2Q+TxIXeZbo0UdQyH/enhAoGAT3JXF83/8Yu1nXmLvf6b\n7INvMKYPr8dFMrPM79s9o7GvEI2UhJk0whKEo1v/r8bbmzF2ubWUQljAUhRiwJ3T\nAgsB7U5C26CbSZG/DysqishAUhS4pnKkU6gUr1ADpni3Bznja+9z5mfyi/x0a5Kq\nE0/mEFb1+4BLR1alno3B0c8=\n-----END PRIVATE KEY-----\n",
+  "client_email": "theoryofbloom-storage@theory-of-bloom.iam.gserviceaccount.com",
+  "client_id": "114241250643999945272",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/theoryofbloom-storage%40theory-of-bloom.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}

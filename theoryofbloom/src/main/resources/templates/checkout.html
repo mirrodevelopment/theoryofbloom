@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure Checkout | Theory of Bloom</title>
+    <link rel="icon" type="image/png" th:href="@{/images/flower-logo.png}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" th:href="@{/css/header.css}">
+    <style>
+        :root { --bg: #F5F0E8; --primary: #4A6B5D; --text: #2A2621; --gold: #C9954A; --border: rgba(180,160,120,0.3); }
+        body { background-color: var(--bg); font-family: 'Inter', sans-serif; color: var(--text); padding-top: 0; }
+        .checkout-container { max-width: 1200px; margin: 2rem auto; display: grid; grid-template-columns: 1.5fr 1fr; gap: 2rem; padding: 0 1rem; }
+        .step-card { background: #fff; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 1.5rem; overflow: hidden; border: 1px solid var(--border); transition: all 0.3s ease; }
+        .step-header { background: #fdfbf7; padding: 1.2rem 1.5rem; display: flex; align-items: center; gap: 1rem; cursor: pointer; border-bottom: 1px solid transparent; transition: background 0.3s; }
+        .step-header:hover { background: #f9f6f0; }
+        .step-number { width: 30px; height: 30px; background: #e0e0e0; color: #666; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 0.9rem; transition: all 0.3s; }
+        .step-title { font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; font-weight: 600; margin: 0; color: #666; transition: color 0.3s; }
+        
+        /* Active State */
+        .step-card.active { box-shadow: 0 8px 25px rgba(74, 107, 93, 0.15); border-color: var(--primary); }
+        .step-card.active .step-header { border-bottom-color: var(--border); }
+        .step-card.active .step-number { background: var(--primary); color: #fff; }
+        .step-card.active .step-title { color: var(--primary); }
+        
+        /* Completed State */
+        .step-card.completed .step-number { background: var(--gold); color: #fff; }
+        .step-card.completed .step-title { color: var(--text); }
+        .step-card.completed .step-summary { display: block; font-size: 0.85rem; color: #666; margin-top: 0.2rem; }
+
+        .step-body { padding: 0; max-height: 0; overflow: hidden; opacity: 0; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        .step-card.active .step-body { padding: 1.5rem; max-height: 1500px; opacity: 1; }
+        
+        .step-summary { display: none; }
+
+        .form-label { font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: #666; margin-bottom: 0.3rem; }
+        .form-control { border: 1px solid var(--border); border-radius: 4px; padding: 0.7rem 1rem; font-size: 0.9rem; transition: border-color 0.3s, box-shadow 0.3s; }
+        .form-control:focus { border-color: var(--primary); box-shadow: 0 0 0 0.2rem rgba(74, 107, 93, 0.15); }
+        
+        .btn-continue { background: var(--primary); color: #fff; border: none; padding: 0.8rem 2rem; border-radius: 4px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; font-size: 0.85rem; transition: all 0.3s; margin-top: 1rem; }
+        .btn-continue:hover { background: #3d5c41; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(74, 107, 93, 0.2); color: #fff; }
+
+        /* Order Summary Sidebar */
+        .summary-card { background: #fff; border-radius: 8px; border: 1px solid var(--border); padding: 1.5rem; position: sticky; top: 100px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        .summary-title { font-family: 'Cormorant Garamond', serif; font-size: 1.6rem; font-weight: 600; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border); padding-bottom: 0.8rem; }
+        
+        .item-row { display: flex; gap: 1rem; margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px dashed var(--border); }
+        .item-img { width: 60px; height: 60px; object-fit: cover; border-radius: 4px; border: 1px solid #eee; }
+        .item-details { flex: 1; }
+        .item-name { font-weight: 600; font-size: 0.9rem; margin-bottom: 0.2rem; }
+        .item-meta { font-size: 0.75rem; color: #666; }
+        .item-price { font-weight: 600; color: var(--primary); }
+
+        .price-row { display: flex; justify-content: space-between; font-size: 0.9rem; margin-bottom: 0.8rem; color: #555; }
+        .price-row.total { font-size: 1.2rem; font-weight: 700; color: var(--text); border-top: 1px solid var(--border); padding-top: 1rem; margin-top: 0.5rem; }
+
+        /* Payment Options */
+        .payment-option { border: 1px solid var(--border); border-radius: 6px; padding: 1rem; margin-bottom: 1rem; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; gap: 1rem; }
+        .payment-option:hover { border-color: var(--primary); background: #fdfaf5; }
+        .payment-option.selected { border-color: var(--primary); background: rgba(74, 107, 93, 0.05); box-shadow: 0 0 0 1px var(--primary); }
+        .payment-radio { width: 18px; height: 18px; accent-color: var(--primary); }
+        .payment-info h4 { margin: 0; font-size: 0.95rem; font-weight: 600; }
+        .payment-info p { margin: 0; font-size: 0.75rem; color: #666; }
+
+        @media (max-width: 991px) {
+            .checkout-container { grid-template-columns: 1fr; }
+            .summary-card { position: static; order: -1; margin-bottom: 2rem; }
+        }
+        
+        /* Loading Overlay */
+        .loader-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.8); z-index: 9999; display: none; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
+        .spinner { width: 40px; height: 40px; border: 4px solid var(--border); border-top-color: var(--primary); border-radius: 50%; animation: spin 1s linear infinite; }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+
+<!-- PREMIUM UNIVERSAL HEADER -->
+<header class="tob-header" id="tobHeader">
+  <div class="tob-top tob-top-row1">
+    <div class="tob-brand">
+      <a th:href="@{/}" style="display:flex; align-items:center; text-decoration:none; color:inherit;">
+        <img th:src="@{/images/flower-logo.png}" alt="Logo" class="tob-logo">
+        <div class="tob-brand-name">Theory <em>of</em> Bloom</div>
+      </a>
+    </div>
+    <div class="tob-actions">
+      <div class="tob-search-wrap tob-cat-search">
+        <form class="tob-search-form" th:action="@{/shop}" method="get">
+          <input type="text" name="query" th:value="${searchKeyword}" class="tob-search-input" placeholder="Search our botanical library...">
+          <button type="submit" class="tob-search-btn"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16"><path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/></svg></button>
+        </form>
+      </div>
+      <div class="tob-action-item" sec:authorize="!isAuthenticated()"><a th:href="@{/login}" class="tob-icon-btn" style="text-decoration:none;"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M6 3.5a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-2a.5.5 0 0 0-1 0v2A1.5 1.5 0 0 0 6.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-8A1.5 1.5 0 0 0 5 3.5v2a.5.5 0 0 0 1 0z"/><path fill-rule="evenodd" d="M11.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H1.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708z"/></svg><span class="tob-icon-label">Login</span></a></div>
+      <div class="tob-action-item" sec:authorize="isAuthenticated()">
+        <button class="tob-icon-btn" type="button"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 16 16"><path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/><path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"/></svg><span class="tob-icon-label" th:text="${user != null and !#strings.isEmpty(user.fullName) ? #strings.arraySplit(user.fullName, ' ')[0] : 'Account'}">Account</span></button>
+        <div class="tob-drop"><div class="tob-drop-header">Account Centre</div><a class="tob-drop-item" th:href="@{/profile}"><i class="fas fa-user-circle fa-sm"></i> My Profile</a><a class="tob-drop-item" th:href="@{/order-history}"><i class="fas fa-box fa-sm"></i> Orders</a><a class="tob-drop-item" th:href="@{/saved-blends}"><i class="fas fa-heart fa-sm"></i> Saved Blends</a><a class="tob-drop-item" th:href="@{/profile#settings}"><i class="fas fa-cog fa-sm"></i> Settings</a><div class="tob-drop-divider"></div><button class="tob-drop-item danger" type="button" onclick="openSignoutModal()" style="width:100%;text-align:left;background:none;border:none;cursor:pointer;"><i class="fas fa-sign-out-alt fa-sm"></i> Sign Out</button></div>
+      </div>
+      <div class="tob-action-item">
+        <button class="tob-icon-btn"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16"><path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0"/></svg><span class="tob-icon-label">More</span></button>
+        <div class="tob-drop"><div class="tob-drop-header">Explore</div><a class="tob-drop-item" th:href="@{/}"><i class="fas fa-home fa-sm"></i> Home</a><a class="tob-drop-item" th:href="@{/contact}"><i class="fas fa-envelope fa-sm"></i> Contact Us</a><a class="tob-drop-item" th:href="@{/privacy-policy}"><i class="fas fa-shield-alt fa-sm"></i> Privacy Policy</a></div>
+      </div>
+      <a th:href="@{/cart}" class="tob-icon-btn tob-cart-btn"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 16 16"><path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .49.598l-1 5a.5.5 0 0 1-.465.401l-9.397.472L4.415 11H13a.5.5 0 0 1 0 1H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5M3.102 4l.84 4.479 9.144-.459L13.89 4zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4m7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4m-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2m7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2"/></svg><span class="tob-icon-label">Cart</span></a>
+    </div>
+  </div>
+</header>
+
+<!-- MOBILE HEADER -->
+<div class="tob-mobile-header" id="tobMobileHeader">
+  <div class="tob-mob-bar">
+    <button class="tob-mob-ham-btn" type="button" onclick="tobOpenMenu()" aria-label="Open menu" id="tobHamBtn">
+      <span class="tob-ham-line"></span>
+      <span class="tob-ham-line"></span>
+      <span class="tob-ham-line tob-ham-line--short"></span>
+    </button>
+    <div class="tob-mob-center">
+      <img th:src="@{/images/flower-logo.png}" class="tob-mob-logo-img" alt="Theory of Bloom logo">
+      <span class="tob-mob-name">Theory <em>of</em> Bloom</span>
+    </div>
+    <div class="tob-mob-icons">
+      <div class="tob-mob-account">
+        <button class="tob-mob-icon" type="button" onclick="tobToggleAccDrop(event)" sec:authorize="isAuthenticated()"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#a37c4e" viewBox="0 0 16 16"><path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/><path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"/></svg></button>
+        <a th:href="@{/login}" class="tob-mob-icon" sec:authorize="!isAuthenticated()"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#a37c4e" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M6 3.5a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-2a.5.5 0 0 0-1 0v2A1.5 1.5 0 0 0 6.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-8A1.5 1.5 0 0 0 5 3.5v2a.5.5 0 0 0 1 0z"/><path fill-rule="evenodd" d="M11.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H1.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708z"/></svg></a>
+        <div class="tob-drawer-backdrop" id="tobMobBackdrop"></div>
+        <div class="tob-mob-acc-drawer" id="tobMobDrawer">
+          <div class="drawer-profile-header">
+            <div class="drawer-header-top">
+              <div class="drawer-avatar" th:text="${user != null and !#strings.isEmpty(user.fullName) ? #strings.substring(user.fullName,0,1) : 'U'}">U</div>
+              <div class="drawer-name-wrap">
+                <div class="drawer-name" th:text="${user != null ? user.fullName : 'Valued Member'}">User Name</div>
+                <div class="drawer-status" th:text="${user != null and user.premium ? '✦ Premium Member' : 'Standard Member'}">Standard Member</div>
+              </div>
+            </div>
+          </div>
+          <div class="drawer-menu">
+            <a th:href="@{/profile}" class="drawer-menu-item"><i class="bi bi-person-circle"></i><div class="drawer-item-content"><span class="drawer-item-title">Account Centre</span></div></a>
+            <a th:href="@{/order-history}" class="drawer-menu-item"><i class="bi bi-box-seam"></i><div class="drawer-item-content"><span class="drawer-item-title">Purchase History</span></div></a>
+            <a th:href="@{/saved-blends}" class="drawer-menu-item"><i class="bi bi-heart"></i><div class="drawer-item-content"><span class="drawer-item-title">Saved Blends</span></div></a>
+          </div>
+        </div>
+      </div>
+      <a th:href="@{/cart}" class="tob-mob-icon cart-ic"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#a37c4e" viewBox="0 0 16 16"><path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .49.598l-1 5a.5.5 0 0 1-.465.401l-9.397.472L4.415 11H13a.5.5 0 0 1 0 1H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5M3.102 4l.84 4.479 9.144-.459L13.89 4zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4m7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4m-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2m7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2"/></svg></a>
+    </div>
+  </div>
+</div>
+
+<!-- FULLSCREEN MENU -->
+<div class="tob-overlay" id="tobOverlay">
+  <button class="tob-overlay-close" onclick="tobCloseMenu()">&times;</button>
+  <a th:href="@{/profile}" class="tob-overlay-acc" sec:authorize="isAuthenticated()"><div class="tob-overlay-acc-circle"><i class="fas fa-user"></i></div><div><span class="tob-overlay-acc-name" th:text="${user != null and !#strings.isEmpty(user.fullName) ? user.fullName : 'My Account'}">User Name</span><span class="tob-overlay-acc-sub">Manage Dashboard</span></div></a>
+  <ul class="tob-overlay-links">
+    <li><a th:href="@{/}">Home</a></li>
+    <li><a th:href="@{/shop}">Shop Blends</a></li>
+    <li><a th:href="@{/saved-blends}">Saved Blends</a></li>
+    <li><a th:href="@{/profile}">My Account</a></li>
+    <li><a th:href="@{/contact}">Contact</a></li>
+  </ul>
+  <div class="tob-overlay-footer"><p>Theory <em>of</em> Bloom</p><small>Crafted by Nature. Perfected by Science.</small></div>
+</div>
+
+    <div class="loader-overlay" id="loader">
+        <div class="text-center">
+            <div class="spinner mb-3"></div>
+            <h5 style="font-family:'Cormorant Garamond',serif; color:var(--primary);">Processing your order...</h5>
+        </div>
+    </div>
+
+    <div class="container checkout-container">
+        
+        <!-- Left Column: Accordion Steps -->
+        <div class="checkout-steps">
+            <form id="checkoutForm" th:action="@{/checkout/process}" method="post">
+                
+                <!-- STEP 1: LOGIN / ACCOUNT -->
+                <div class="step-card active completed" id="step1">
+                    <div class="step-header">
+                        <div class="step-number">1</div>
+                        <div>
+                            <h3 class="step-title">Login</h3>
+                            <div class="step-summary" id="step1Summary">
+                                <span sec:authorize="isAuthenticated()" th:text="${user.fullName + ' (' + user.email + ')'}">Logged In User</span>
+                                <span sec:authorize="!isAuthenticated()">Guest Checkout</span>
+                            </div>
+                        </div>
+                        <div class="ms-auto">
+                            <i class="bi bi-check-circle-fill text-success" style="font-size: 1.2rem;"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- STEP 2: DELIVERY ADDRESS -->
+                <div class="step-card active" id="step2">
+                    <div class="step-header" onclick="goToStep(2)">
+                        <div class="step-number">2</div>
+                        <div>
+                            <h3 class="step-title">Delivery Address</h3>
+                            <div class="step-summary" id="step2Summary">Not provided yet</div>
+                        </div>
+                    </div>
+                    <div class="step-body">
+                        <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+                        
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Full Name *</label>
+                                <input type="text" class="form-control" id="contactName" name="contactName" th:value="${user != null ? user.fullName : ''}" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Email Address *</label>
+                                <input type="email" class="form-control" id="contactEmail" name="contactEmail" th:value="${user != null ? user.email : ''}" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Phone Number *</label>
+                                <input type="tel" class="form-control" id="contactPhone" name="contactPhone" th:value="${user != null ? user.phone : ''}" required pattern="[0-9]{10}" title="Please enter a valid 10-digit phone number">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Pincode *</label>
+                                <input type="text" class="form-control" id="pincode" name="pincode" th:value="${user != null ? user.pincode : ''}" required>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">Complete Address (House No, Building, Street) *</label>
+                                <textarea class="form-control" id="shippingAddress" name="shippingAddress" rows="3" required th:text="${user != null ? user.address : ''}"></textarea>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">City *</label>
+                                <input type="text" class="form-control" id="city" name="city" th:value="${user != null ? user.city : ''}" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">State *</label>
+                                <input type="text" class="form-control" id="state" name="state" th:value="${user != null ? user.state : ''}" required>
+                            </div>
+                            <div class="col-12 mt-2" sec:authorize="isAuthenticated()">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="saveAddress" name="saveAddress" value="true" checked>
+                                    <label class="form-check-label text-muted" for="saveAddress" style="font-size: 0.85rem;">
+                                        Save this address to my profile for future orders
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="button" class="btn-continue mt-4" onclick="validateStep2()">Deliver Here</button>
+                    </div>
+                </div>
+
+                <!-- STEP 3: ORDER SUMMARY (Flipkart style review inside flow) -->
+                <div class="step-card" id="step3">
+                    <div class="step-header" onclick="if(document.getElementById('step2').classList.contains('completed')) goToStep(3)">
+                        <div class="step-number">3</div>
+                        <div>
+                            <h3 class="step-title">Order Summary</h3>
+                            <div class="step-summary" id="step3Summary" th:text="${cartItems.size() + ' Items'}">Items</div>
+                        </div>
+                    </div>
+                    <div class="step-body">
+                        <div class="alert alert-success d-flex align-items-center mb-4">
+                            <i class="bi bi-shield-check me-2 fs-5"></i> 
+                            <div>Safe and secure packaging. Quality checked.</div>
+                        </div>
+                        <!-- Items rendered here for review -->
+                        <div th:each="item : ${cartItems}" class="item-row align-items-center">
+                            <img th:src="${item.product.imageUrl != null ? item.product.imageUrl : '/images/placeholder.png'}" class="item-img" alt="Product">
+                            <div class="item-details">
+                                <div class="item-name" th:text="${item.product.name}">Product Name</div>
+                                <div class="item-meta">Qty: <span th:text="${item.quantity}">1</span></div>
+                            </div>
+                            <div class="item-price" th:text="'₹' + ${item.subtotal}">₹0</div>
+                        </div>
+                        <button type="button" class="btn-continue" onclick="completeStep3()">Continue</button>
+                    </div>
+                </div>
+
+                <!-- STEP 4: PAYMENT OPTIONS -->
+                <div class="step-card" id="step4">
+                    <div class="step-header">
+                        <div class="step-number">4</div>
+                        <div>
+                            <h3 class="step-title">Payment Options</h3>
+                        </div>
+                    </div>
+                    <div class="step-body">
+                        <div class="payment-options-list">
+                            
+                            <label class="payment-option selected" id="opt-online">
+                                <input type="radio" name="paymentType" value="ONLINE" class="payment-radio" checked onclick="selectPayment('online')">
+                                <div class="payment-info">
+                                    <h4>UPI / Credit Card / Debit Card / Net Banking</h4>
+                                    <p>Secure online payment via Razorpay. Recommended.</p>
+                                </div>
+                                <i class="bi bi-credit-card ms-auto fs-4 text-muted"></i>
+                            </label>
+
+                            <label class="payment-option" id="opt-cod">
+                                <input type="radio" name="paymentType" value="COD" class="payment-radio" onclick="selectPayment('cod')">
+                                <div class="payment-info">
+                                    <h4>Cash on Delivery (COD)</h4>
+                                    <p>Pay comfortably when your order arrives.</p>
+                                </div>
+                                <i class="bi bi-cash ms-auto fs-4 text-muted"></i>
+                            </label>
+
+                        </div>
+
+                        <!-- Hidden field to map to controller's isCod param -->
+                        <input type="hidden" name="isCod" id="isCodInput" value="false">
+
+                        <button type="submit" class="btn-continue w-100 mt-3" style="font-size: 1rem; padding: 1rem;" onclick="showLoader()">
+                            Place Order
+                        </button>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+
+        <!-- Right Column: Price Breakdown Sidebar -->
+        <div>
+            <div class="summary-card">
+                <h3 class="summary-title">Price Details</h3>
+                
+                <div class="price-row">
+                    <span>Price (<span th:text="${cartItems.size()}">0</span> items)</span>
+                    <span th:text="'₹' + ${totalPrice}">₹0</span>
+                </div>
+                <div class="price-row" style="color: #666; font-size: 0.85rem;">
+                    <span>GST (Included 18%)</span>
+                    <span th:text="'₹' + ${#numbers.formatInteger(totalPrice * 0.18, 0)}">₹0</span>
+                </div>
+                <div class="price-row">
+                    <span>Delivery Charges</span>
+                    <span class="text-success">FREE</span>
+                </div>
+                <div class="price-row">
+                    <span>Packaging Fee</span>
+                    <span>₹49</span>
+                </div>
+                
+                <div class="price-row total">
+                    <span>Amount Payable</span>
+                    <span th:text="'₹' + ${totalPrice + 49}">₹0</span>
+                </div>
+
+                <div class="alert alert-success mt-4 mb-0" style="font-size: 0.8rem; background: rgba(74, 107, 93, 0.1); border: 1px dashed var(--primary); color: var(--primary);">
+                    <i class="bi bi-tag-fill me-1"></i> You will earn <strong><span th:text="${(totalPrice/10)}">0</span> Bloom Points</strong> on this order.
+                </div>
+            </div>
+            
+            <div class="text-center mt-3 text-muted" style="font-size: 0.75rem;">
+                <i class="bi bi-shield-lock-fill me-1"></i> Safe and Secure Payments. 100% Authentic products.
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        function goToStep(step) {
+            // Remove active from all
+            document.querySelectorAll('.step-card').forEach(c => c.classList.remove('active'));
+            // Add active to target
+            document.getElementById('step' + step).classList.add('active');
+        }
+
+        function validateStep2() {
+            const name = document.getElementById('contactName').value;
+            const phone = document.getElementById('contactPhone').value;
+            const address = document.getElementById('shippingAddress').value;
+            const city = document.getElementById('city').value;
+            
+            if(!name || !phone || !address || !city) {
+                alert("Please fill all required delivery details.");
+                return;
+            }
+            
+            // Mark Step 2 completed
+            const step2 = document.getElementById('step2');
+            step2.classList.add('completed');
+            document.getElementById('step2Summary').innerText = name + ', ' + city + ' - ' + phone;
+            
+            // Move to Step 3
+            goToStep(3);
+        }
+
+        function completeStep3() {
+            document.getElementById('step3').classList.add('completed');
+            goToStep(4);
+        }
+
+        function selectPayment(type) {
+            document.querySelectorAll('.payment-option').forEach(el => el.classList.remove('selected'));
+            document.getElementById('opt-' + type).classList.add('selected');
+            
+            document.getElementById('isCodInput').value = (type === 'cod') ? 'true' : 'false';
+        }
+
+        function showLoader() {
+            // Basic validation check before showing loader
+            if(document.getElementById('checkoutForm').checkValidity()) {
+                document.getElementById('loader').style.display = 'flex';
+            }
+        }
+    </script>
+    <script th:src="@{/js/header.js?v=7.0}"></script>
+</body>
+</html>

@@ -1,0 +1,2265 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title th:text="${product.name + ' | Theory of Bloom'}">Product Detail | Theory of Bloom</title>
+  
+  <meta name="description" th:content="${product.shortDescription}">
+  <meta name="keywords" th:content="${product.name + ', botanical wellness, herbal blend, Theory of Bloom'}">
+  <link rel="canonical" th:href="@{'/shop/product/' + ${product.id}}">
+  
+  <!-- Open Graph -->
+  <meta property="og:title" th:content="${product.name + ' | Theory of Bloom'}">
+  <meta property="og:description" th:content="${product.shortDescription}">
+  <meta property="og:image" th:content="${product.imageUrl != null ? 'https://theoryofbloom.com' + product.imageUrl : 'https://theoryofbloom.com/images/lux-book-1.png'}">
+  <meta property="og:url" th:content="@{'/shop/product/' + ${product.id}}">
+  <meta property="og:type" content="product">
+  
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" th:content="${product.name + ' | Theory of Bloom'}">
+  <meta name="twitter:description" th:content="${product.shortDescription}">
+  <meta name="twitter:image" th:content="${product.imageUrl != null ? 'https://theoryofbloom.com' + product.imageUrl : 'https://theoryofbloom.com/images/lux-book-1.png'}">
+
+  <link rel="icon" type="image/png" th:href="@{/images/flower-logo.png}">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,700&family=Cinzel:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" th:href="@{/css/shop.css?v=3.7}">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" th:href="@{/css/header.css?v=4.9}">  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+  <style>
+    :root {
+      --bg-texture: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='512' height='512'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' seed='5' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='512' height='512' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
+      --cream: #F5F0E8;
+      --cream-dk: #EBE5D8;
+      --text-dark: #1A1208;
+      --text-light: #4A3E2E;
+      --border-light: rgba(163, 124, 78, 0.15);
+      --font-serif: 'Cormorant Garamond', serif;
+      --font-sans: 'Inter', sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--cream);
+      background-image: var(--bg-texture);
+      color: var(--text-dark);
+      font-family: var(--font-serif);
+      -webkit-font-smoothing: antialiased;
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 3rem 44px 0rem;
+      /* Matches header 44px padding, adds top margin */
+      min-height: auto;
+    }
+
+    .back-to-shop {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-sans);
+      font-size: 0.75rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: #F8F6F2;
+      background-color: #2D2A27;
+      padding: 10px 20px;
+      border-radius: 3px;
+      text-decoration: none;
+      margin-bottom: 2rem;
+      transition: background-color 0.3s, transform 0.3s, box-shadow 0.3s;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    .back-to-shop:hover {
+      background-color: #111;
+      color: #fff;
+      transform: translateX(-4px);
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Desktop Layout */
+    .product-top {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 3rem;
+      margin-bottom: 2rem;
+    }
+
+    .product-img-col {
+      flex: 1;
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .product-info-col {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      text-align: left;
+      padding-right: 2rem;
+    }
+
+    .page-title {
+      font-size: 3.5rem;
+      font-weight: 400;
+      letter-spacing: 1px;
+      margin-bottom: 0.5rem;
+      color: #33312E;
+    }
+
+    .product-hero-image {
+      max-width: 100%;
+      height: auto;
+      filter: drop-shadow(0 20px 30px rgba(0, 0, 0, 0.08));
+    }
+
+    .subtitle {
+      font-size: 1.3rem;
+      color: #4A4642;
+      margin-bottom: 1.5rem;
+      font-style: italic;
+    }
+
+    .price {
+      font-size: 1.5rem;
+      font-weight: 500;
+      color: #55514C;
+      margin-bottom: 2rem;
+      font-family: var(--font-sans);
+    }
+
+    .add-to-ritual-btn {
+      display: inline-block;
+      background-color: #2D2A27;
+      color: #F8F6F2;
+      font-family: var(--font-sans);
+      text-transform: uppercase;
+      font-size: 0.85rem;
+      letter-spacing: 2px;
+      padding: 16px 50px;
+      border: none;
+      border-radius: 2px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background-color 0.3s;
+      margin-bottom: 3rem;
+    }
+
+    .add-to-ritual-btn:hover {
+      background-color: #111;
+    }
+
+    .features-row {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      gap: 1.5rem;
+      font-family: var(--font-sans);
+      font-size: 0.8rem;
+      color: var(--text-light);
+    }
+
+    .feature-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .feature-item svg {
+      width: 18px;
+      height: 18px;
+      stroke: #5A5652;
+    }
+
+    .sep {
+      width: 1px;
+      height: 18px;
+      background: var(--border-light);
+    }
+
+    /* Bottom Sections */
+    .bottom-section {
+      text-align: center;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .divider {
+      height: 1px;
+      background-color: var(--border-light);
+      width: 100%;
+      margin: 0 auto 4rem;
+    }
+
+    .section-icon {
+      font-size: 2rem;
+      color: #A4A09B;
+      margin-bottom: 0.5rem;
+      line-height: 1;
+    }
+
+    /* ── CHAPTER EDITORIAL BLOCK ── */
+    .chapter-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.4rem, 5vw, 3.6rem);
+      font-weight: 400;
+      letter-spacing: 0.5px;
+      line-height: 1.2;
+      color: #1A1208;
+      margin-bottom: 1rem;
+    }
+
+    .chapter-desc {
+      font-family: 'Inter', sans-serif;
+      font-size: clamp(0.95rem, 2vw, 1.05rem);
+      font-weight: 400;
+      color: #5A5652;
+      max-width: 600px;
+      margin: 0 auto 2.8rem;
+      line-height: 1.6;
+      letter-spacing: 0.3px;
+    }
+
+    .outline-btn {
+      display: inline-block;
+      border: 1px solid var(--border-light);
+      background: transparent;
+      color: var(--text-dark);
+      font-family: var(--font-sans);
+      font-size: 0.85rem;
+      padding: 10px 30px;
+      cursor: pointer;
+      margin-bottom: 4rem;
+      transition: all 0.3s;
+    }
+
+    .outline-btn:hover {
+      background: rgba(0, 0, 0, 0.03);
+      border-color: #5A5652;
+    }
+
+    .ingredients-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+      margin-top: 3rem;
+      text-align: center;
+    }
+
+    .ingredient-col img {
+      max-width: 140px;
+      margin-bottom: 1.5rem;
+      mix-blend-mode: multiply;
+      opacity: 0.9;
+    }
+
+    .ing-title {
+      font-family: var(--font-serif);
+      font-size: 1.2rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 0.2rem;
+      color: #444;
+    }
+
+    .ing-sub {
+      display: block;
+      font-family: var(--font-serif);
+      font-size: 1.4rem;
+      text-transform: capitalize;
+      font-weight: 400;
+      margin-bottom: 0.6rem;
+      color: #333;
+    }
+
+    .ing-desc {
+      font-family: var(--font-sans);
+      font-size: 0.85rem;
+      color: var(--text-light);
+      line-height: 1.6;
+      max-width: 200px;
+      margin: 0 auto;
+    }
+
+    /* Footer Styles */
+    .shop-footer { background: #130D09; color: rgba(246, 235, 233, 0.7); padding: 40px 24px; text-align: center; margin-top: 0; font-family: var(--font-sans); }
+    .shop-footer-inner { max-width: 800px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; gap: 20px; }
+    .shop-footer-brand { display: flex; flex-direction: column; gap: 8px; }
+    .shop-footer-name { font-family: 'Cormorant Garamond', serif; font-size: 1.8rem; color: #FFFFFF; letter-spacing: 4px; font-weight: 300; margin: 0; }
+    .shop-footer-name em { font-style: italic; color: #C9A070; }
+    .shop-footer-tag { font-size: 0.8rem; letter-spacing: 2px; text-transform: uppercase; margin: 0; }
+    .shop-footer-links { display: flex; gap: 24px; flex-wrap: wrap; justify-content: center; margin-top: 10px; }
+    .shop-footer-links a { color: #FFFFFF; text-decoration: none; font-size: 0.75rem; font-weight: 500; letter-spacing: 1.5px; text-transform: uppercase; transition: color 0.3s; }
+    .shop-footer-links a:hover { color: #C9A070; }
+    .shop-footer-copy { font-size: 0.7rem; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; width: 100%; text-align: center; margin-top: 1rem; color: #A4A09B; }
+
+    /* Mobile overrides */
+    @media (max-width: 900px) {
+      .product-top {
+        flex-direction: column;
+        gap: 1.5rem;
+        text-align: center;
+      }
+
+      .product-img-col {
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+      }
+
+      .product-info-col {
+        align-items: center;
+        padding-right: 0;
+        width: 100%;
+        text-align: center;
+      }
+
+      .page-title {
+        font-size: 2.2rem !important;
+      }
+
+      .subtitle {
+        text-align: center;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .features-row {
+        flex-direction: column;
+        gap: 1.2rem;
+      }
+
+      .sep {
+        display: none;
+      }
+    }
+
+    @media (max-width: 650px) {
+      .ingredients-grid {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+      }
+
+      .container {
+        padding: 2rem 1rem;
+      }
+
+      #mainProductImg {
+        min-height: 280px !important;
+      }
+
+      .page-title {
+        font-size: 2rem;
+      }
+
+      .price {
+        font-size: 1.8rem;
+      }
+
+      .add-to-ritual-btn {
+        padding: 14px 20px;
+        font-size: 0.72rem;
+      }
+
+      .pd-cta-form {
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+    }
+
+    /* ── Section background bands (like homepage) ── */
+    .pd-section-alt   {
+      background: linear-gradient(160deg,#FAF8F3 0%,#F0EAD9 100%);
+      padding: 4rem 5%;
+      margin-bottom: 0;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.02);
+    }
+    .pd-section-sage  {
+      background: linear-gradient(160deg,#EEF2EC 0%,#E4EBE1 100%);
+      padding: 4rem 5%;
+      margin-bottom: 0;
+    }
+    .pd-section-light {
+      background: #FDFBF7;
+      padding: 4rem 5%;
+      margin-bottom: 0;
+    }
+    .pd-section-ymal {
+      background: linear-gradient(160deg,#FDFBF7 0%,#EBE5D8 100%);
+      padding: 3rem 5% 4rem;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+    }
+
+    /* ── Section headings ── */
+    .pd-section-heading {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2rem, 3.5vw, 2.8rem);
+      font-weight: 700;
+      color: #1A1208;
+      letter-spacing: 0.5px;
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+    .pd-section-subheading {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.3rem, 2.5vw, 1.7rem);
+      font-weight: 600;
+      color: #33312E;
+      letter-spacing: 0.3px;
+      margin-bottom: 1rem;
+    }
+
+    /* Reviews section */
+    .rev-section {
+      background: linear-gradient(160deg,#FAF8F3 0%,#EBE5D8 100%);
+      max-width: 100%;
+      margin: 0;
+      padding: 3rem 1.5rem 5rem;
+    }
+
+    .rev-section-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 2.5rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid rgba(180, 160, 120, 0.2);
+    }
+
+    .rev-title {
+      font-family: var(--serif);
+      font-size: clamp(1.8rem, 3.5vw, 2.4rem);
+      font-weight: 400;
+      color: var(--ink);
+    }
+
+    .rev-title em {
+      font-style: italic;
+      color: var(--sage);
+    }
+
+    .rev-avg-block {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    .rev-avg-num {
+      font-family: var(--serif);
+      font-size: 3.5rem;
+      font-weight: 400;
+      color: var(--ink);
+      line-height: 1;
+    }
+
+    .rev-stars-col {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .rev-stars {
+      color: #C9954A;
+      font-size: 1.1rem;
+      letter-spacing: 2px;
+    }
+
+    .rev-total {
+      font-size: 0.72rem;
+      color: var(--ink-soft);
+      letter-spacing: 1px;
+    }
+
+    .rev-bars {
+      flex: 1;
+      min-width: 160px;
+    }
+
+    .rev-bar-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 5px;
+    }
+
+    .rev-bar-lbl {
+      font-size: 0.68rem;
+      color: var(--ink-soft);
+      width: 36px;
+      flex-shrink: 0;
+    }
+
+    .rev-bar-track {
+      flex: 1;
+      height: 5px;
+      background: rgba(180, 160, 120, 0.15);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .rev-bar-fill {
+      height: 100%;
+      background: linear-gradient(to right, #C9954A, #a37c4e);
+      border-radius: 3px;
+    }
+
+    .rev-cards {
+      display: grid;
+      gap: 1.2rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .rev-card {
+      background: linear-gradient(145deg, #FDFCFA, #F5F2EB);
+      border: 1px solid rgba(180, 160, 120, 0.18);
+      border-radius: 10px;
+      padding: 1.5rem;
+      position: relative;
+    }
+
+    .rev-card-hd {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 0.8rem;
+    }
+
+    .rev-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--sage), var(--sage-dk));
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--sans);
+      font-size: 0.85rem;
+      font-weight: 600;
+      flex-shrink: 0;
+    }
+
+    .rev-user {
+      font-family: var(--sans);
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    .rev-date {
+      font-size: 0.68rem;
+      color: var(--ink-soft);
+      margin-top: 2px;
+    }
+
+    .rev-badge-v {
+      font-size: 0.58rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      background: rgba(74, 107, 93, 0.1);
+      color: var(--sage-dk);
+      border-radius: 20px;
+      padding: 3px 8px;
+      font-weight: 600;
+    }
+
+    .rev-stars-sm {
+      color: #C9954A;
+      font-size: 0.85rem;
+      letter-spacing: 1px;
+      margin-bottom: 0.5rem;
+    }
+
+    .rev-text {
+      font-size: 0.85rem;
+      color: var(--ink-soft);
+      line-height: 1.7;
+    }
+
+    .rev-helpful {
+      font-size: 0.7rem;
+      color: var(--ink-soft);
+      margin-top: 0.8rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .rev-helpful button {
+      font-size: 0.68rem;
+      background: transparent;
+      border: 1px solid rgba(180, 160, 120, 0.25);
+      border-radius: 3px;
+      padding: 3px 10px;
+      cursor: pointer;
+      color: var(--ink-soft);
+      transition: all 0.2s;
+    }
+
+    .rev-helpful button:hover {
+      background: var(--sage-dk);
+      color: #fff;
+      border-color: var(--sage-dk);
+    }
+
+    .rev-write {
+      background: linear-gradient(135deg, #1A1208, #2C1A08);
+      border-radius: 12px;
+      padding: 2rem;
+      text-align: center;
+      margin-top: 2rem;
+    }
+
+    .rev-write h3 {
+      font-family: var(--serif);
+      font-size: 1.5rem;
+      color: #F5F0E8;
+      margin-bottom: 0.4rem;
+    }
+
+    .rev-write h3 em {
+      font-style: italic;
+      color: #C9954A;
+    }
+
+    .rev-write p {
+      font-size: 0.78rem;
+      color: rgba(245, 240, 232, 0.6);
+      margin-bottom: 1.2rem;
+    }
+
+    .btn-rev-write {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #1A1208;
+      background: linear-gradient(135deg, #C9954A, #a37c4e);
+      border: none;
+      border-radius: 3px;
+      padding: 11px 24px;
+      cursor: pointer;
+      transition: all 0.3s;
+      text-decoration: none;
+    }
+
+    .btn-rev-write:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(163, 124, 78, 0.4);
+    }
+
+    /* Review form modal */
+    .rev-modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(42, 33, 24, 0.6);
+      backdrop-filter: blur(4px);
+      z-index: 9990;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+
+    .rev-modal-box {
+      background: linear-gradient(145deg, #FEFDF9, #F5F1E8);
+      border: 1px solid rgba(180, 160, 120, 0.25);
+      border-radius: 12px;
+      padding: 2rem;
+      max-width: 520px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .rev-modal-title {
+      font-family: var(--serif);
+      font-size: 1.6rem;
+      font-weight: 400;
+      margin-bottom: 1.2rem;
+    }
+
+    .rev-modal-title em {
+      font-style: italic;
+      color: var(--sage);
+    }
+
+    .rev-form label {
+      display: block;
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      color: var(--ink-soft);
+      margin-bottom: 0.4rem;
+      margin-top: 1rem;
+    }
+
+    .rev-form input,
+    .rev-form textarea,
+    .rev-form select {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid rgba(180, 160, 120, 0.3);
+      border-radius: 4px;
+      background: #FEFDF9;
+      font-family: var(--sans);
+      font-size: 0.84rem;
+      color: var(--ink);
+    }
+
+    .rev-form textarea {
+      resize: vertical;
+      min-height: 90px;
+    }
+
+    .rev-star-picker {
+      display: flex;
+      gap: 6px;
+      font-size: 1.8rem;
+      cursor: pointer;
+      color: rgba(180, 160, 120, 0.3);
+      margin-bottom: 0.5rem;
+    }
+
+    .rev-star-picker span:hover,
+    .rev-star-picker span.sel {
+      color: #C9954A;
+    }
+
+    .pd-weight {
+      font-family: var(--sans);
+      font-size: 0.75rem;
+      color: var(--ink-soft);
+      border: 1px solid rgba(180, 160, 120, 0.25);
+      border-radius: 3px;
+      padding: 4px 12px;
+      display: inline-block;
+      margin-bottom: 1.4rem;
+    }
+
+    /* Trust badges */
+    .pd-trust {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-bottom: 1.8rem;
+    }
+
+    .pd-trust-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.75rem;
+      color: var(--ink-soft);
+    }
+
+    .pd-trust-item i {
+      color: var(--sage);
+      font-size: 0.85rem;
+    }
+
+    /* Add to cart CTA */
+    .pd-cta-form {
+      display: flex;
+      gap: 0.8rem;
+      align-items: stretch;
+      margin-bottom: 1rem;
+    }
+
+    .pd-qty {
+      width: 70px;
+      padding: 0 12px;
+      border: 1px solid rgba(180, 160, 120, 0.35);
+      border-radius: 3px;
+      font-size: 0.9rem;
+      text-align: center;
+      background: #FAF8F4;
+      color: var(--ink);
+      outline: none;
+    }
+
+    .pd-add-btn {
+      flex: 1;
+      font-family: var(--sans);
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      background: var(--ink);
+      color: #fff;
+      border: none;
+      border-radius: 3px;
+      padding: 15px;
+      cursor: pointer;
+      transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .pd-add-btn:hover {
+      background: var(--sage-dk);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(61, 92, 65, 0.2);
+    }
+
+    .pd-save-btn {
+      width: 52px;
+      background: #FAF8F4;
+      border: 1px solid rgba(180, 160, 120, 0.35);
+      border-radius: 3px;
+      cursor: pointer;
+      font-size: 1.1rem;
+      color: var(--ink-soft);
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .pd-save-btn:hover,
+    .pd-save-btn.saved {
+      color: #C44;
+      border-color: rgba(204, 68, 68, 0.3);
+    }
+
+    /* Tabs */
+    .pd-tabs {
+      display: flex;
+      gap: 0;
+      border-bottom: 1px solid rgba(180, 160, 120, 0.25);
+      margin-bottom: 1.5rem;
+    }
+
+    .pd-tab {
+      font-family: var(--sans);
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 10px 16px;
+      border: none;
+      background: none;
+      cursor: pointer;
+      color: var(--ink-soft);
+      border-bottom: 2px solid transparent;
+      transition: all 0.2s;
+    }
+
+    .pd-tab.active {
+      color: var(--sage-dk);
+      border-bottom-color: var(--sage-dk);
+    }
+
+    .pd-tab-panel {
+      display: none;
+      font-size: 0.88rem;
+      color: var(--ink-soft);
+      line-height: 1.8;
+    }
+
+    .pd-tab-panel.active {
+      display: block;
+    }
+
+    .pd-tab-panel h5 {
+      font-family: var(--serif);
+      font-weight: 500;
+      font-size: 1rem;
+      color: var(--ink);
+      margin-bottom: 0.4rem;
+    }
+
+    /* Share toast */
+    .pd-toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(60px);
+      background: var(--ink);
+      color: #fff;
+      font-size: 0.75rem;
+      padding: 10px 22px;
+      border-radius: 3px;
+      opacity: 0;
+      transition: all 0.35s;
+      z-index: 9999;
+      pointer-events: none;
+    }
+
+    .pd-toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* ======= UNIFIED SECTION (Benefits / How to Use / FAQ) ======= */
+    .pd-unified-section {
+      background: linear-gradient(135deg, #F8EFE0 0%, #E8D9C8 100%);
+      padding: 20px 5% 60px;
+    }
+    .pd-unified-inner { max-width: 1100px; margin: 0 auto; }
+    .pd-unified-header { text-align: center; margin-bottom: 48px; }
+    .pd-unified-eyebrow {
+      font-family: 'Inter', sans-serif; font-size: 0.6rem; letter-spacing: 4px;
+      text-transform: uppercase; color: #A37C4E; margin-bottom: 12px;
+    }
+    .pd-unified-title {
+      font-family: 'Cormorant Garamond', serif; font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 400; color: #1A1208; margin-bottom: 12px;
+    }
+    .pd-unified-title em { font-style: italic; color: #B03030; }
+    .pd-unified-sub {
+      font-family: 'Inter', sans-serif; font-size: 0.9rem;
+      color: #5A5652; max-width: 550px; margin: 0 auto; line-height: 1.8;
+    }
+
+    /* Tab Nav */
+    .pd-unified-tabs {
+      display: flex; justify-content: center; gap: 0;
+      border-bottom: 1px solid rgba(180,160,120,0.2); margin-bottom: 48px;
+    }
+    .pd-utab {
+      font-family: 'Inter', sans-serif; font-size: 0.75rem; font-weight: 600;
+      letter-spacing: 1.5px; text-transform: uppercase;
+      padding: 12px 28px; border: none; background: none; cursor: pointer;
+      color: #A4A09B; border-bottom: 2px solid transparent;
+      transition: all 0.3s; display: flex; align-items: center; gap: 8px;
+    }
+    .pd-utab:hover { color: #5A5652; }
+    .pd-utab.active { color: #2A2621; border-bottom-color: #A37C4E; }
+    .pd-utab i { color: #A37C4E; font-size: 0.9rem; }
+    .pd-upanel { display: none; }
+    .pd-upanel.active { display: block; }
+
+    /* Benefits Grid */
+    .pd-benefits-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px;
+    }
+    .pd-benefit-card {
+      background: linear-gradient(145deg, #FEFDF9, #F5F1E8);
+      border: 1px solid rgba(180,160,120,0.2); border-radius: 16px;
+      padding: 28px; transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .pd-benefit-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 32px rgba(42, 33, 24, 0.08);
+    }
+    .pd-benefit-icon {
+      width: 52px; height: 52px; border-radius: 50%; display: flex;
+      align-items: center; justify-content: center; margin-bottom: 20px; font-size: 1.3rem;
+    }
+    .pd-benefit-title {
+      font-family: 'Inter', sans-serif; font-weight: 700; font-size: 0.92rem;
+      color: #2A2621; margin-bottom: 8px;
+    }
+    .pd-benefit-desc { font-size: 0.82rem; color: #5A5652; line-height: 1.7; }
+
+    /* How to Use */
+    .pd-htu-wrap { display: grid; grid-template-columns: 1.4fr 1fr; gap: 32px; }
+    @media (max-width: 768px) { .pd-htu-wrap { grid-template-columns: 1fr; } }
+    .pd-htu-brew {
+      background: linear-gradient(135deg, #F9F7F3, #F0EBE0);
+      border-radius: 12px; padding: 28px 32px; border-left: 4px solid #A37C4E;
+    }
+    .pd-htu-brew-title {
+      font-family: 'Inter', sans-serif; font-weight: 700; font-size: 0.9rem;
+      color: #2A2621; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;
+    }
+    .pd-htu-brew-title i { color: #A37C4E; }
+    .pd-htu-steps {
+      padding-left: 1.4rem; margin: 0; display: flex; flex-direction: column; gap: 12px;
+      font-family: 'Inter', sans-serif; font-size: 0.87rem; color: #5A5652; line-height: 1.8;
+    }
+    .pd-htu-tips { display: flex; flex-direction: column; gap: 12px; }
+    .pd-tip-card {
+      background: #fff; border-radius: 10px; padding: 16px;
+      border: 1px solid rgba(74,107,93,0.15);
+    }
+    .pd-tip-title {
+      font-family: 'Inter', sans-serif; font-weight: 700; font-size: 0.82rem;
+      color: #2A2621; margin-bottom: 6px; display: flex; align-items: center; gap: 8px;
+    }
+    .pd-tip-text { font-size: 0.78rem; color: #5A5652; line-height: 1.6; }
+
+    /* FAQ */
+    .pd-faq-list { display: flex; flex-direction: column; gap: 12px; max-width: 800px; margin: 0 auto; }
+    .pd-faq-item {
+      background: #fff; border-radius: 12px; border: 1px solid rgba(180,160,120,0.2);
+      overflow: hidden; transition: box-shadow 0.3s;
+    }
+    .pd-faq-item[open] { box-shadow: 0 6px 24px rgba(42,33,24,0.06); }
+    .pd-faq-q {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 18px 24px; font-family: 'Inter', sans-serif; font-weight: 600;
+      font-size: 0.9rem; color: #2A2621; cursor: pointer; list-style: none; gap: 16px;
+    }
+    .pd-faq-q::-webkit-details-marker { display: none; }
+    .pd-faq-icon { color: #A37C4E; font-size: 0.85rem; flex-shrink: 0; transition: transform 0.3s; }
+    .pd-faq-item[open] .pd-faq-icon { transform: rotate(45deg); }
+    .pd-faq-a {
+      padding: 0 24px 18px; font-family: 'Inter', sans-serif; font-size: 0.85rem;
+      color: #5A5652; line-height: 1.8; border-top: 1px solid rgba(180,160,120,0.12);
+      padding-top: 14px; margin-top: -2px;
+    }
+
+    /* ======= YOU MAY ALSO LIKE ======= */
+    .pd-ymal-section {
+      background: linear-gradient(160deg, #FDFCF9 0%, #EBE5D8 100%);
+      padding: 80px 5%;
+    }
+    .pd-ymal-inner { max-width: 1360px; margin: 0 auto; }
+    .pd-ymal-header {
+      display: flex; align-items: flex-end; justify-content: space-between;
+      margin-bottom: 40px; flex-wrap: wrap; gap: 16px;
+    }
+    .pd-ymal-eyebrow {
+      font-family: 'Inter', sans-serif; font-size: 0.6rem; letter-spacing: 4px;
+      text-transform: uppercase; color: #A37C4E; margin-bottom: 8px;
+    }
+    .pd-ymal-title {
+      font-family: 'Cormorant Garamond', serif; font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+      font-weight: 400; color: #1A1208;
+    }
+    .pd-ymal-title em { font-style: italic; color: #B03030; }
+    .pd-ymal-viewall {
+      font-family: 'Inter', sans-serif; font-size: 0.75rem; font-weight: 600;
+      letter-spacing: 1px; color: #1A1208; background: transparent;
+      border: 1px solid rgba(163,124,78,0.4); text-decoration: none;
+      padding: 10px 20px; border-radius: 30px; transition: all 0.3s;
+      display: flex; align-items: center; gap: 8px; white-space: nowrap;
+    }
+    .pd-ymal-viewall:hover {
+      background: #A37C4E; color: #fff; border-color: #A37C4E;
+      transform: translateX(4px);
+    }
+    .pd-ymal-grid {
+      display: flex;
+      flex-direction: row;
+      gap: 20px;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(163,124,78,0.3) transparent;
+      padding-bottom: 12px;
+    }
+    .pd-ymal-grid::-webkit-scrollbar { height: 4px; }
+    .pd-ymal-grid::-webkit-scrollbar-thumb { background: rgba(163,124,78,0.35); border-radius: 4px; }
+    .pd-ymal-card {
+      scroll-snap-align: start;
+      flex: 0 0 220px;
+      min-width: 220px;
+      text-decoration: none; background: #fff;
+      border: 1px solid rgba(163,124,78,0.15); border-radius: 16px;
+      overflow: hidden; display: flex; flex-direction: column;
+      transition: all 0.35s cubic-bezier(0.165, 0.84, 0.44, 1);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.04);
+    }
+    .pd-ymal-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 16px 40px rgba(42,33,24,0.12);
+      border-color: rgba(163,124,78,0.35);
+    }
+    .pd-ymal-img-wrap { position: relative; overflow: hidden; aspect-ratio: 4/3; }
+    .pd-ymal-img-wrap img {
+      width: 100%; height: 100%; object-fit: cover; display: block;
+      transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+    .pd-ymal-card:hover .pd-ymal-img-wrap img { transform: scale(1.05); }
+    .pd-ymal-badge {
+      position: absolute; top: 10px; left: 10px; color: #fff;
+      font-family: 'Inter', sans-serif; font-size: 0.55rem;
+      font-weight: 700; letter-spacing: 1.2px; padding: 4px 10px;
+      border-radius: 4px; text-transform: uppercase;
+    }
+    .pd-ymal-info { padding: 20px; display: flex; flex-direction: column; flex: 1; }
+    .pd-ymal-cat {
+      font-family: 'Inter', sans-serif; font-size: 0.58rem;
+      letter-spacing: 2px; text-transform: uppercase; color: #A37C4E; margin-bottom: 6px;
+    }
+    .pd-ymal-name {
+      font-family: 'Cormorant Garamond', serif; font-size: 1.15rem;
+      font-weight: 600; color: #2A2621; margin-bottom: 6px; line-height: 1.3;
+    }
+    .pd-ymal-herbs {
+      font-family: 'Inter', sans-serif; font-size: 0.72rem;
+      color: #5A5652; margin-bottom: 12px; flex: 1;
+    }
+    .pd-ymal-stars {
+      display: flex; align-items: center; gap: 6px; margin-bottom: 10px;
+      color: #C9954A; font-size: 0.78rem;
+    }
+    .pd-ymal-rcount { font-family: 'Inter', sans-serif; font-size: 0.65rem; color: #8A8175; }
+    .pd-ymal-pricing { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+    .pd-ymal-price {
+      font-family: 'Inter', sans-serif; font-size: 1.05rem;
+      font-weight: 700; color: #2A2621;
+    }
+    .pd-ymal-old {
+      font-family: 'Inter', sans-serif; font-size: 0.75rem;
+      color: #A37C4E; text-decoration: line-through;
+    }
+    .pd-ymal-disc {
+      font-family: 'Inter', sans-serif; font-size: 0.68rem;
+      color: #B03030; font-weight: 600;
+    }
+    @media (max-width: 600px) {
+      .pd-ymal-grid { grid-template-columns: repeat(2, 1fr); gap: 14px; }
+      .pd-unified-tabs { overflow-x: auto; justify-content: flex-start; }
+      .pd-utab { padding: 10px 16px; font-size: 0.68rem; }
+    }
+
+    /* Mobile Accordion Styles */
+    .pd-acc-header {
+      display: none;
+      width: 100%;
+      background: #FCFAF7;
+      border: none;
+      border-top: 1px solid rgba(163, 124, 78, 0.15);
+      padding: 22px 20px;
+      text-align: left;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 2px;
+      color: #5A5652;
+      cursor: pointer;
+      justify-content: space-between;
+      align-items: center;
+      transition: all 0.3s;
+    }
+    .pd-acc-header i { font-size: 0.9rem; color: #A37C4E; transition: transform 0.3s; }
+    .pd-acc-header.active { color: #1A1208; background: #FFFFFF; }
+    .pd-acc-header.active i { transform: rotate(90deg); }
+
+    @media (max-width: 768px) {
+      .pd-unified-tabs { display: none !important; }
+      .pd-acc-header { display: flex; }
+      .pd-acc-header:last-of-type { border-bottom: 1px solid rgba(163, 124, 78, 0.15); }
+      .pd-upanel { padding: 20px 0 40px; }
+    }
+  </style>
+</head>
+
+<body class="shop-body">
+
+  <!-- PREMIUM UNIVERSAL HEADER -->
+  <header class="tob-header" id="tobHeader">
+  <div class="tob-top tob-top-row1">
+    <div class="tob-brand">
+      <a th:href="@{/}" style="display:flex; align-items:center; text-decoration:none; color:inherit;">
+        <img th:src="@{/images/flower-logo.png}" alt="Logo" class="tob-logo">
+        <div class="tob-brand-name">Theory <em>of</em> Bloom</div>
+      </a>
+    </div>
+    <div class="tob-actions">
+      <div class="tob-search-wrap tob-cat-search">
+        <form class="tob-search-form" th:action="@{/shop}" method="get">
+          <input type="text" name="query" th:value="${searchKeyword}" class="tob-search-input" placeholder="Search our botanical library...">
+          <button type="submit" class="tob-search-btn"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16"><path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/></svg></button>
+        </form>
+      </div>
+      <div class="tob-action-item" sec:authorize="!isAuthenticated()"><a th:href="@{/login}" class="tob-icon-btn" style="text-decoration:none;"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M6 3.5a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-2a.5.5 0 0 0-1 0v2A1.5 1.5 0 0 0 6.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-8A1.5 1.5 0 0 0 5 3.5v2a.5.5 0 0 0 1 0z"/><path fill-rule="evenodd" d="M11.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H1.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708z"/></svg><span class="tob-icon-label">Login</span></a></div>
+      <div class="tob-action-item" sec:authorize="isAuthenticated()">
+        <button class="tob-icon-btn" type="button"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 16 16"><path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/><path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"/></svg><span class="tob-icon-label" th:text="${user != null and !#strings.isEmpty(user.fullName) ? #strings.arraySplit(user.fullName, ' ')[0] : 'Account'}">Account</span></button>
+        <div class="tob-drop"><div class="tob-drop-header">Account Centre</div><a class="tob-drop-item" th:href="@{/profile}"><i class="fas fa-user-circle fa-sm"></i> My Profile</a><a class="tob-drop-item" th:href="@{/order-history}"><i class="fas fa-box fa-sm"></i> Orders</a><a class="tob-drop-item" th:href="@{/saved-blends}"><i class="fas fa-heart fa-sm"></i> Saved Blends</a><a class="tob-drop-item" th:href="@{/profile#settings}"><i class="fas fa-cog fa-sm"></i> Settings</a><div class="tob-drop-divider"></div><button class="tob-drop-item danger" type="button" onclick="openSignoutModal()" style="width:100%;text-align:left;background:none;border:none;cursor:pointer;"><i class="fas fa-sign-out-alt fa-sm"></i> Sign Out</button></div>
+      </div>
+      <div class="tob-action-item">
+        <button class="tob-icon-btn"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16"><path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0"/></svg><span class="tob-icon-label">More</span></button>
+        <div class="tob-drop"><div class="tob-drop-header">Explore</div><a class="tob-drop-item" th:href="@{/}"><i class="fas fa-home fa-sm"></i> Home</a><a class="tob-drop-item" th:href="@{/contact}"><i class="fas fa-envelope fa-sm"></i> Contact Us</a><a class="tob-drop-item" th:href="@{/privacy-policy}"><i class="fas fa-shield-alt fa-sm"></i> Privacy Policy</a></div>
+      </div>
+      <a th:href="@{/cart}" class="tob-icon-btn tob-cart-btn"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 16 16"><path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .49.598l-1 5a.5.5 0 0 1-.465.401l-9.397.472L4.415 11H13a.5.5 0 0 1 0 1H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5M3.102 4l.84 4.479 9.144-.459L13.89 4zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4m7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4m-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2m7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2"/></svg><span class="tob-icon-label">Cart</span></a>
+    </div>
+  </div>
+</header>
+
+  <!-- MOBILE HEADER -->
+  <div class="tob-mobile-header" id="tobMobileHeader">
+    <!-- Bar: Hamburger | Brand | Account+Cart+More -->
+    <div class="tob-mob-bar">
+      <button class="tob-mob-ham-btn" type="button" onclick="tobOpenMenu()" aria-label="Open menu" id="tobHamBtn">
+        <span class="tob-ham-line"></span>
+        <span class="tob-ham-line"></span>
+        <span class="tob-ham-line tob-ham-line--short"></span>
+      </button>
+      <div class="tob-mob-center">
+        <img th:src="@{/images/flower-logo.png}" class="tob-mob-logo-img" alt="Theory of Bloom logo">
+        <span class="tob-mob-name">Theory <em>of</em> Bloom</span>
+      </div>
+      <div class="tob-mob-icons">
+        <div class="tob-mob-account">
+          <button class="tob-mob-icon" type="button" onclick="tobToggleAccDrop(event)"
+            sec:authorize="isAuthenticated()"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+              fill="#a37c4e" viewBox="0 0 16 16">
+              <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
+              <path fill-rule="evenodd"
+                d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1" />
+            </svg></button>
+          <a th:href="@{/login}" class="tob-mob-icon" sec:authorize="!isAuthenticated()"><svg
+              xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#a37c4e" viewBox="0 0 16 16">
+              <path fill-rule="evenodd"
+                d="M6 3.5a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-2a.5.5 0 0 0-1 0v2A1.5 1.5 0 0 0 6.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-8A1.5 1.5 0 0 0 5 3.5v2a.5.5 0 0 0 1 0z" />
+              <path fill-rule="evenodd"
+                d="M11.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H1.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708z" />
+            </svg></a>
+          <div class="tob-drawer-backdrop" id="tobMobBackdrop"></div>
+          <div class="tob-mob-acc-drawer" id="tobMobDrawer">
+            <div class="drawer-profile-header">
+              <div class="drawer-header-top">
+                <div class="drawer-avatar"
+                  th:text="${user != null and !#strings.isEmpty(user.fullName) ? #strings.substring(user.fullName,0,1) : 'U'}">
+                  U</div>
+                <div class="drawer-name-wrap">
+                  <div class="drawer-name" th:text="${user != null ? user.fullName : 'Valued Member'}">User Name</div>
+                  <div class="drawer-status"
+                    th:text="${user != null and user.premium ? '? Premium Member' : 'Standard Member'}">Standard Member
+                  </div>
+                </div>
+              </div>
+              <div class="drawer-header-meta">
+                <div class="meta-item"><span class="meta-label">Member ID</span><span class="meta-value"
+                    th:text="${user != null ? '#TB' + user.id : '#TB0000'}">#TB1001</span></div>
+                <div class="meta-item"><span class="meta-label">Status</span><span class="meta-value"
+                    th:text="${user != null and user.premium ? 'Premium' : 'Normal'}">Normal</span></div>
+              </div>
+            </div>
+            <div class="drawer-menu">
+              <a th:href="@{/profile}" class="drawer-menu-item"><i class="bi bi-person-circle"></i>
+                <div class="drawer-item-content"><span class="drawer-item-title">Account Centre</span><span
+                    class="drawer-item-sub">Manage your botanical ritual</span></div>
+              </a>
+              <a th:href="@{/order-history}" class="drawer-menu-item"><i class="bi bi-box-seam"></i>
+                <div class="drawer-item-content"><span class="drawer-item-title">Purchase History</span><span
+                    class="drawer-item-sub">Track your formulations</span></div><span class="drawer-badge">Active</span>
+              </a>
+              <a th:href="@{/saved-blends}" class="drawer-menu-item"><i class="bi bi-heart"></i>
+                <div class="drawer-item-content"><span class="drawer-item-title">Saved Blends</span><span
+                    class="drawer-item-sub">Your curation library</span></div>
+              </a>
+              <a th:href="@{/profile#settings}" class="drawer-menu-item"><i class="bi bi-gear"></i>
+                <div class="drawer-item-content"><span class="drawer-item-title">System Settings</span><span
+                    class="drawer-item-sub">Privacy &amp; preferences</span></div>
+              </a>
+            </div>
+          </div>
+        </div>
+        <a th:href="@{/cart}" class="tob-mob-icon cart-ic"><svg xmlns="http://www.w3.org/2000/svg" width="20"
+            height="20" fill="#a37c4e" viewBox="0 0 16 16">
+            <path
+              d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .49.598l-1 5a.5.5 0 0 1-.465.401l-9.397.472L4.415 11H13a.5.5 0 0 1 0 1H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5M3.102 4l.84 4.479 9.144-.459L13.89 4zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4m7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4m-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2m7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2" />
+          </svg></a>
+      </div>
+    </div>
+    <!-- 3D Spinner Category Filter -->
+    <div class="tob-spinner-wrap">
+      <div class="tob-spinner-tilt">
+        <div class="tob-spinner-ring">
+          <th:block th:each="cat, iter : ${#strings.listSplit(siteContent.home.spinnerCategories, ',')}">
+            <a th:href="@{/shop(category=${#strings.trim(cat)})}" class="tob-spinner-item" th:style="'--i:' + ${iter.index}">
+              <i class="bi" th:classappend="${iter.index == 0 ? 'bi-moon-stars' : (iter.index == 1 ? 'bi-stars' : (iter.index == 2 ? 'bi-lightning-charge' : (iter.index == 3 ? 'bi-shield-check' : (iter.index == 4 ? 'bi-lightning' : 'bi-sunrise'))))}"></i>
+              <span th:text="${#strings.trim(cat)}">Category</span>
+            </a>
+          </th:block>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- FULLSCREEN MENU OVERLAY (line-style, minimal) -->
+  <div class="tob-overlay" id="tobOverlay">
+    <button class="tob-overlay-close" onclick="tobCloseMenu()" aria-label="Close"><i class="bi bi-x-lg"></i></button>
+    <div class="tob-overlay-acc" sec:authorize="isAuthenticated()">
+      <div class="tob-overlay-acc-circle"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+          fill="currentColor" viewBox="0 0 16 16">
+          <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
+          <path fill-rule="evenodd"
+            d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1" />
+        </svg></div>
+      <div class="tob-overlay-acc-text"><span class="tob-overlay-acc-name"
+          th:text="${user != null and !#strings.isEmpty(user.fullName) ? user.fullName : 'My Account'}">User Name</span><span class="tob-overlay-acc-sub">Manage
+          Dashboard</span></div>
+    </div>
+    <ul class="tob-overlay-links">
+      <li><a th:href="@{/}">Home</a></li>
+      <li><a th:href="@{/shop}">Shop Blends</a></li>
+      <li><a th:href="@{/saved-blends}">Saved Blends</a></li>
+      <li><a th:href="@{/profile}">Account Centre</a></li>
+      <li><a th:href="@{/contact}">Contact</a></li>
+    </ul>
+    <div class="tob-overlay-footer">
+      <p>Theory <em>of</em> Bloom</p><small>Crafted by Nature. Perfected by Science.</small>
+    </div>
+  </div>
+
+
+
+
+  <div style="background: linear-gradient(160deg, #FAF8F3 0%, #F0EAD9 100%); width: 100%;">
+    <div class="container">
+    <!-- Breadcrumb Navigation -->
+    <nav style="margin-bottom:1.5rem;display:flex;align-items:center;gap:6px;font-family:'Inter',sans-serif;font-size:0.72rem;font-weight:500;letter-spacing:0.5px;" aria-label="Breadcrumb">
+      <a th:href="@{/}" style="color:#A37C4E;text-decoration:none;transition:color 0.2s;" onmouseover="this.style.color='#7A5C38'" onmouseout="this.style.color='#A37C4E'">Home</a>
+      <span style="color:rgba(90,86,82,0.4);font-size:0.65rem;">&#8250;</span>
+      <a th:href="@{/shop}" style="color:#A37C4E;text-decoration:none;transition:color 0.2s;" onmouseover="this.style.color='#7A5C38'" onmouseout="this.style.color='#A37C4E'">Shop Blends</a>
+      <span style="color:rgba(90,86,82,0.4);font-size:0.65rem;">&#8250;</span>
+      <span th:text="${product.name}" style="color:#5A5652;font-weight:600;">Product Name</span>
+    </nav>
+
+    <!-- Top Section (2 Column on Desktop) -->
+    <div class="product-top">
+      <!-- Image Column with thumbnail gallery -->
+      <div class="product-img-col" style="flex-direction:column;gap:1rem;">
+        
+        <!-- Save, Share, Copy Icons -->
+        <div style="display:flex;align-items:center;gap:10px;justify-content:flex-end;">
+          <button type="button" id="pdLikeBtn" th:data-pid="${product.id}" onclick="togglePdSave()" title="Save to Wishlist"
+            style="display:flex;align-items:center;gap:6px;padding:8px 16px;background:transparent;border:1px solid rgba(180,160,120,0.25);border-radius:20px;cursor:pointer;font-family:'Inter',sans-serif;font-size:0.72rem;color:#5A5652;transition:all 0.3s;box-shadow:0 2px 10px rgba(0,0,0,0.07);">
+            <i class="bi bi-heart" id="pdLikeIcon" style="font-size:0.9rem;"></i> <span style="font-weight: 500;">Save</span>
+          </button>
+          <button onclick="sharePd()" title="Share"
+            style="display:flex;align-items:center;gap:6px;padding:8px 16px;background:transparent;border:1px solid rgba(180,160,120,0.25);border-radius:20px;cursor:pointer;font-family:'Inter',sans-serif;font-size:0.72rem;color:#5A5652;transition:all 0.3s;box-shadow:0 2px 10px rgba(0,0,0,0.07);">
+            <i class="bi bi-share" style="font-size:0.9rem;"></i> <span style="font-weight: 500;">Share</span>
+          </button>
+          <button onclick="copyPdLink()" title="Copy link"
+            style="display:flex;align-items:center;gap:6px;padding:8px 16px;background:transparent;border:1px solid rgba(180,160,120,0.25);border-radius:20px;cursor:pointer;font-family:'Inter',sans-serif;font-size:0.72rem;color:#5A5652;transition:all 0.3s;box-shadow:0 2px 10px rgba(0,0,0,0.07);">
+            <i class="bi bi-link-45deg" style="font-size:0.9rem;"></i> <span style="font-weight: 500;">Copy</span>
+          </button>
+        </div>
+
+        <!-- Main image (larger, aligned) -->
+        <div id="mainImgWrap"
+          style="position:relative;border-radius:12px;overflow:hidden;background:transparent;box-shadow:0 16px 48px rgba(42,38,33,0.13);">
+          <img id="mainProductImg" th:src="${product.imageUrl != null ? product.imageUrl : '/images/placeholder.png'}"
+            th:alt="${product.name + ' Botanical Blend'}" class="product-hero-image"
+            onerror="this.src='https://placehold.co/600x600/FDFBF7/2A2621?text=Bloom'"
+            style="width:100%;max-width:560px;min-height:420px;object-fit:cover;display:block;transition:opacity 0.3s;mix-blend-mode: multiply;">
+        </div>
+        <!-- Thumbnail row -->
+        <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:0.5rem;">
+          <button th:data-img="${product.imageUrl != null ? product.imageUrl : '/images/placeholder.png'}"
+            onclick="switchImg(this, this.getAttribute('data-img'), 'https://placehold.co/500x500/FDFBF7/2A2621?text=Bloom')"
+            class="thumb-btn active-thumb"
+            style="width:72px;height:72px;border-radius:6px;overflow:hidden;border:2px solid #2D2A27;padding:0;cursor:pointer;background:transparent;transition:border 0.2s;">
+            <img th:src="${product.imageUrl != null ? product.imageUrl : '/images/placeholder.png'}"
+              onerror="this.src='https://placehold.co/80x80/F9F8F6/4A6B5D?text=1'" alt="View 1"
+              style="width:100%;height:100%;object-fit:cover;mix-blend-mode: multiply;">
+          </button>
+          <button
+            onclick="switchImg(this, 'https://placehold.co/500x500/F5EDE0/C9954A?text=Ingredients','https://placehold.co/500x500/F5EDE0/C9954A?text=Ingredients')"
+            class="thumb-btn"
+            style="width:72px;height:72px;border-radius:6px;overflow:hidden;border:2px solid transparent;padding:0;cursor:pointer;background:transparent;transition:border 0.2s;">
+            <img src="https://placehold.co/80x80/F5EDE0/C9954A?text=Ingredients" alt="Ingredients"
+              style="width:100%;height:100%;object-fit:cover;mix-blend-mode: multiply;">
+          </button>
+          <button
+            onclick="switchImg(this, 'https://placehold.co/500x500/EDE9DF/4A6B5D?text=Packaging','https://placehold.co/500x500/EDE9DF/4A6B5D?text=Packaging')"
+            class="thumb-btn"
+            style="width:72px;height:72px;border-radius:6px;overflow:hidden;border:2px solid transparent;padding:0;cursor:pointer;background:transparent;transition:border 0.2s;">
+            <img src="https://placehold.co/80x80/EDE9DF/4A6B5D?text=Packaging" alt="Packaging"
+              style="width:100%;height:100%;object-fit:cover;mix-blend-mode: multiply;">
+          </button>
+          <button
+            onclick="switchImg(this, 'https://placehold.co/500x500/F0EBE3/5C4D3C?text=How+to+Use','https://placehold.co/500x500/F0EBE3/5C4D3C?text=How+to+Use')"
+            class="thumb-btn"
+            style="width:72px;height:72px;border-radius:6px;overflow:hidden;border:2px solid transparent;padding:0;cursor:pointer;background:transparent;transition:border 0.2s;">
+            <img src="https://placehold.co/80x80/F0EBE3/5C4D3C?text=How+to+Use" alt="How to Use"
+              style="width:100%;height:100%;object-fit:cover;mix-blend-mode: multiply;">
+          </button>
+        </div>
+      </div>
+
+        <!-- Share/Like/Copy icons removed from here — now above image -->
+        <div class="product-info-col">
+        <div style="display:flex; justify-content:space-between; align-items:center; width:100%; margin-bottom: 0.8rem;">
+          <div style="font-family:'Inter',sans-serif;font-size:0.6rem;letter-spacing:4px;text-transform:uppercase;color:#A37C4E;">
+            <span th:text="${product.category != null ? product.category : 'Botanical Blend'}">Botanical Blend</span>
+          </div>
+        </div>
+        <h1 class="page-title" th:text="${product.name}" style="font-family: 'Cormorant Garamond', serif; font-weight: 500; color: #2A2118; letter-spacing: 1px; text-transform: uppercase; font-size: clamp(2rem, 5vw, 3.5rem);">Product Name</h1>
+        <p class="subtitle" style="font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; color: #C9954A; font-style: italic; margin-top: 0.5rem; font-weight: 500;"><span th:text="${product.shortDescription}">Short description</span></p>
+
+        <!-- Rating strip -->
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:1.2rem;">
+          <span style="color:#C9954A;font-size:0.95rem;letter-spacing:2px;">★★★★★</span>
+          <span style="font-family:'Inter',sans-serif;font-size:0.75rem;color:#5A5652;">4.9 · <span style="color:#A37C4E;font-weight:600;">(128)</span></span>
+        </div>
+
+        <p class="price"><span th:text="'&#8377;' + ${product.price}">&#8377;0</span></p>
+        <div
+          style="font-family:'Inter',sans-serif;font-size:0.72rem;color:#B03030;margin-top:-1.5rem;margin-bottom:1.5rem;display:flex;align-items:center;gap:6px;">
+          <i class="bi bi-gift"></i> Earn <strong><span th:text="${product.price / 10} + ' bloom points'">0 bloom
+              points</span></strong> on this purchase
+        </div>
+
+        <!-- Quantity + Add to Cart -->
+        <form id="pdAddForm" class="pd-cta-form" onsubmit="addToCartAjax(event)"
+          style="display:flex;align-items:center;gap:12px;margin-bottom:1.5rem;">
+          <input type="hidden" name="productId" id="pdProductId" th:value="${product.id}">
+          <div
+            style="display:flex;align-items:center;border:1px solid rgba(42,38,33,0.2);border-radius:3px;overflow:hidden;">
+            <button type="button" onclick="changeQty(-1)"
+              style="width:36px;height:42px;background:transparent;border:none;font-size:1.1rem;cursor:pointer;color:#2D2A27;">−</button>
+            <input type="number" name="quantity" id="pdQty" value="1" min="1" max="10"
+              style="width:44px;height:42px;text-align:center;border:none;border-left:1px solid rgba(42,38,33,0.1);border-right:1px solid rgba(42,38,33,0.1);font-family:'Inter',sans-serif;font-size:0.9rem;background:transparent;">
+            <button type="button" onclick="changeQty(1)"
+              style="width:36px;height:42px;background:transparent;border:none;font-size:1.1rem;cursor:pointer;color:#2D2A27;">+</button>
+          </div>
+          <button type="submit" id="pdAddBtn" class="add-to-ritual-btn"
+            style="margin-bottom:0;flex:1;text-align:center;border:none;">
+            <i class="bi bi-bag-plus" style="margin-right:6px;"></i>ADD TO RITUAL
+          </button>
+        </form>
+
+        <!-- Cart success toast -->
+        <div id="cartToast11"
+          style="display:none;font-family:'Inter',sans-serif;font-size:0.78rem;color:#B03030;background:rgba(176,48,48,0.06);border:1px solid rgba(176,48,48,0.2);border-radius:4px;padding:8px 14px;margin-bottom:1rem;display:none;align-items:center;gap:8px;">
+          <i class="bi bi-check-circle-fill"></i> Added to your ritual bag!
+          <a th:href="@{/cart}" style="color:#B03030;font-weight:600;text-decoration:underline;margin-left:auto;">View
+            Cart →</a>
+        </div>
+
+
+
+        <div class="features-row">
+          <div class="feature-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
+              <path d="M12 22C12 22 20 18 20 12C20 6 12 2 12 2C12 2 4 6 4 12C4 18 12 22 12 22Z" />
+              <path d="M12 22V12" />
+            </svg>
+            <span>100% Botanical</span>
+          </div>
+          <div class="sep"></div>
+          <div class="feature-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
+              <path d="M9 3H15M10 3V8L4 20H20L14 8V3" />
+            </svg>
+            <span>No Synthetics</span>
+          </div>
+          <div class="sep"></div>
+          <div class="feature-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
+              <path d="M9 12l2 2 4-4M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <span>Lab Tested</span>
+          </div>
+        </div>
+
+
+        </div>
+
+      </div>
+    </div>
+
+    <script>
+      function switchImg(btn, src, fallback) {
+        const img = document.getElementById('mainProductImg');
+        img.style.opacity = '0.6';
+        img.src = src;
+        img.onerror = function () { this.src = fallback; };
+        setTimeout(() => { img.style.opacity = '1'; }, 200);
+        document.querySelectorAll('.thumb-btn').forEach(b => { b.style.border = '2px solid transparent'; });
+        btn.style.border = '2px solid #2D2A27';
+      }
+      function changeQty(delta) {
+        const inp = document.getElementById('pdQty');
+        let v = parseInt(inp.value) + delta;
+        inp.value = Math.max(1, Math.min(10, v));
+      }
+      function switchUTab(panel, btn) {
+        const isAccordion = btn.classList.contains('pd-acc-header');
+        const isAlreadyActive = btn.classList.contains('active');
+
+        // On mobile accordion, allow toggling (collapsing the active section)
+        if (isAccordion && isAlreadyActive) {
+          btn.classList.remove('active');
+          document.getElementById('upanel-' + panel).classList.remove('active');
+          document.querySelectorAll('.pd-utab').forEach(b => b.classList.remove('active'));
+          return;
+        }
+
+        // Standard switch logic
+        document.querySelectorAll('.pd-upanel').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('.pd-utab, .pd-acc-header').forEach(b => b.classList.remove('active'));
+        const el = document.getElementById('upanel-' + panel);
+        if (el) el.classList.add('active');
+        
+        // Activate clicked button and counterpart
+        if (btn) btn.classList.add('active');
+        if (btn.classList.contains('pd-utab')) {
+          const counterpart = document.querySelector(`.pd-acc-header[data-panel="${panel}"]`);
+          if (counterpart) counterpart.classList.add('active');
+        } else {
+          const idx = Array.from(document.querySelectorAll('.pd-acc-header')).indexOf(btn);
+          const counterpart = document.querySelectorAll('.pd-utab')[idx];
+          if (counterpart) counterpart.classList.add('active');
+          
+          // Scroll header to top (offset for sticky header)
+          setTimeout(() => {
+            const offset = 80;
+            const elementPosition = btn.getBoundingClientRect().top + window.pageYOffset;
+            window.scrollTo({ top: elementPosition - offset, behavior: 'smooth' });
+          }, 50);
+        }
+      }
+    </script>
+
+
+    <!-- Bottom Section: Details (Centered) -->
+    <div class="pd-section-alt" style="text-align:center;">
+      <div class="pd-section-heading"><i class="bi bi-journal-text" style="color:#A37C4E;font-size:0.7em;vertical-align:middle;margin-right:10px;"></i>Details</div>
+      <div class="divider" style="max-width:80px;margin:0 auto 2.5rem;"></div>
+
+      <h3 class="chapter-title">CHAPTER I – The Daily Ritual</h3>
+      <p class="chapter-desc">
+        Sustainable. Botanical. Transformative. A sacred elixir<br>crafted to restore balance and brighten your spirit.
+      </p>
+
+      <!-- Our Ingredients button removed -->
+
+      <!-- Ingredients Popup Modal -->
+      <div id="ingPopup" style="display:none;position:fixed;inset:0;background:rgba(42,33,24,0.55);backdrop-filter:blur(4px);z-index:9990;align-items:center;justify-content:center;padding:1rem;" onclick="if(event.target===this)this.style.display='none'">
+        <div style="background:linear-gradient(145deg,#FEFDF9,#F5F1E8);border:1px solid rgba(180,160,120,0.25);border-radius:14px;padding:2rem;max-width:560px;width:100%;max-height:85vh;overflow-y:auto;position:relative;">
+          <button onclick="document.getElementById('ingPopup').style.display='none'" style="position:absolute;top:1rem;right:1rem;background:none;border:none;font-size:1.4rem;cursor:pointer;color:#5A5652;">✕</button>
+          <div style="font-family:'Inter',sans-serif;font-size:0.6rem;letter-spacing:4px;text-transform:uppercase;color:#A37C4E;margin-bottom:0.4rem;">Theory of Bloom</div>
+          <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:400;color:#2A2118;margin-bottom:1.2rem;">Our <em style="font-style:italic;color:#4A6B5D;">Ingredients</em></h3>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+            <div style="background:#fff;border-radius:10px;padding:1rem;border-top:3px solid #C9954A;">
+              <div style="margin-bottom:8px;"><i class="bi bi-flower1" style="font-size:1.6rem;color:#C9954A;"></i></div>
+              <div style="font-weight:600;font-family:'Cormorant Garamond',serif;font-size:1.05rem;color:#2A2118;">Ashwagandha</div>
+              <div style="font-size:0.78rem;color:#5A5652;margin-top:4px;">Certified organic adaptogen — reduces cortisol, enhances stamina</div>
+            </div>
+            <div style="background:#fff;border-radius:10px;padding:1rem;border-top:3px solid #6B8C6F;">
+              <div style="margin-bottom:8px;"><i class="bi bi-flower3" style="font-size:1.6rem;color:#6B8C6F;"></i></div>
+              <div style="font-weight:600;font-family:'Cormorant Garamond',serif;font-size:1.05rem;color:#2A2118;">Chamomile</div>
+              <div style="font-size:0.78rem;color:#5A5652;margin-top:4px;">Wild-harvested florals — calming, anti-inflammatory, sleep-supportive</div>
+            </div>
+            <div style="background:#fff;border-radius:10px;padding:1rem;border-top:3px solid #B47E95;">
+              <div style="margin-bottom:8px;"><i class="bi bi-heart-fill" style="font-size:1.6rem;color:#B47E95;"></i></div>
+              <div style="font-weight:600;font-family:'Cormorant Garamond',serif;font-size:1.05rem;color:#2A2118;">Rose Petals</div>
+              <div style="font-size:0.78rem;color:#5A5652;margin-top:4px;">Antioxidant-rich, mood-lifting, supports radiant skin</div>
+            </div>
+            <div style="background:#fff;border-radius:10px;padding:1rem;border-top:3px solid #4A6B5D;">
+              <div style="margin-bottom:8px;"><i class="bi bi-tree" style="font-size:1.6rem;color:#4A6B5D;"></i></div>
+              <div style="font-weight:600;font-family:'Cormorant Garamond',serif;font-size:1.05rem;color:#2A2118;">Tulsi</div>
+              <div style="font-size:0.78rem;color:#5A5652;margin-top:4px;">Sacred adaptogen — immunity, stress relief, respiratory health</div>
+            </div>
+            <div style="background:#fff;border-radius:10px;padding:1rem;border-top:3px solid #C9954A;">
+              <div style="margin-bottom:8px;"><i class="bi bi-droplet-half" style="font-size:1.6rem;color:#C9954A;"></i></div>
+              <div style="font-weight:600;font-family:'Cormorant Garamond',serif;font-size:1.05rem;color:#2A2118;">Lemon Peel</div>
+              <div style="font-size:0.78rem;color:#5A5652;margin-top:4px;">Brightening citrus zest — Vitamin C, digestion aid, uplifting</div>
+            </div>
+            <div style="background:#fff;border-radius:10px;padding:1rem;border-top:3px solid #6B8C6F;">
+              <div style="margin-bottom:8px;"><i class="bi bi-wind" style="font-size:1.6rem;color:#6B8C6F;"></i></div>
+              <div style="font-weight:600;font-family:'Cormorant Garamond',serif;font-size:1.05rem;color:#2A2118;">Ginger Root</div>
+              <div style="font-size:0.78rem;color:#5A5652;margin-top:4px;">Anti-inflammatory warming spice — gut health, circulation boost</div>
+            </div>
+          </div>
+          <p style="font-size:0.72rem;color:#8A8175;margin-top:1.2rem;text-align:center;"><i class="bi bi-patch-check-fill" style="color:#A37C4E;margin-right:4px;"></i> All ingredients are 100% natural, ethically sourced &amp; lab-tested for purity.</p>
+        </div>
+      </div>
+
+      <div class="divider" style="max-width:80px;margin:0 auto 2.5rem;"></div>
+
+      <!-- Ingredients Subheading -->
+      <h3 class="pd-section-subheading" style="text-align:center;"><i class="bi bi-droplet-half" style="color:#C9954A;font-size:0.8em;margin-right:8px;"></i>Ingredients</h3>
+      <p class="chapter-desc" style="max-width: 500px;">
+        A carefully crafted blend of adaptogens, calming florals, and invigorating citrus peels.
+      </p>
+
+      <div class="ingredients-grid">
+        <div class="ingredient-col">
+          <img src="https://placehold.co/200x160/F9F8F6/C9954A?text=Citrus+Peel" alt="Citrus Peel"
+            style="border-radius: 8px;">
+          <div class="ing-title">Uplifting</div>
+          <div class="ing-sub">Citrus Peel</div>
+          <div class="ing-desc">Bright lemon peel and invigorating notes</div>
+        </div>
+        <div class="ingredient-col">
+          <img src="https://placehold.co/200x160/F9F8F6/B47E95?text=Flower+Extracts" alt="Flower Extracts"
+            style="border-radius: 8px;">
+          <div class="ing-title">Calming</div>
+          <div class="ing-sub">Flower Extracts</div>
+          <div class="ing-desc">Delicate roses, calming chamomile</div>
+        </div>
+        <div class="ingredient-col">
+          <img src="https://placehold.co/200x160/F9F8F6/4A6B5D?text=Herbal+Adaptogens" alt="Herbal Adaptogens"
+            style="border-radius: 8px;">
+          <div class="ing-title">Balancing</div>
+          <div class="ing-sub">Herbal Adaptogens</div>
+          <div class="ing-desc">Powerful tulsi, soothing adaptogens</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div> <!-- end product-hero-wrapper -->
+
+
+  <!-- ======= UNIFIED BENEFITS / HOW TO USE / FAQ SECTION ======= -->
+  <div class="pd-unified-section">
+    <div class="pd-unified-inner">
+
+      <!-- Section Header -->
+      <div class="pd-unified-header">
+        <div class="pd-unified-eyebrow">The Ritual Guide</div>
+        <h2 class="pd-unified-title">Everything You <em>Need to Know</em></h2>
+        <p class="pd-unified-sub">From daily ritual instructions to the science of botanicals — your complete guide.</p>
+      </div>
+
+      <!-- Tab Nav -->
+      <div class="pd-unified-tabs" id="unifiedTabs">
+        <button class="pd-utab active" onclick="switchUTab('benefits',this)"><i class="bi bi-award"></i> Benefits</button>
+        <button class="pd-utab" onclick="switchUTab('howtouse',this)"><i class="bi bi-cup-hot"></i> How to Use</button>
+        <button class="pd-utab" onclick="switchUTab('faq',this)"><i class="bi bi-question-circle"></i> FAQ</button>
+      </div>
+
+      <!-- BENEFITS Panel -->
+      <button class="pd-acc-header active" data-panel="benefits" onclick="switchUTab('benefits',this)">BENEFITS <i class="bi bi-chevron-right"></i></button>
+      <div id="upanel-benefits" class="pd-upanel active">
+        <div class="pd-benefits-grid">
+          <div class="pd-benefit-card">
+            <div class="pd-benefit-icon" style="background:rgba(74,107,93,0.1);"><i class="bi bi-moon-stars" style="color:#4A6B5D;"></i></div>
+            <div class="pd-benefit-title">Improved Sleep</div>
+            <div class="pd-benefit-desc">Calming adaptogens promote deep, restful sleep cycles naturally and sustainably.</div>
+          </div>
+          <div class="pd-benefit-card">
+            <div class="pd-benefit-icon" style="background:rgba(201,149,74,0.1);"><i class="bi bi-heart-pulse" style="color:#C9954A;"></i></div>
+            <div class="pd-benefit-title">Stress Relief</div>
+            <div class="pd-benefit-desc">Reduces cortisol and promotes a deep sense of calm and well-being throughout the day.</div>
+          </div>
+          <div class="pd-benefit-card">
+            <div class="pd-benefit-icon" style="background:rgba(180,126,149,0.1);"><i class="bi bi-stars" style="color:#B47E95;"></i></div>
+            <div class="pd-benefit-title">Skin Radiance</div>
+            <div class="pd-benefit-desc">Antioxidant-rich botanicals deliver a natural, healthy glow from deep within.</div>
+          </div>
+          <div class="pd-benefit-card">
+            <div class="pd-benefit-icon" style="background:rgba(74,107,93,0.1);"><i class="bi bi-shield-check" style="color:#4A6B5D;"></i></div>
+            <div class="pd-benefit-title">Immunity Boost</div>
+            <div class="pd-benefit-desc">Supports your body's natural defences with time-tested ancient botanicals.</div>
+          </div>
+          <div class="pd-benefit-card">
+            <div class="pd-benefit-icon" style="background:rgba(201,149,74,0.1);"><i class="bi bi-lightning-charge" style="color:#C9954A;"></i></div>
+            <div class="pd-benefit-title">Mental Clarity</div>
+            <div class="pd-benefit-desc">Enhances focus and cognitive function for sustained, productive days.</div>
+          </div>
+          <div class="pd-benefit-card">
+            <div class="pd-benefit-icon" style="background:rgba(74,107,93,0.1);"><i class="bi bi-flower1" style="color:#4A6B5D;"></i></div>
+            <div class="pd-benefit-title">Gut Health</div>
+            <div class="pd-benefit-desc">Supports healthy digestion and microbiome balance with warming herbs.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- HOW TO USE Panel -->
+      <button class="pd-acc-header" data-panel="howtouse" onclick="switchUTab('howtouse',this)">HOW TO USE <i class="bi bi-chevron-right"></i></button>
+      <div id="upanel-howtouse" class="pd-upanel">
+        <div class="pd-htu-wrap">
+          <div class="pd-htu-brew">
+            <div class="pd-htu-brew-title"><i class="bi bi-cup-hot"></i> How to Brew</div>
+            <ol class="pd-htu-steps">
+              <li>Boil fresh water and let it cool to <strong>85–90°C</strong> (off the boil for ~60 seconds).</li>
+              <li>Measure <strong>1 heaped teaspoon (2–3g)</strong> of the blend into a strainer or infuser.</li>
+              <li>Pour <strong>200ml</strong> of hot water over the blend.</li>
+              <li>Steep for <strong>5–7 minutes</strong> — longer for a more therapeutic cup.</li>
+              <li>Remove the infuser, sweeten with honey if desired, and sip slowly.</li>
+            </ol>
+          </div>
+          <div class="pd-htu-tips">
+            <div class="pd-tip-card"><div class="pd-tip-title"><i class="bi bi-lightbulb" style="color:#C9954A;"></i> Best Time</div><div class="pd-tip-text">Morning on an empty stomach or 30 minutes before bed.</div></div>
+            <div class="pd-tip-card"><div class="pd-tip-title"><i class="bi bi-droplet" style="color:#4A6B5D;"></i> Temperature</div><div class="pd-tip-text">Never use boiling water — 85–90°C protects delicate botanicals.</div></div>
+            <div class="pd-tip-card"><div class="pd-tip-title"><i class="bi bi-calendar-check" style="color:#4A6B5D;"></i> Consistency</div><div class="pd-tip-text">Drink daily for 3–4 weeks to experience the full therapeutic benefits.</div></div>
+            <div class="pd-tip-card"><div class="pd-tip-title"><i class="bi bi-jar" style="color:#A37C4E;"></i> Storage</div><div class="pd-tip-text">Store in a cool, dry place away from sunlight. Reseal after each use.</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FAQ Panel -->
+      <button class="pd-acc-header" data-panel="faq" onclick="switchUTab('faq',this)">FAQ <i class="bi bi-chevron-right"></i></button>
+      <div id="upanel-faq" class="pd-upanel">
+        <div class="pd-faq-list">
+          <details class="pd-faq-item">
+            <summary class="pd-faq-q"><span>How do I brew this blend?</span><i class="bi bi-plus-lg pd-faq-icon"></i></summary>
+            <p class="pd-faq-a">Add 1 tsp (2–3g) to 200ml of hot water (85–90°C). Steep for 5–7 minutes, strain, and sip slowly.</p>
+          </details>
+          <details class="pd-faq-item">
+            <summary class="pd-faq-q"><span>How many servings per pack?</span><i class="bi bi-plus-lg pd-faq-icon"></i></summary>
+            <p class="pd-faq-a">Each 50g pack contains approximately 25 servings. A 100g pack contains ~50 servings — ideal for a 2-month ritual.</p>
+          </details>
+          <details class="pd-faq-item">
+            <summary class="pd-faq-q"><span>Are there any side effects?</span><i class="bi bi-plus-lg pd-faq-icon"></i></summary>
+            <p class="pd-faq-a">Our blends are made from 100% natural ingredients. If pregnant, nursing, or on medication, consult your doctor before use.</p>
+          </details>
+          <details class="pd-faq-item">
+            <summary class="pd-faq-q"><span>Can I drink this every day?</span><i class="bi bi-plus-lg pd-faq-icon"></i></summary>
+            <p class="pd-faq-a">Yes! Our blends are designed for daily use. Most customers notice visible benefits within 2–4 weeks of consistency.</p>
+          </details>
+          <details class="pd-faq-item">
+            <summary class="pd-faq-q"><span>Is this suitable for vegans?</span><i class="bi bi-plus-lg pd-faq-icon"></i></summary>
+            <p class="pd-faq-a">Absolutely. All Theory of Bloom blends are 100% plant-based, vegan, and cruelty-free.</p>
+          </details>
+          <details class="pd-faq-item">
+            <summary class="pd-faq-q"><span>What is your return policy?</span><i class="bi bi-plus-lg pd-faq-icon"></i></summary>
+            <p class="pd-faq-a">We offer a 15-day return policy on unopened products. Reach out to support@theoryofbloom.com for case-by-case assistance.</p>
+          </details>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ======= YOU MAY ALSO LIKE ======= -->
+  <div class="pd-ymal-section">
+    <div class="pd-ymal-inner">
+
+      <!-- Header Row -->
+      <div class="pd-ymal-header">
+        <div>
+          <div class="pd-ymal-eyebrow">Curated For You</div>
+          <h2 class="pd-ymal-title">You May Also <em>Like</em></h2>
+        </div>
+        <a href="/shop" class="pd-ymal-viewall">View All Blends <i class="bi bi-arrow-right"></i></a>
+      </div>
+
+      <!-- Product Grid -->
+      <div class="pd-ymal-grid">
+
+        <!-- Card 1: Lunar Calm -->
+        <a href="/shop/product/1" class="pd-ymal-card">
+          <div class="pd-ymal-img-wrap">
+            <img src="/images/lunar-calm.jpg" onerror="this.src='https://placehold.co/400x320/EDE9DF/4A6B5D?text=Lunar+Calm'" alt="Lunar Calm">
+            <span class="pd-ymal-badge" style="background:#B03030;">Bestseller</span>
+          </div>
+          <div class="pd-ymal-info">
+            <div class="pd-ymal-cat">Sleep &amp; Calm</div>
+            <div class="pd-ymal-name">Lunar Calm</div>
+            <div class="pd-ymal-herbs">Chamomile · Lavender · Ashwagandha</div>
+            <div class="pd-ymal-stars"><span>★★★★★</span><span class="pd-ymal-rcount">(84)</span></div>
+            <div class="pd-ymal-pricing">
+              <span class="pd-ymal-price">&#8377;999</span>
+              <span class="pd-ymal-old">&#8377;1,299</span>
+              <span class="pd-ymal-disc">23% off</span>
+            </div>
+          </div>
+        </a>
+
+        <!-- Card 2: Morning Ritual -->
+        <a href="/shop/product/2" class="pd-ymal-card">
+          <div class="pd-ymal-img-wrap">
+            <img src="/images/morning-after.jpg" onerror="this.src='https://placehold.co/400x320/F5EDE0/C9954A?text=Morning+Ritual'" alt="Morning Ritual">
+            <span class="pd-ymal-badge" style="background:#C9954A;">New</span>
+          </div>
+          <div class="pd-ymal-info">
+            <div class="pd-ymal-cat">Morning Blend</div>
+            <div class="pd-ymal-name">Morning Ritual</div>
+            <div class="pd-ymal-herbs">Tulsi · Ginger · Lemongrass</div>
+            <div class="pd-ymal-stars"><span>★★★★☆</span><span class="pd-ymal-rcount">(61)</span></div>
+            <div class="pd-ymal-pricing">
+              <span class="pd-ymal-price">&#8377;1,149</span>
+              <span class="pd-ymal-old">&#8377;1,499</span>
+              <span class="pd-ymal-disc">23% off</span>
+            </div>
+          </div>
+        </a>
+
+        <!-- Card 3: Mind Garden -->
+        <a href="/shop/product/3" class="pd-ymal-card">
+          <div class="pd-ymal-img-wrap">
+            <img src="/images/mind-garden.jpg" onerror="this.src='https://placehold.co/400x320/EDE8DD/3D5C41?text=Mind+Garden'" alt="Mind Garden">
+          </div>
+          <div class="pd-ymal-info">
+            <div class="pd-ymal-cat">Focus &amp; Clarity</div>
+            <div class="pd-ymal-name">Mind Garden</div>
+            <div class="pd-ymal-herbs">Brahmi · Rosemary · Peppermint</div>
+            <div class="pd-ymal-stars"><span>★★★★★</span><span class="pd-ymal-rcount">(112)</span></div>
+            <div class="pd-ymal-pricing">
+              <span class="pd-ymal-price">&#8377;1,099</span>
+              <span class="pd-ymal-old">&#8377;1,399</span>
+              <span class="pd-ymal-disc">21% off</span>
+            </div>
+          </div>
+        </a>
+
+        <!-- Card 4: Skin Nectar -->
+        <a href="/shop/product/4" class="pd-ymal-card">
+          <div class="pd-ymal-img-wrap">
+            <img src="/images/skin-nectar.jpg" onerror="this.src='https://placehold.co/400x320/F0EBE3/B47E95?text=Skin+Nectar'" alt="Skin Nectar">
+            <span class="pd-ymal-badge" style="background:#B47E95;">Top Rated</span>
+          </div>
+          <div class="pd-ymal-info">
+            <div class="pd-ymal-cat">Skin &amp; Glow</div>
+            <div class="pd-ymal-name">Skin Nectar</div>
+            <div class="pd-ymal-herbs">Rose · Saffron · Collagen Herb</div>
+            <div class="pd-ymal-stars"><span>★★★★★</span><span class="pd-ymal-rcount">(98)</span></div>
+            <div class="pd-ymal-pricing">
+              <span class="pd-ymal-price">&#8377;1,249</span>
+              <span class="pd-ymal-old">&#8377;1,599</span>
+              <span class="pd-ymal-disc">22% off</span>
+            </div>
+          </div>
+        </a>
+
+        <!-- Card 5: Flora Shield -->
+        <a href="/shop/product/5" class="pd-ymal-card">
+          <div class="pd-ymal-img-wrap">
+            <img src="/images/flora-shield.jpg" onerror="this.src='https://placehold.co/400x320/EDE9E5/4A6B5D?text=Flora+Shield'" alt="Flora Shield">
+          </div>
+          <div class="pd-ymal-info">
+            <div class="pd-ymal-cat">Immunity</div>
+            <div class="pd-ymal-name">Flora Shield</div>
+            <div class="pd-ymal-herbs">Amla · Giloy · Turmeric</div>
+            <div class="pd-ymal-stars"><span>★★★★☆</span><span class="pd-ymal-rcount">(73)</span></div>
+            <div class="pd-ymal-pricing">
+              <span class="pd-ymal-price">&#8377;899</span>
+              <span class="pd-ymal-old">&#8377;1,199</span>
+              <span class="pd-ymal-disc">25% off</span>
+            </div>
+          </div>
+        </a>
+
+      </div><!-- /pd-ymal-grid -->
+    </div>
+  </div>
+
+  <!-- ======= REVIEWS SECTION (unchanged) ======= -->
+
+  <!-- ===== REVIEWS SECTION ===== -->
+
+  <!-- ======= REVIEWS SECTION (unchanged) ======= -->
+  <div class="rev-section">
+    <div class="rev-section-header">
+      <h2 class="rev-title">Customer <em>Reviews</em></h2>
+      <div class="rev-avg-block">
+        <div class="rev-avg-num">4.8</div>
+        <div class="rev-stars-col">
+          <div class="rev-stars"><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i></div>
+          <div class="rev-total">Based on 47 reviews</div>
+        </div>
+        <div class="rev-bars">
+          <div class="rev-bar-row"><span class="rev-bar-lbl">5 <i class="bi bi-star-fill" style="font-size:0.8em;"></i></span>
+            <div class="rev-bar-track">
+              <div class="rev-bar-fill" style="width:78%"></div>
+            </div><span style="font-size:0.65rem;color:var(--ink-soft);">37</span>
+          </div>
+          <div class="rev-bar-row"><span class="rev-bar-lbl">4 <i class="bi bi-star-fill" style="font-size:0.8em;"></i></span>
+            <div class="rev-bar-track">
+              <div class="rev-bar-fill" style="width:15%"></div>
+            </div><span style="font-size:0.65rem;color:var(--ink-soft);">7</span>
+          </div>
+          <div class="rev-bar-row"><span class="rev-bar-lbl">3 <i class="bi bi-star-fill" style="font-size:0.8em;"></i></span>
+            <div class="rev-bar-track">
+              <div class="rev-bar-fill" style="width:4%"></div>
+            </div><span style="font-size:0.65rem;color:var(--ink-soft);">2</span>
+          </div>
+          <div class="rev-bar-row"><span class="rev-bar-lbl">2 <i class="bi bi-star-fill" style="font-size:0.8em;"></i></span>
+            <div class="rev-bar-track">
+              <div class="rev-bar-fill" style="width:2%"></div>
+            </div><span style="font-size:0.65rem;color:var(--ink-soft);">1</span>
+          </div>
+          <div class="rev-bar-row"><span class="rev-bar-lbl">1 <i class="bi bi-star-fill" style="font-size:0.8em;"></i></span>
+            <div class="rev-bar-track">
+              <div class="rev-bar-fill" style="width:0%"></div>
+            </div><span style="font-size:0.65rem;color:var(--ink-soft);">0</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Review Cards -->
+    <div class="rev-cards" id="revCards">
+      <div class="rev-card">
+        <div class="rev-card-hd">
+          <div style="display:flex;align-items:center;gap:10px;">
+            <div class="rev-avatar">P</div>
+            <div>
+              <div class="rev-user">Priya M.</div>
+              <div class="rev-date">April 2026</div>
+            </div>
+          </div>
+          <span class="rev-badge-v"><i class="bi bi-patch-check-fill"></i> Verified</span>
+        </div>
+        <div class="rev-stars-sm"><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i></div>
+        <p class="rev-text">Absolutely love this blend! I've been drinking it every evening for the past month and my
+          sleep quality has improved tremendously. The floral notes are subtle and calming. Highly recommend!</p>
+        <div class="rev-helpful">Helpful? <button onclick="markHelpful(this)"><i class="bi bi-hand-thumbs-up"></i> Yes (12)</button><button onclick="markHelpful(this)"><i class="bi bi-hand-thumbs-down"></i> No</button>
+        </div>
+      </div>
+      <div class="rev-card">
+        <div class="rev-card-hd">
+          <div style="display:flex;align-items:center;gap:10px;">
+            <div class="rev-avatar" style="background:linear-gradient(135deg,#C9954A,#a37c4e);">R</div>
+            <div>
+              <div class="rev-user">Rohit K.</div>
+              <div class="rev-date">March 2026</div>
+            </div>
+          </div>
+          <span class="rev-badge-v"><i class="bi bi-patch-check-fill"></i> Verified</span>
+        </div>
+        <div class="rev-stars-sm"><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i></div>
+        <p class="rev-text">The packaging is gorgeous and the blend smells divine. I brew this every morning and it
+          genuinely helps me feel grounded before a hectic day. Worth every rupee.</p>
+        <div class="rev-helpful">Helpful? <button onclick="markHelpful(this)"><i class="bi bi-hand-thumbs-up"></i> Yes (8)</button><button onclick="markHelpful(this)"><i class="bi bi-hand-thumbs-down"></i> No</button>
+        </div>
+      </div>
+      <div class="rev-card">
+        <div class="rev-card-hd">
+          <div style="display:flex;align-items:center;gap:10px;">
+            <div class="rev-avatar" style="background:linear-gradient(135deg,#6B8C6F,#3D5C41);">A</div>
+            <div>
+              <div class="rev-user">Ananya S.</div>
+              <div class="rev-date">March 2026</div>
+            </div>
+          </div>
+          <span class="rev-badge-v"><i class="bi bi-patch-check-fill"></i> Verified</span>
+        </div>
+        <div class="rev-stars-sm"><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i></div>
+        <p class="rev-text">Really nice product. The taste is earthy and calming. I gave 4 stars only because the pouch
+          ran out faster than expected. Will definitely reorder — now buying the larger size.</p>
+        <div class="rev-helpful">Helpful? <button onclick="markHelpful(this)"><i class="bi bi-hand-thumbs-up"></i> Yes (5)</button><button onclick="markHelpful(this)"><i class="bi bi-hand-thumbs-down"></i> No</button>
+        </div>
+      </div>
+      <div class="rev-card" id="moreRevs" style="display:none;">
+        <div class="rev-card-hd">
+          <div style="display:flex;align-items:center;gap:10px;">
+            <div class="rev-avatar" style="background:linear-gradient(135deg,#A37C4E,#7A5C35);">N</div>
+            <div>
+              <div class="rev-user">Nisha T.</div>
+              <div class="rev-date">February 2026</div>
+            </div>
+          </div>
+          <span class="rev-badge-v"><i class="bi bi-patch-check-fill"></i> Verified</span>
+        </div>
+        <div class="rev-stars-sm"><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i></div>
+        <p class="rev-text">I was sceptical at first — I'm not usually a herbal tea person. But this has completely
+          changed my evening routine. The lavender and chamomile combination is perfect. My anxiety has noticeably
+          reduced.</p>
+        <div class="rev-helpful">Helpful? <button onclick="markHelpful(this)"><i class="bi bi-hand-thumbs-up"></i> Yes (3)</button><button onclick="markHelpful(this)"><i class="bi bi-hand-thumbs-down"></i> No</button>
+        </div>
+      </div>
+    </div>
+
+    <div style="text-align:center;margin-bottom:2rem;">
+      <button id="showMoreRevBtn" onclick="showMoreRevs()"
+        style="font-size:0.7rem;font-weight:600;letter-spacing:2px;text-transform:uppercase;background:transparent;border:1px solid rgba(180,160,120,0.35);border-radius:3px;padding:10px 24px;cursor:pointer;color:var(--ink-soft);transition:all 0.2s;">Show
+        More Reviews</button>
+    </div>
+
+    <!-- Write a Review CTA -->
+    <div class="rev-write">
+      <h3>Share Your <em>Experience</em></h3>
+      <p>Help others bloom with honest insights from your ritual.</p>
+      <button onclick="openRevModal()" class="btn-rev-write" sec:authorize="isAuthenticated()"><i
+          class="bi bi-pencil-square"></i> Write a Review</button>
+      <a th:href="@{/login}" class="btn-rev-write" sec:authorize="!isAuthenticated()"><i
+          class="bi bi-pencil-square"></i> Login to Review</a>
+    </div>
+  </div>
+
+  <!-- Review Write Modal -->
+  <div class="rev-modal" id="revModal">
+    <div class="rev-modal-box">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.5rem;">
+        <h3 class="rev-modal-title">Write a <em>Review</em></h3>
+        <button onclick="closeRevModal()"
+          style="background:none;border:none;font-size:1.4rem;cursor:pointer;color:var(--ink-soft);"><i class="bi bi-x-lg"></i></button>
+      </div>
+      <div class="rev-form">
+        <label>Your Rating *</label>
+        <div class="rev-star-picker" id="starPicker">
+          <span onclick="setRevStar(1)" data-v="1"><i class="bi bi-star-fill"></i></span>
+          <span onclick="setRevStar(2)" data-v="2"><i class="bi bi-star-fill"></i></span>
+          <span onclick="setRevStar(3)" data-v="3"><i class="bi bi-star-fill"></i></span>
+          <span onclick="setRevStar(4)" data-v="4"><i class="bi bi-star-fill"></i></span>
+          <span onclick="setRevStar(5)" data-v="5"><i class="bi bi-star-fill"></i></span>
+        </div>
+        <label>Review Title</label>
+        <input type="text" id="revTitle" placeholder="Sum up your experience in one line...">
+        <label>Your Review *</label>
+        <textarea id="revBody" placeholder="Tell others what you loved (or didn't) about this blend..."></textarea>
+        <label>Your Name</label>
+        <input type="text" id="revName" th:value="${user != null ? user.fullName : ''}" readonly style="background-color: #f5f5f5; color: #888; cursor: not-allowed;" placeholder="Your name will be populated automatically">
+        <div style="display:flex;gap:0.8rem;justify-content:flex-end;margin-top:1.5rem;flex-wrap:wrap;">
+          <button onclick="closeRevModal()"
+            style="font-size:0.7rem;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;color:var(--ink-soft);background:transparent;border:1px solid rgba(180,160,120,0.3);border-radius:3px;padding:11px 22px;cursor:pointer;">Cancel</button>
+          <button onclick="submitRevForm()"
+            style="font-size:0.7rem;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:#fff;background:linear-gradient(135deg,#3D5C41,#4A6B5D);border:none;border-radius:3px;padding:11px 22px;cursor:pointer;">Submit
+            Review</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="shop-footer">
+    <div class="shop-footer-inner">
+      <div class="shop-footer-brand">
+        <p class="shop-footer-name">THEORY <em>of</em> BLOOM</p>
+        <p class="shop-footer-tag" th:text="${siteContent.shop.footerTagline}">Crafted by Nature. Perfected by Science.</p>
+      </div>
+      <div class="shop-footer-links">
+        <a th:href="@{/shop}">All Blends</a>
+        <a th:href="@{/shop(category='Sleep &amp; Calm')}">Sleep &amp; Calm</a>
+        <a th:href="@{/shop(category='Skin &amp; Glow')}">Skin &amp; Glow</a>
+        <a th:href="@{/shop(category='Focus &amp; Clarity')}">Focus &amp; Clarity</a>
+      </div>
+      <p class="shop-footer-copy" th:text="${siteContent.footer.copyrightText}">© 2026 Theory of Bloom. All rights reserved.</p>
+    </div>
+  </footer>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+  <script th:src="@{/js/header.js?v=5.0}"></script>
+
+  <!-- SIGN-OUT CONFIRMATION MODAL -->
+  <div id="signoutOverlay"
+    style="display:none;position:fixed;inset:0;background:rgba(42,33,24,0.55);backdrop-filter:blur(3px);z-index:9999;align-items:center;justify-content:center;">
+    <div
+      style="background-color:#FAF8F4;background-image:linear-gradient(160deg,#FEFDF9 0%,#F5F1E8 100%);border:1px solid rgba(180,160,120,0.25);border-radius:4px;padding:2.5rem;max-width:400px;width:90%;text-align:center;box-shadow:0 20px 60px rgba(42,33,24,0.2);">
+      <div style="font-size:2rem;color:#4A6B5D;margin-bottom:1rem;"><i class="bi bi-box-arrow-right"></i></div>
+      <h3
+        style="font-family:'Cormorant Garamond',serif;font-size:1.7rem;font-weight:400;color:#2A2118;margin-bottom:0.5rem;">
+        Sign <em style="font-style:italic;color:#B03030;">Out?</em></h3>
+      <p style="font-size:0.82rem;color:#5C4D3C;margin-bottom:1.8rem;line-height:1.6;">Are you sure you want to sign
+        out?</p>
+      <div style="display:flex;gap:0.8rem;justify-content:center;flex-wrap:wrap;">
+        <button onclick="closeSignoutModal()"
+          style="font-family:'Inter',sans-serif;font-size:0.75rem;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;color:#5C4D3C;background:transparent;border:1px solid rgba(107,140,111,0.18);border-radius:3px;padding:11px 24px;cursor:pointer;">Stay
+          Signed In</button>
+        <a th:href="@{/logout}"
+          style="font-family:'Inter',sans-serif;font-size:0.75rem;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:#fff;background:#7a2020;border:1px solid #7a2020;border-radius:3px;padding:11px 24px;text-decoration:none;display:inline-block;">Yes,
+          Sign Out</a>
+      </div>
+    </div>
+  </div>
+  <script>
+    function openSignoutModal() { document.getElementById('signoutOverlay').style.display = 'flex'; document.body.style.overflow = 'hidden'; }
+    function closeSignoutModal() { document.getElementById('signoutOverlay').style.display = 'none'; document.body.style.overflow = ''; }
+    document.getElementById('signoutOverlay').addEventListener('click', function (e) { if (e.target === this) closeSignoutModal(); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeSignoutModal(); });
+  </script>
+
+  <script th:inline="javascript">
+    const PD_ID = String(/*[[${product.id}]]*/ '0');
+    function p11Tab(id, btn) {
+      document.querySelectorAll('.p11-tab').forEach(t => {
+        t.classList.remove('active');
+        t.style.color = '#5A5652';
+        t.style.borderBottom = '2px solid transparent';
+      });
+      document.querySelectorAll('.p11-panel').forEach(p => p.style.display = 'none');
+      btn.classList.add('active');
+      btn.style.color = '#2A2621';
+      btn.style.borderBottom = '2px solid #2D2A27';
+      document.getElementById('p11-' + id).style.display = 'block';
+    }
+    function switchImg(btn, src, fallback) {
+      const img = document.getElementById('mainProductImg');
+      if (!img) return;
+      img.style.opacity = '0.6';
+      img.src = src;
+      img.onerror = function () { this.src = fallback; };
+      setTimeout(() => { img.style.opacity = '1'; }, 200);
+      document.querySelectorAll('.thumb-btn').forEach(b => { b.style.border = '2px solid transparent'; b.classList.remove('active-thumb'); });
+      btn.style.border = '2px solid #2D2A27';
+      btn.classList.add('active-thumb');
+    }
+    function changeQty(delta) {
+      const inp = document.getElementById('pdQty');
+      if (!inp) return;
+      let v = parseInt(inp.value) + delta;
+      inp.value = Math.max(1, Math.min(10, v));
+    }
+    function togglePdLike() {
+      if (document.querySelector('.tob-action-item a[href*="/login"]')) {
+        window.location.href = '/login';
+        return;
+      }
+      let saved = JSON.parse(localStorage.getItem('tob_saved') || '[]');
+      if (saved.includes(PD_ID)) { saved = saved.filter(x => x !== PD_ID); } else { saved.push(PD_ID); }
+      localStorage.setItem('tob_saved', JSON.stringify(saved));
+      syncSaveBtn();
+    }
+    function togglePdSave() { togglePdLike(); }
+    function syncSaveBtn() {
+      const saved = JSON.parse(localStorage.getItem('tob_saved') || '[]');
+      const isSaved = saved.includes(PD_ID);
+      const likeBtn = document.getElementById('pdLikeBtn');
+      const likeIcon = document.getElementById('pdLikeIcon');
+      if (likeBtn) {
+         likeBtn.classList.toggle('liked', isSaved);
+         likeBtn.style.color = isSaved ? '#C9954A' : '#5A5652';
+         likeBtn.style.borderColor = isSaved ? '#C9954A' : 'rgba(180,160,120,0.25)';
+      }
+      if (likeIcon) {
+         likeIcon.className = isSaved ? 'bi bi-heart-fill' : 'bi bi-heart';
+         likeIcon.style.color = isSaved ? '#C9954A' : 'inherit';
+      }
+    }
+    document.addEventListener('DOMContentLoaded', syncSaveBtn);
+    function copyPdLink() { navigator.clipboard.writeText(window.location.href).then(() => showToast('Link copied <i class="bi bi-check-circle"></i>')); }
+    function sharePd() { if (navigator.share) { navigator.share({ title: document.title, url: window.location.href }); } else { copyPdLink(); } }
+    function showToast(msg) { const t = document.getElementById('pdToast'); t.textContent = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2500); }
+
+    /* -- AJAX Add to Cart -- */
+    function addToCartAjax(e) {
+      e.preventDefault();
+      if (document.querySelector('.tob-action-item a[href*="/login"]')) {
+        window.location.href = '/login';
+        return;
+      }
+      const productId = document.getElementById('pdProductId').value;
+      const quantity = document.getElementById('pdQty').value || 1;
+      const btn = document.getElementById('pdAddBtn');
+      btn.disabled = true;
+      btn.innerHTML = '<i class="bi bi-hourglass-split" style="margin-right:6px;"></i>Adding…';
+      fetch('/cart/add/ajax', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'X-Requested-With': 'XMLHttpRequest'
+        },
+        body: 'productId=' + encodeURIComponent(productId) + '&quantity=' + encodeURIComponent(quantity)
+      })
+        .then(r => r.json())
+        .then(data => {
+          btn.disabled = false;
+          btn.innerHTML = '<i class="bi bi-bag-plus" style="margin-right:6px;"></i>ADD TO RITUAL';
+          showCartPopupModal();
+        })
+        .catch(() => {
+          btn.disabled = false;
+          btn.innerHTML = '<i class="bi bi-bag-plus" style="margin-right:6px;"></i>ADD TO RITUAL';
+          showCartPopupModal();
+        });
+    }
+    function showCartPopupModal() {
+        let m = document.getElementById('cartPopupModal');
+        if (!m) {
+            m = document.createElement('div');
+            m.id = 'cartPopupModal';
+            m.style.cssText = 'position:fixed;inset:0;background:rgba(42,33,24,0.55);backdrop-filter:blur(3px);z-index:99999;display:none;align-items:center;justify-content:center;opacity:0;transition:opacity 0.3s ease;';
+            m.innerHTML = '<div style="background-color:#FAF8F4;background-image:linear-gradient(160deg,#FEFDF9 0%,#F5F1E8 100%);padding:2.5rem;border-radius:4px;border:1px solid rgba(180,160,120,0.25);text-align:center;max-width:400px;width:90%;box-shadow:0 20px 60px rgba(42,33,24,0.2);transform:translateY(20px);transition:transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);">' +
+                    '<div style="font-size:2.2rem;color:#4A6B5D;margin-bottom:1rem;"><i class="bi bi-bag-check"></i></div>' +
+                    '<h3 style="font-family:\'Cormorant Garamond\',serif;font-size:1.7rem;color:#2A2118;margin-bottom:0.5rem;font-weight:400;">Added to <em style="font-style:italic;color:#3D5C41;">Ritual</em></h3>' +
+                    '<p style="font-family:\'Inter\',sans-serif;font-size:0.82rem;color:#5C4D3C;line-height:1.6;margin-bottom:1.8rem;">Your botanical selection has been successfully added to your cart.</p>' +
+                    '<div style="display:flex;gap:0.8rem;justify-content:center;flex-wrap:wrap;">' +
+                        '<button onclick="document.getElementById(\'cartPopupModal\').style.opacity=\'0\';document.getElementById(\'cartPopupModal\').querySelector(\'div\').style.transform=\'translateY(20px)\';setTimeout(()=>document.getElementById(\'cartPopupModal\').style.display=\'none\',300);" style="font-family:\'Inter\',sans-serif;font-size:0.75rem;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;color:#5C4D3C;background:transparent;border:1px solid rgba(107,140,111,0.18);border-radius:3px;padding:11px 24px;cursor:pointer;">Continue</button>' +
+                        '<a href="/cart" style="font-family:\'Inter\',sans-serif;font-size:0.75rem;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:#fff;background:#4A6B5D;border:1px solid #4A6B5D;border-radius:3px;padding:11px 24px;text-decoration:none;display:inline-block;">View Cart</a>' +
+                    '</div>' +
+                '</div>';
+            document.body.appendChild(m);
+        }
+        m.style.display = 'flex';
+        void m.offsetWidth;
+        m.style.opacity = '1';
+        m.querySelector('div').style.transform = 'translateY(0)';
+    }
+  </script>
+  <script>
+    var _revStar = 0;
+    function openRevModal() { document.getElementById('revModal').style.display = 'flex'; document.body.style.overflow = 'hidden'; }
+    function closeRevModal() { document.getElementById('revModal').style.display = 'none'; document.body.style.overflow = ''; }
+    function setRevStar(v) {
+      _revStar = v;
+      document.querySelectorAll('.rev-star-picker span').forEach((s, i) => { s.classList.toggle('sel', i < v); });
+    }
+    function markHelpful(btn) {
+      const container = btn.parentElement;
+      const otherBtn = Array.from(container.querySelectorAll('button')).find(b => b !== btn);
+
+      const m = btn.innerHTML.match(/\((\d+)\)/);
+      let count = m ? parseInt(m[1]) : 0;
+
+      if (btn.classList.contains('selected')) {
+        // Undo
+        count--;
+        btn.classList.remove('selected');
+        btn.style.color = '';
+        btn.style.opacity = '1';
+        if (otherBtn) {
+           otherBtn.style.opacity = '1';
+           otherBtn.style.cursor = 'pointer';
+           otherBtn.disabled = false;
+        }
+      } else {
+        // Select
+        count++;
+        btn.classList.add('selected');
+        btn.style.color = '#4A6B5D';
+        btn.style.opacity = '1';
+        if (otherBtn) {
+           if (otherBtn.classList.contains('selected')) {
+               const om = otherBtn.innerHTML.match(/\((\d+)\)/);
+               if (om) {
+                   otherBtn.innerHTML = otherBtn.innerHTML.replace(/\(\d+\)/, '(' + (parseInt(om[1]) - 1) + ')');
+               }
+               otherBtn.classList.remove('selected');
+               otherBtn.style.color = '';
+           }
+           otherBtn.style.opacity = '0.5';
+           otherBtn.style.cursor = 'not-allowed';
+           otherBtn.disabled = true;
+        }
+      }
+
+      if (m) {
+        btn.innerHTML = btn.innerHTML.replace(/\(\d+\)/, '(' + count + ')');
+      } else {
+        btn.innerHTML += ' (' + count + ')';
+      }
+    }
+    function showMoreRevs() {
+      document.getElementById('moreRevs').style.display = '';
+      document.getElementById('showMoreRevBtn').style.display = 'none';
+    }
+    function submitRevForm() {
+      if (!_revStar) { alert('Please select a rating.'); return; }
+      const body = document.getElementById('revBody').value.trim();
+      if (!body) { alert('Please write your review.'); return; }
+      const name = document.getElementById('revName').value.trim() || 'Anonymous';
+      const stars = '<i class="bi bi-star-fill"></i>'.repeat(_revStar) + '<i class="bi bi-star" style="color:#ccc;"></i>'.repeat(5 - _revStar);
+      const initials = name.charAt(0).toUpperCase();
+      const card = document.createElement('div');
+      card.className = 'rev-card';
+      card.innerHTML = `<div class="rev-card-hd"><div style="display:flex;align-items:center;gap:10px;"><div class="rev-avatar">${initials}</div><div><div class="rev-user">${name}</div><div class="rev-date">Just now</div></div></div><span class="rev-badge-v"><i class="bi bi-patch-check-fill"></i> Verified</span></div><div class="rev-stars-sm">${stars}</div><p class="rev-text">${body}</p><div class="rev-helpful">Helpful? <button onclick="markHelpful(this)"><i class="bi bi-hand-thumbs-up"></i> Yes (0)</button><button onclick="markHelpful(this)"><i class="bi bi-hand-thumbs-down"></i> No</button></div>`;
+      const container = document.getElementById('revCards');
+      container.insertBefore(card, container.firstChild);
+      closeRevModal();
+      document.getElementById('revTitle').value = '';
+      document.getElementById('revBody').value = '';
+      document.getElementById('revName').value = '';
+      _revStar = 0;
+      document.querySelectorAll('.rev-star-picker span').forEach(s => s.classList.remove('sel'));
+    }
+    function switchPdImg(btn, src, fallback) {
+      const img = document.querySelector('.pd-img');
+      if (!img) return;
+      img.style.opacity = '0.5';
+      img.src = src;
+      img.onerror = function () { this.src = fallback; };
+      setTimeout(() => { img.style.opacity = '1'; }, 200);
+      document.querySelectorAll('.pd-thumb').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    }
+    document.getElementById('revModal').addEventListener('click', function (e) { if (e.target === this) closeRevModal(); });
+  </script>
+</body>

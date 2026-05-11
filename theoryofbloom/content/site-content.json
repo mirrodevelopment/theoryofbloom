@@ -1,0 +1,75 @@
+{
+  "home" : {
+    "heroEyebrow" : "Botanical Wellness",
+    "heroHeading" : "A new theory of<br><em>blooming</em> from within",
+    "heroSubtext" : "Crafted by nature. Perfected by science. A collection of floral wellness blends designed to calm the mind, nourish the body, and elevate your daily ritual.",
+    "heroCtaText" : "Shop Blends",
+    "heroImageUrl" : "",
+    "spinnerCategories" : "Sleep & Calm,Skin & Glow,Focus & Clarity,Immunity,Masculine,Morning",
+    "philosophyQuote" : "At Theory of Bloom, wellness is not a quick fix &mdash; it is a<br>quiet, daily unfolding.",
+    "philosophyBody" : "Rooted in nature and refined through thoughtful formulation, our blends are created to support<br>the body gently, yet effectively. Every ingredient is chosen not just for its benefit, but for how it<br>works in harmony with others &mdash; bringing balance, clarity and calm into your everyday life.",
+    "testimonialsTitle" : "What Our Community Feels",
+    "testimonials" : [ {
+      "name" : "Sarah J.",
+      "location" : "London",
+      "stars" : "★★★★★",
+      "quote" : "The Lunar Calm blend has completely transformed my sleep routine. It's subtle yet so effective."
+    }, {
+      "name" : "Marcus T.",
+      "location" : "Berlin",
+      "stars" : "★★★★★",
+      "quote" : "Focus & Clarity is my go-to for deep work sessions. No jitters, just pure mental flow."
+    }, {
+      "name" : "Sarah J.",
+      "location" : "London",
+      "stars" : "★★★★★",
+      "quote" : "The Lunar Calm blend has completely transformed my sleep routine. It's subtle yet so effective."
+    } ],
+    "ourStoryEyebrow" : "Est. 2024 · Botanical Wellness",
+    "ourStoryTitle" : "Our Story",
+    "ourStoryP1" : "Theory of Bloom was created from a simple belief that wellness should feel natural, not complicated.",
+    "ourStoryP2" : "In a world of quick fixes, we choose to slow down, return to nature, and create blends that support the body gently yet meaningfully.",
+    "ourStoryHighlight" : "This is our theory &mdash; that when given the right care, the body knows how to bloom.",
+    "ritualEyebrow" : "Your Daily Practice",
+    "ritualHeading" : "A Daily Ritual,<br>Not Just a <em>Drink.</em>",
+    "ritualBody" : "Slow down. Sip intentionally. Let your body find its natural rhythm. Each cup is an invitation to pause, reflect, and nourish your whole self &mdash; inside and out.",
+    "ritualImageUrl" : "/images/ritual-tea.jpg"
+  },
+  "shop" : {
+    "heroBannerTitle" : "The Master Curations",
+    "heroBannerSubtitle" : "Discover botanical alchemy designed for your well-being. Formulated with precision, elevated by nature.",
+    "filterLabel" : "Shop by Category",
+    "filterCategories" : "Sleep & Calm,Skin & Glow,Focus & Clarity,Immunity,Masculine,Morning",
+    "footerTagline" : "Crafted by Nature. Perfected by Science."
+  },
+  "contact" : {
+    "bannerEyebrow" : "We're Here to Help",
+    "bannerTitle" : "Get in Touch",
+    "bannerSubtitle" : "Whether you need blend guidance, have an order query, or would like to discuss wholesale &mdash; our floral consultants are here to help.",
+    "email" : "hello@theoryofbloom.com",
+    "address" : "12/87 Sathy Cross No:1,<br>Gandhipuram, Coimbatore 641012<br><a href=\"https://maps.app.goo.gl/nnQCQZwLyjJzAg819?g_st=ac\" target=\"_blank\" rel=\"noopener\" style=\"color:var(--sage);\">View on Google Maps &nearr;</a>",
+    "hours" : "Mon &ndash; Sat: 10:00 AM &ndash; 1:00 PM, 5:00 PM &ndash; 6:30 PM<br>Sunday: Holiday",
+    "tagline" : "We usually respond within 24 hours.",
+    "mapsUrl" : "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3916.326839352924!2d76.9634753!3d11.0118837!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ba859a8449c2d1b%3A0x6d9f3f4e3c3b3b3b!2sTheory%20of%20Bloom!5e0!3m2!1sen!2sin!4v1714382000000!5m2!1sen!2sin"
+  },
+  "order" : {
+    "pageTitle" : "Your Orders",
+    "pageSubtitle" : "Track and manage your botanical ritual orders.",
+    "emptyStateMessage" : "You haven't placed any orders yet.",
+    "emptyStateCtaText" : "Explore Our Blends"
+  },
+  "profile" : {
+    "pageTitle" : "My Profile",
+    "pageSubtitle" : "Manage your account, orders and preferences.",
+    "membershipBannerTitle" : "Upgrade to Premium",
+    "membershipBannerBody" : "Unlock exclusive blends, early access and free delivery.",
+    "pointsLabel" : "Bloom Points",
+    "pointsDescription" : "Earn points with every purchase and redeem for rewards."
+  },
+  "footer" : {
+    "tagline" : "Botanical wellness blends crafted by nature, perfected by science.",
+    "copyrightText" : "© 2026 Theory of Bloom. All rights reserved.",
+    "bottomTagline" : "Crafted by Nature. Perfected by Science.",
+    "contactEmail" : "hello@theoryofbloom.com"
+  }
+}

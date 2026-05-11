@@ -1,0 +1,483 @@
+/* ==================== GLOBAL & UTILITIES ==================== */
+.btn-sage {
+    background-color: #000000;
+    color: #fff;
+    font-weight: 500;
+    transition: all 0.3s;
+}
+
+.btn-sage:hover {
+    background-color: #333333;
+    color: #fff;
+}
+
+/* ── Brand name typography — matches the logo image exactly ── */
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400;1,500;1,600&display=swap');
+
+.navbar-brand {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 400;
+    letter-spacing: 2px;
+    line-height: 1.1;
+    display: inline-flex !important;
+    align-items: baseline !important;
+    gap: 0;
+}
+
+/* The reusable brand-name block — use inside navbar-brand */
+.brand-name {
+    display: inline-flex;
+    flex-direction: row;
+    align-items: baseline;
+    gap: 0.35em;
+    font-family: 'Cormorant Garamond', serif;
+    line-height: 1;
+    color: #a37c4e;
+    /* Light golden brown matching the user's uploaded theme image */
+    transform: translateY(-3px);
+    /* Nudge text up to perfectly align its visual center with the logo center */
+}
+
+.brand-name .b-theory {
+    font-size: 1.45rem;
+    font-weight: 500;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: inherit;
+}
+
+.brand-name .b-of-bloom {
+    font-size: 1.45rem;
+    font-weight: 400;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: inherit;
+}
+
+.brand-name .b-of-bloom em {
+    font-style: italic;
+    font-size: 1.35rem;
+    font-weight: 700;
+    /* Thicker bold for 'of' */
+    margin-right: 3px;
+    text-transform: lowercase;
+    /* explicitly keep 'of' small */
+}
+
+/* ── Classy Logo Border ── */
+.brand-logo-icon {
+    height: 48px;
+    width: 48px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 1px solid #a37c4e;
+    /* Thinner sophisticated border */
+    padding: 5px;
+    /* Larger gap inside the ring */
+    background-color: transparent;
+    mix-blend-mode: multiply;
+    box-shadow: 0 4px 20px rgba(163, 124, 78, 0.15);
+    /* Softer drop shadow */
+    margin-right: 1.25rem;
+    /* Larger gap before the brand text for alignment */
+    flex-shrink: 0;
+}
+
+.bg-cream {
+    background-color: #F5F5F5;
+}
+
+.bg-light-cream {
+    background-color: #FAFAFA;
+}
+
+.tracking-wide {
+    letter-spacing: 1.5px;
+}
+
+/* ==================== NAVBAR ==================== */
+.navbar {
+    transition: all 0.3s ease;
+}
+
+.navbar-scrolled {
+    background-color: #F5F5F5;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
+}
+
+.nav-link {
+    font-size: 14px;
+    letter-spacing: 1px;
+    transition: color 0.2s;
+}
+
+.nav-link:hover {
+    color: #8A817C !important;
+}
+
+/* ================= HERO SECTION ==================== */
+.hero-section {
+    padding: 60px 0 80px 0;
+}
+
+.hero-badge {
+    font-size: 12px;
+    letter-spacing: 3px;
+    color: #8A817C;
+}
+
+.hero-image {
+    max-width: 100%;
+    height: auto;
+}
+
+/* ==================== BRAND PHILOSOPHY ==================== */
+.philosophy-section p {
+    font-size: 1.1rem;
+    line-height: 1.7;
+}
+
+/* ==================== BOTANICAL SCIENCE ICONS ==================== */
+.science-icon {
+    font-size: 36px;
+    margin-bottom: 16px;
+}
+
+/* ==================== METHOD SECTION (numbered) ==================== */
+.method-number {
+    font-size: 20px;
+    font-weight: 300;
+    color: #4A6B5D;
+    letter-spacing: 2px;
+}
+
+.method-item h5 {
+    font-weight: 500;
+    font-size: 18px;
+}
+
+/* ==================== RITUAL SECTION ==================== */
+.ritual-image {
+    border-radius: 0;
+    width: 100%;
+}
+
+/* ==================== TESTIMONIALS ==================== */
+.testimonial-item p {
+    font-size: 1.2rem;
+    font-weight: 300;
+    line-height: 1.6;
+}
+
+/* ==================== NEWSLETTER ==================== */
+.newsletter input.form-control {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.3);
+    color: white;
+}
+
+.newsletter input.form-control::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.newsletter input.form-control:focus {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: white;
+}
+
+/* ==================== FOOTER ==================== */
+.footer a:hover {
+    color: white !important;
+    text-decoration: underline;
+}
+
+/* ==================== RESPONSIVE FIXES ==================== */
+@media (max-width: 768px) {
+    .hero-section {
+        padding: 40px 0;
+    }
+
+    .product-description {
+        max-width: 100%;
+    }
+
+    .method-number {
+        display: block;
+        margin-bottom: 8px;
+    }
+
+    .method-item h5 {
+        margin-left: 0 !important;
+        display: block;
+    }
+
+    .method-item p {
+        margin-left: 0 !important;
+    }
+}
+
+/* ==================== ANIMATIONS (for scroll reveal) ==================== */
+.fade-up {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.fade-up.revealed {
+    opacity: 1;
+}
+
+/* ==================== AESOP SCROLL WRAPPER ==================== */
+.horizontal-scroll-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    padding: 0 4rem 2rem 4rem;
+    scrollbar-width: thin;
+    scrollbar-color: #4A6B5D transparent;
+}
+
+.horizontal-scroll-wrapper::-webkit-scrollbar {
+    height: 6px;
+}
+
+.horizontal-scroll-wrapper::-webkit-scrollbar-thumb {
+    background-color: #D8D2C2;
+    border-radius: 4px;
+}
+
+.horizontal-scroll-track {
+    display: inline-flex;
+    gap: 3rem;
+    padding-bottom: 2rem;
+}
+
+.aesop-product-card {
+    width: 320px;
+    flex: 0 0 auto;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+}
+
+.card-header-line {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+    font-size: 0.75rem;
+    color: #888;
+}
+
+.new-tag {
+    color: #A66;
+    /* Mild terracotta */
+}
+
+.aesop-product-img {
+    width: 100%;
+    height: 400px;
+    object-fit: cover;
+    background: transparent;
+    transition: transform 0.3s ease;
+}
+
+.aesop-product-img:hover {
+    transform: scale(1.02);
+}
+
+.aesop-title {
+    font-family: 'Cinzel', serif;
+    font-size: 1.25rem;
+    margin-top: 1.5rem;
+    color: #111;
+}
+
+.aesop-desc {
+    font-size: 0.9rem;
+    color: #555;
+    margin-top: 0.5rem;
+    line-height: 1.5;
+}
+
+.aesop-divider {
+    width: 100%;
+    height: 1px;
+    background: #e0e0e0;
+    margin: 1.2rem 0;
+}
+
+.aesop-size {
+    font-size: 0.8rem;
+    color: #666;
+    margin-top: 0;
+}
+
+/* ==================== BLOOMING SCROLL PETALS ==================== */
+.scroll-petal {
+    position: fixed;
+    z-index: 9999;
+    pointer-events: none;
+    /* Default flower SVG */
+    background-image: url('data:image/svg+xml;utf8,<svg viewBox="0 0 24 24" fill="%23EEAA99" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C10 5 6 5 4 8C2 11 4 15 8 16C10 16.5 12 18 12 21C12 18 14 16.5 16 16C20 15 22 11 20 8C18 5 14 5 12 2Z"/></svg>');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    opacity: 0;
+    transform-origin: center;
+    animation: floatUp 2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+@keyframes floatUp {
+    0% {
+        opacity: 0;
+        transform: translate(0, 0) rotate(0deg) scale(0.5);
+    }
+
+    20% {
+        opacity: 0.8;
+    }
+
+    100% {
+        opacity: 0;
+        /* Drift upwards roughly 40vh and sideways using CSS var */
+        transform: translate(var(--drift), -40vh) rotate(var(--spin)) scale(1.5);
+    }
+}
+
+/* ================= Aesthetic Overlay Menu ================= */
+.aesthetic-hamburger-btn {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #a37c4e;
+}
+
+.aesthetic-hamburger-btn svg {
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.aesthetic-hamburger-btn:hover svg {
+    transform: scale(1.1) rotate(90deg);
+}
+
+.aesthetic-hamburger-btn span {
+    font-size: 9px;
+    font-weight: 500;
+    letter-spacing: 1.5px;
+}
+
+@media (max-width: 991px) {
+    .aesthetic-hamburger-btn {
+        display: flex !important;
+    }
+
+    .collapse.navbar-collapse {
+        display: none !important;
+    }
+
+    .shop-nav-links {
+        display: none !important;
+    }
+
+    .shop-nav-hamburger {
+        display: none !important;
+    }
+
+    button.navbar-toggler {
+        display: none !important;
+    }
+
+    .shop-nav-mobile {
+        display: none !important;
+    }
+}
+
+.aesthetic-menu-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background: #F7F4EF;
+    z-index: 99999;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    visibility: hidden;
+    opacity: 0;
+
+    transition: all 0.4s cubic-bezier(0.85, 0, 0.15, 1);
+    transform: translateY(-20px);
+}
+
+.aesthetic-menu-overlay.active {
+    visibility: visible;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.aesthetic-menu-overlay .menu-close-btn {
+    position: absolute;
+    top: 2rem;
+    right: 2rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #444;
+    transition: transform 0.3s;
+}
+
+.aesthetic-menu-overlay .menu-close-btn:hover {
+    transform: rotate(90deg);
+    color: #222;
+}
+
+.aesthetic-menu-overlay .menu-overlay-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    text-align: center;
+}
+
+.aesthetic-menu-overlay .menu-overlay-links li {
+    margin: 1.5rem 0;
+}
+
+.aesthetic-menu-overlay .menu-overlay-links a {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.2rem;
+    color: #2C1A10;
+    text-decoration: none;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    transition: color 0.3s;
+}
+
+.aesthetic-menu-overlay .menu-overlay-links a:hover {
+    color: #a37c4e;
+}
+
+.aesthetic-menu-overlay .menu-overlay-footer {
+    position: absolute;
+    bottom: 3rem;
+    text-align: center;
+}
+
+.aesthetic-menu-overlay .menu-overlay-footer p {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.2rem;
+    letter-spacing: 3px;
+    margin-bottom: 0.2rem;
+    color: #444;
+    text-transform: uppercase;
+}
+
+.aesthetic-menu-overlay .menu-overlay-footer small {
+    font-size: 0.75rem;
+    letter-spacing: 1px;
+    color: #777;
+}
