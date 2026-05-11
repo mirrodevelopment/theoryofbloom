@@ -33,18 +33,18 @@ jobs:
             sudo systemctl restart theoryofbloom
 
             # Wait for app startup
-            sleep 15
+            sleep 40
 
-            # Health check
-            if ! curl -f http://localhost:8080 > /dev/null; then
-              echo "Deployment failed. Rolling back..."
+                  if ! curl -f http://localhost:8080 > /dev/null; then
+            echo "Deployment failed. Rolling back..."
 
-              # Restore backup
+            # Restore backup
+            if [ -f target/backup.jar ]; then
               cp target/backup.jar target/theoryofbloom-0.0.1-SNAPSHOT.jar
-
               sudo systemctl restart theoryofbloom
-
-              exit 1
             fi
 
-            echo "Deployment successful"
+            exit 1
+          fi
+
+          echo "Deployment successful"
