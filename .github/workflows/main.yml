@@ -34,8 +34,8 @@ jobs:
 
             # Wait for app startup
             sleep 40
-
-                  if ! curl -f http://localhost:8080 > /dev/null; then
+            
+            if ! curl -f http://localhost:8080 > /dev/null; then 
             echo "Deployment failed. Rolling back..."
 
             # Restore backup
@@ -45,6 +45,6 @@ jobs:
             fi
 
             exit 1
-          fi
+            fi
 
-          echo "Deployment successful"
+            echo "Deployment successful"
