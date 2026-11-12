@@ -17,16 +17,105 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-
+  build:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Prepare static website
+        run: |
+          python3 - <<'PY'
+          import os
+          import re
+          import shutil
+
+          root = "theoryofbloom/src/main/resources"
+          template = os.path.join(root, "templates/index.html")
+          static = os.path.join(root, "static")
+          output = "docs"
+
+          if not os.path.isfile(template):
+              raise SystemExit("Homepage template not found: " + template)
+
+          if os.path.exists(output):
+              shutil.rmtree(output)
+
+          os.makedirs(output, exist_ok=True)
+
+          # Copy existing frontend assets
+          shutil.copytree(static, output, dirs_exist_ok=True)
+
+          # Read the existing homepage
+          with open(template, "r", encoding="utf-8") as f:
+              html = f.read()
+
+          # Convert Thymeleaf asset URLs into static URLs
+          def convert_url(value):
+              value = re.sub(
+                  r'@\{([^}]+)\}',
+                  lambda m: m.group(1).split('__')[0],
+                  value
+              )
+              value = re.sub(
+                  r'^/',
+                  './',
+                  value
+              )
+              return value
+
+          # Preserve static href and src values from Thymeleaf attributes
+          html = re.sub(
+              r'\bth:href\s*=\s*["\']([^"\']*)["\']',
+              lambda m: 'href="' + convert_url(m.group(1)) + '"',
+              html
+          )
+
+          html = re.sub(
+              r'\bth:src\s*=\s*["\']([^"\']*)["\']',
+              lambda m: 'src="' + convert_url(m.group(1)) + '"',
+              html
+          )
+
+          # Remove server-side Thymeleaf and Spring Security attributes
+          html = re.sub(
+              r'\s+(?:th|sec):[a-zA-Z0-9_-]+\s*=\s*["\'][^"\']*["\']',
+              '',
+              html
+          )
+
+          # Remove remaining Thymeleaf URL expressions
+          html = re.sub(
+              r'@\{([^}]+)\}',
+              lambda m: './' + m.group(1).lstrip('/'),
+              html
+          )
+
+          # Fix absolute static asset paths for GitHub Pages
+          html = re.sub(
+              r'(["\'])/(css|js|images)/',
+              r'\1./\2/',
+              html
+          )
+
+          with open(
+              os.path.join(output, "index.html"),
+              "w",
+              encoding="utf-8"
+          ) as f:
+              f.write(html)
+
+          # Copy public content JSON if available
+          if os.path.isfile("content/site-content.json"):
+              os.makedirs(os.path.join(output, "content"), exist_ok=True)
+              shutil.copy2(
+                  "content/site-content.json",
+                  os.path.join(output, "content/site-content.json")
+              )
+
+          print("Static website prepared successfully.")
+          PY
 
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
@@ -36,6 +125,15 @@ jobs:
         with:
           path: ./docs
 
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
